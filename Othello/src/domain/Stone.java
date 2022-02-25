@@ -23,4 +23,12 @@ public class Stone {
             this.color = Color.WHITE;
         }
     }
+
+    public boolean isPlayerColor(){
+        if (this.color == Color.BLACK){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

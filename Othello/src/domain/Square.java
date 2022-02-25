@@ -12,11 +12,19 @@ public class Square {
         this.stone = stone;
     }
 
-    public boolean HasStone() {
+    public boolean hasStone() {
         if (this.stone != null){
             return true;
         } else {
             return false;
         }
+    }
+
+    public Stone getStone() {
+        return stone;
+    }
+
+    public void setStone(Stone stone) {
+        this.stone = stone;
     }
 }
