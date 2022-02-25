@@ -26,15 +26,11 @@ public class Board {
 
     public String toString() {
         /*
-        Creates a visual representation of the user's progress on a semester1.Minesweeper board.
+        Creates a visual representation of the user's progress on a Othello board.
         The board is shown with a border and numbers along each of the board's axes
-        to allow the user to choose the coordinates of the square he/she wants to check.
+        to allow the user to choose the coordinates of the square he/she wants to put a stone in .
 
-        Uncovered squares with value "0" are displayed as □.
-        Uncovered squares with any value over 0 are displayed as their number (e.g. a square
-        with 2 bombs in its radius will be displayed as "2").
-        Uncovered squares with a bomb (value = -1) are displayed as a *.
-        All covered squares are displayed as ■.
+
          */
         StringBuilder builder = new StringBuilder();
         int countRow = 1;
