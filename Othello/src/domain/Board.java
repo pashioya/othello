@@ -63,7 +63,7 @@ public class Board {
         String header = "|%" + (11 + 3 * SIDE_LENGTH) + "s";
         builder.append(String.format(header, "|\n"));
         builder.append(String.format("%-7s", "|"));
-        for (int i = 0; i < SIDE_LENGTH ; i++) {
+        for (int i = 0; i < SIDE_LENGTH; i++) {
             builder.append(String.format("%2d ", i));
         }
         builder.append(String.format("%4s", "|") + "\n");
@@ -93,8 +93,7 @@ public class Board {
             } else {
                 if (square.getStone().getColor() == Stone.Color.BLACK) {
                     builder.append(String.format("%2s ", "B"));
-                }
-                else {
+                } else {
                     builder.append(String.format("%2s ", "W"));
                 }
             }
@@ -134,23 +133,49 @@ public class Board {
     //---------------TO STRING METHODS---------------
 
 
-
-    public void isValidMove(int row, int column){
-        for (int vertical = row-1; vertical <= row+1; vertical++){
-            for (int horizontal = column-1; horizontal <= column+1; horizontal++){
+    public boolean isValidMove(int row, int column) {
+        boolean isValid = false;
+        for (int vertical = row - 1; vertical <= row + 1; vertical++) {
+            for (int horizontal = column - 1; horizontal <= column + 1; horizontal++) {
                 if (horizontal < 0 || horizontal > SIDE_LENGTH - 1 || vertical < 0 || vertical > SIDE_LENGTH - 1) {
                     continue;
-                }
-                else if (GRID[vertical][horizontal].hasStone()){
-                    if (GRID[vertical][horizontal].getStone().isPlayerColor()){
-                        System.out.println("this is your color" + vertical + " " + horizontal);
+                } else if (GRID[vertical][horizontal].hasStone()) {
+                    if (!GRID[vertical][horizontal].getStone().isPlayerColor()) {
+                        int verticalShift = vertical - row;
+                        int horizontalShift = horizontal - column;
+                        System.out.println("Vertical shift: " + verticalShift + " Horizontal shift: " + horizontalShift + " Row: " + vertical + " Column: " + horizontal);
+                        isValid = checkDirection(verticalShift, horizontalShift, vertical, horizontal);
+                        if (isValid){
+                            return isValid;
+                        }
                     }
                 }
             }
+
         }
+        return isValid;
     }
 
-    public void placeStone(int row, int column){
-        this.GRID[row][column].setStone(new Stone(Stone.Color.BLACK));
+    public void placeStone(int row, int column, Stone.Color color) {
+        this.GRID[row][column].setStone(new Stone(color));
+    }
+
+    public boolean checkDirection(int verticalShift, int horizontalShift, int vertical, int horizontal) {
+        int newVertical = vertical + verticalShift;
+        int newHorizontal = horizontal + horizontalShift;
+        System.out.println("the square you are checking has row " + newVertical + " and column " + newHorizontal);
+        // check if not out of bounds:
+        if (newHorizontal < 0 || newHorizontal > SIDE_LENGTH - 1 || newVertical < 0 || newVertical > SIDE_LENGTH - 1) {
+            return false;
+        }
+        Square newSquare = GRID[newVertical][newHorizontal];
+        if (newSquare.getStone() != null) {
+            if (!newSquare.getStone().isPlayerColor()) {
+                return checkDirection(verticalShift, horizontalShift, newVertical, newHorizontal);
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 }
