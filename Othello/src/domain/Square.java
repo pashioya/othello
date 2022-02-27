@@ -24,7 +24,7 @@ public class Square {
         return stone;
     }
 
-    public void setStone(Stone stone) {
-        this.stone = stone;
+    public void setStone(StoneColor stoneColor) {
+        this.stone = new Stone(stoneColor);
     }
 }

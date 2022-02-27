@@ -1,31 +1,29 @@
 package domain;
 
 public class Stone {
-    public enum Color{
-        BLACK, WHITE;
+
+
+    private StoneColor stoneColor;
+
+    public Stone(StoneColor stoneColor) {
+        this.stoneColor = stoneColor;
     }
 
-    private Color color;
-
-    public Stone(Color color) {
-        this.color = color;
-    }
-
-    public Color getColor() {
-        return color;
+    public StoneColor getColor() {
+        return stoneColor;
     }
 
     public void flip() {
-        if (this.color == Color.WHITE){
-            this.color = Color.BLACK;
+        if (this.stoneColor == stoneColor.WHITE){
+            this.stoneColor = stoneColor.BLACK;
         }
         else {
-            this.color = Color.WHITE;
+            this.stoneColor = stoneColor.WHITE;
         }
     }
 
-    public boolean isPlayerColor(){
-        if (this.color == Color.BLACK){
+    public boolean isPlayerColor(StoneColor stoneColor){
+        if (this.stoneColor.equals(stoneColor)){
             return true;
         } else {
             return false;
