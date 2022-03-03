@@ -8,30 +8,21 @@ public class Computer extends Player{
         super(stoneColor);
     }
 
-    public void chooseMostProfitableMove(Board board){
-        ArrayList<int[]> possibleMovesCoordinates = findAllPossibleMoves(board);
-        ArrayList<int[]> flippableStones = board.findFlippableStones(4, 1, this.getPlayerColor());
-        System.out.println(flippableStones.size());
 
 
-    }
 
-    public ArrayList<int[]> findAllPossibleMoves(Board board){
-        ArrayList<int[]> possibleMovesCoordinates = new ArrayList<int[]>();
-        for (int row = 0; row < board.getGRID().length; row++){
-            for (int column = 0; column < board.getGRID()[row].length; column++ ){
-                if (board.isValidMove(row, column, getPlayerColor())){
-                    possibleMovesCoordinates.add(new int[] {row, column});
-                }
+    public int[] findMostProfitableMove(ArrayList<int[]> possibleMoves, Board board){
+        int[] mostProfitableMove = null;
+        int highestProfitability = 0;
+        for (int[] possibleMove : possibleMoves) {
+            ArrayList<int[]>flippableStoneList = board.findFlippableStones(possibleMove[0], possibleMove[1], getPlayerColor());
+            int profitability =  flippableStoneList.size();
+            System.out.println("Move at row " + possibleMove[0] + ", column " + possibleMove[1] + " yields " + profitability);
+            if (profitability > highestProfitability){
+                mostProfitableMove = possibleMove;
+                highestProfitability = profitability;
             }
         }
-        return possibleMovesCoordinates;
+        return mostProfitableMove;
     }
-
-    public int getMoveProfitability(int[] coordinatePair, Board board){
-        ArrayList<int[]>flippableStoneList = board.findFlippableStones(coordinatePair[0], coordinatePair[1], getPlayerColor());
-        return flippableStoneList.size();
-    }
-
-
 }
