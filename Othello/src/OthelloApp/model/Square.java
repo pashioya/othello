@@ -1,4 +1,4 @@
-package domain;
+package OthelloApp.model;
 
 public class Square {
     private Stone stone;

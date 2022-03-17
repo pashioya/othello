@@ -1,10 +1,10 @@
-package domain;
+package OthelloApp.model;
 
 import java.util.ArrayList;
 
 public class Board {
     private final Square[][] GRID;
-    private final int SIDE_LENGTH = 8;
+    private final static int SIDE_LENGTH = 8;
 
     public Board() {
         this.GRID = new Square[SIDE_LENGTH][SIDE_LENGTH];
@@ -233,4 +233,7 @@ public class Board {
         }
     }
 
+    public static int getSIDE_LENGTH() {
+        return SIDE_LENGTH;
+    }
 }

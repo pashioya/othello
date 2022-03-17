@@ -1,4 +1,4 @@
-package domain;
+package OthelloApp.model;
 
 import java.util.ArrayList;
 

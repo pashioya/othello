@@ -1,4 +1,4 @@
-package domain;
+package OthelloApp.model;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 public class GameSession {
 
     private Board board;
-    private User user;
-    private Computer computer;
+    public User user;
+    public Computer computer;
 //    private int sessionStartTime;
 //    private int sessionEndTime;
 //    private boolean isWon;
@@ -16,29 +16,6 @@ public class GameSession {
         this.board = new Board();
         this.user = new User(StoneColor.BLACK);
         this.computer = new Computer(StoneColor.WHITE);
-
-        // test ability to flip stones in more than one direction
-//        board.placeStone(2, 3, StoneColor.BLACK);
-//        board.placeStone(2, 4, StoneColor.BLACK);
-//        board.placeStone(3, 3, StoneColor.BLACK);
-//        board.placeStone(3, 4, StoneColor.BLACK);
-//        board.placeStone(3, 5, StoneColor.WHITE);
-//        board.placeStone(4, 3, StoneColor.BLACK);
-//        board.placeStone(4, 4, StoneColor.WHITE);
-//        board.placeStone(5, 4, StoneColor.BLACK);
-//        board.placeStone(6, 5, StoneColor.WHITE);
-        //
-
-        // test situation where computer cannot make a move
-//        for (int i = 0; i < board.getGRID().length; i++) {
-//            for (int ii = 0; ii < board.getGRID()[i].length; ii++) {
-//                if ((i == 3) && (ii == 3)) {
-//                    continue;
-//                } else {
-//                    board.placeStone(i, ii, StoneColor.BLACK);
-//                }
-//            }
-//        }
     }
 
     public boolean isOver() {
@@ -50,7 +27,6 @@ public class GameSession {
                     stoneCounter++;
                 }
             }
-
         }
         return (stoneCounter == numberSquares);
     }
