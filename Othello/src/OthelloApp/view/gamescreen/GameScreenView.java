@@ -67,7 +67,7 @@ public class GameScreenView extends BorderPane {
                         true,
                         true, false));
         Background backGround = new Background(backgroundImage);
-                button.setPrefWidth(buttonWidth);
+        button.setPrefWidth(buttonWidth);
         button.setPrefHeight(buttonHeight);
         button.setBackground(backGround);
         return button;
@@ -82,29 +82,15 @@ public class GameScreenView extends BorderPane {
         this.gridButtons = new Button[Board.getSIDE_LENGTH()][Board.getSIDE_LENGTH()];
         for (int row = 0; row < this.gridButtons.length; row++) {
             for (int column = 0; column < this.gridButtons[row].length; column++) {
-                if ((row == 3 & column == 3) || (row == 4 & column == 4)) {
-                    Button button = new Button();
-                    setButtonBackgroundImage(button, "white.png");
-                    this.gridButtons[row][column] = button;
-                    grid.add(button, column, row);
-                }
-                else if ((row == 3 & column == 4) || (row == 4 & column == 3)){
-                    Button button = new Button();
-                    setButtonBackgroundImage(button, "black.png");
-                    this.gridButtons[row][column] = button;
-                    grid.add(button, column, row);
-                }
-                else {
-                    Button button = new Button();
-                    setButtonBackgroundImage(button, "empty.png");
-                    this.gridButtons[row][column] = button;
-                    grid.add(button, column, row);
-                }
+                Button button = new Button();
+                setButtonBackgroundImage(button, "empty.png");
+                this.gridButtons[row][column] = button;
+                grid.add(button, column, row);
             }
-
         }
 
     }
+
 
     public HBox getHBoxTopLabels() {
         return hBoxTopLabels;

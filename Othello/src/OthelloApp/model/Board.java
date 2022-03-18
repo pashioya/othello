@@ -23,6 +23,15 @@ public class Board {
         GRID[3][4] = new Square(new Stone(StoneColor.WHITE));
         GRID[4][3] = new Square(new Stone(StoneColor.WHITE));
         GRID[4][4] = new Square(new Stone(StoneColor.BLACK));
+
+//        // Test
+//        GRID[3][3] = new Square(new Stone(StoneColor.WHITE));
+//        GRID[3][4] = new Square(new Stone(StoneColor.WHITE));
+//        GRID[4][3] = new Square(new Stone(StoneColor.WHITE));
+//        GRID[4][4] = new Square(new Stone(StoneColor.BLACK));
+//        GRID[5][4] = new Square(new Stone(StoneColor.WHITE));
+//        GRID[6][5] = new Square(new Stone(StoneColor.BLACK));
+//        GRID[3][5] = new Square(new Stone(StoneColor.BLACK));
     }
 
     //---------------TO STRING METHODS---------------

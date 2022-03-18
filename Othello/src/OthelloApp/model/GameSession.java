@@ -43,39 +43,39 @@ public class GameSession {
         return (userStoneCount > 32);
     }
 
-    public void playRound() {
-        System.out.println("--USER'S TURN--");
-        delayOneSecond();
-        showBoard();
-        if (user.hasValidMoves(board)) {
-            boolean isValidMove = false;
-            while (!isValidMove) {
-                int[] coordinates = user.move();
-                isValidMove = board.isValidMove(coordinates[0], coordinates[1], user.getPlayerColor());
-                if (isValidMove) {
-                    updateBoard(coordinates[0], coordinates[1], user.getPlayerColor());
-                    showBoard();
-                } else {
-                    System.out.println("Please input a valid row and column");
-                }
-            }
-        } else {
-            System.out.println("User cannot place a stone - turn forfeited");
-        }
-        delayOneSecond();
-        System.out.println("--COMPUTER'S TURN--");
-        delayOneSecond();
-        if (computer.hasValidMoves(board)) {
-            ArrayList<int[]> possibleMoves = computer.findAllPossibleMoves(board);
-            int[] mostProfitableMove = computer.findMostProfitableMove(possibleMoves, board);
-            delayOneSecond();
-            updateBoard(mostProfitableMove[0], mostProfitableMove[1], computer.getPlayerColor());
-            System.out.println("Computer placed stone at row " + mostProfitableMove[0] + ", column " + mostProfitableMove[1]);
-            delayOneSecond();
-        } else {
-            System.out.println("Computer cannot place a stone - turn forfeited");
-        }
-    }
+//    public void playRound() {
+//        System.out.println("--USER'S TURN--");
+//        delayOneSecond();
+//        showBoard();
+//        if (user.hasValidMoves(board)) {
+//            boolean isValidMove = false;
+//            while (!isValidMove) {
+//                int[] coordinates = user.move();
+//                isValidMove = board.isValidMove(coordinates[0], coordinates[1], user.getPlayerColor());
+//                if (isValidMove) {
+//                    updateBoard(coordinates[0], coordinates[1], user.getPlayerColor());
+//                    showBoard();
+//                } else {
+//                    System.out.println("Please input a valid row and column");
+//                }
+//            }
+//        } else {
+//            System.out.println("User cannot place a stone - turn forfeited");
+//        }
+//        delayOneSecond();
+//        System.out.println("--COMPUTER'S TURN--");
+//        delayOneSecond();
+//        if (computer.hasValidMoves(board)) {
+//            ArrayList<int[]> possibleMoves = computer.findAllPossibleMoves(board);
+//            int[] mostProfitableMove = computer.findMostProfitableMove(possibleMoves, board);
+//            delayOneSecond();
+//            updateBoard(mostProfitableMove[0], mostProfitableMove[1], computer.getPlayerColor());
+//            System.out.println("Computer placed stone at row " + mostProfitableMove[0] + ", column " + mostProfitableMove[1]);
+//            delayOneSecond();
+//        } else {
+//            System.out.println("Computer cannot place a stone - turn forfeited");
+//        }
+//    }
 
 
     public void updateBoard(int row, int column, StoneColor playerColor) {
