@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import OthelloApp.model.*;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Background;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +17,12 @@ public class GameScreenPresenter {
     public GameScreenPresenter(GameSession model, GameScreenView view) {
         this.model = model;
         this.view = view;
+        System.out.println(this.model.getActivePlayer());
         addEventHandlers();
+
+        //refactor as drawBoard()
+        StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+        setClickableButtons(activePlayerColor);
         updateView();
     }
 
@@ -33,14 +37,42 @@ public class GameScreenPresenter {
 
         public void handle(ActionEvent event) {
             System.out.println("Clicked " + row + " " + column);
-            ArrayList<int[]> flippableStoneCoordinates = model.getBoard().findFlippableStones(row, column, model.user.getPlayerColor());
-            model.updateBoard(row, column, model.user.getPlayerColor());
+            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+            ArrayList<int[]> flippableStoneCoordinates = model.getBoard().findFlippableStones(row, column, activePlayerColor);
+            model.updateBoard(row, column, activePlayerColor);
             System.out.println(model.getBoard());
             setButtonImage(row, column);
-            setClickableButtons();
-            updateViewFlippedPieces(row, column, flippableStoneCoordinates);
+            updateViewFlippedPieces(flippableStoneCoordinates);
+            switchActivePlayer();
+            activePlayerColor = model.getActivePlayer().getPlayerColor();
+            if (model.getBoard().hasValidMoves(activePlayerColor)){
+                ArrayList<int[]> possibleMoves = model.getBoard().findAllPossibleMoves(activePlayerColor);
+                int[] mostProfitableMove = model.getBoard().findMostProfitableMove(possibleMoves, activePlayerColor);
+                flippableStoneCoordinates = model.getBoard().findFlippableStones(mostProfitableMove[0], mostProfitableMove[1], activePlayerColor);
+                model.updateBoard(mostProfitableMove[0], mostProfitableMove[1], activePlayerColor);
+                System.out.println(model.getBoard());
+                setButtonImage(mostProfitableMove[0], mostProfitableMove[1]);
+                updateViewFlippedPieces(flippableStoneCoordinates);
 
+            }
+            else{
+                System.out.println("Turn forfeited!");
+            }
+            switchActivePlayer();
+            activePlayerColor = model.getActivePlayer().getPlayerColor();
+            setClickableButtons(activePlayerColor);
         }
+    }
+
+
+
+    public void switchActivePlayer(){
+        if (this.model.getActivePlayer().equals(this.model.getPlayers()[0])){
+            this.model.setActivePlayer(this.model.getPlayers()[1]);
+        } else {
+            this.model.setActivePlayer(this.model.getPlayers()[0]);
+        }
+
     }
 
     private void addEventHandlers() {
@@ -59,6 +91,7 @@ public class GameScreenPresenter {
             }
         }
     }
+
     private void setButtonImage(int row, int column) {
         Square square = this.model.getBoard().getGRID()[row][column];
         Button button = this.view.getGridButtons()[row][column];
@@ -66,31 +99,59 @@ public class GameScreenPresenter {
         this.view.setButtonBackgroundImage(button, imageURL);
     }
 
+
+    // PUT IN VIEW!
     private String getButtonImageURL(Square square) {
-        if (!square.hasStone()){
+        if (!square.hasStone()) {
             return "empty.png";
-        }
-        else return switch (square.getStone().getColor()) {
+        } else return switch (square.getStone().getColor()) {
             case WHITE -> "white.png";
             case BLACK -> "black.png";
 
         };
     }
 
-    private void setClickableButtons(){
-        ArrayList<int[]> findAllPossibleMoves = this.model.user.findAllPossibleMoves(this.model.getBoard());
-        System.out.println(findAllPossibleMoves.size());
-        for (int[] possibleMove : findAllPossibleMoves) {
-            Button button = this.view.getGridButtons()[possibleMove[0]][possibleMove[1]];
-            button.setDisable(false);
+    private void setClickableButtons(StoneColor stoneColor) {
+        ArrayList<int[]> possibleMoves = this.model.getBoard().findAllPossibleMoves(stoneColor);
+        System.out.println(possibleMoves.size());
+        for (int row = 0; row < view.getGridButtons().length; row++) {
+            for (int column = 0; column < view.getGridButtons()[row].length; column++) {
+                Button button = this.view.getGridButtons()[row][column];
+                if (buttonIsValidMove(row, column, possibleMoves)) {
+                    button.setDisable(false);
+                }
+                else {
+                    button.setDisable(true);
+                }
+            }
         }
     }
 
-    private void updateViewFlippedPieces(int row, int column, ArrayList<int[]> flippableStoneCoordinates){
+    public boolean buttonIsValidMove(int buttonRow, int buttonColumn, ArrayList<int[]> possibleMoves){
+        for (int[] possibleMove : possibleMoves) {
+            int possibleMoveRow = possibleMove[0];
+            int possibleMoveColumn = possibleMove[1];
+            if ((buttonRow == possibleMoveRow) & (buttonColumn == possibleMoveColumn)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void updateViewFlippedPieces(ArrayList<int[]> flippableStoneCoordinates) {
         for (int[] flippableStoneCoordinate : flippableStoneCoordinates) {
             setButtonImage(flippableStoneCoordinate[0], flippableStoneCoordinate[1]);
         }
     }
+
+    public void delayOneSecond() {
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
 
 }
 

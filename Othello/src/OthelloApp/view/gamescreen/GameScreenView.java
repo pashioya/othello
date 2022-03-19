@@ -38,18 +38,25 @@ public class GameScreenView extends BorderPane {
     }
 
     private void layoutNodes() {
+        layoutHboxTop();
+        layoutHboxBottom();
+    }
 
+    public void layoutHboxTop(){
         this.setTop(hBoxTopLabels);
         this.hBoxTopLabels.getChildren().addAll(playerScoreLabel, computerScoreLabel);
         this.hBoxTopLabels.setAlignment(Pos.CENTER);
         this.hBoxTopLabels.setPadding(new Insets(10, 10, 10, 10));
         this.setMargin(hBoxTopLabels, new Insets(10, 10, 10, 10));
         this.hBoxTopLabels.setSpacing(20);
+    }
 
-
+    public void layoutHboxBottom(){
         this.setBottom(hBoxBottomButtons);
         this.hBoxBottomButtons.setAlignment(Pos.CENTER);
         this.hBoxBottomButtons.getChildren().addAll(rulesButton, quitButton);
+        this.hBoxBottomButtons.setPadding(new Insets(10, 10, 10, 10));
+        this.setMargin(hBoxBottomButtons, new Insets(10, 10, 10, 10));
     }
 
     public Button setButtonBackgroundImage(Button button, String imageUrl) {

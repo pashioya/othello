@@ -19,10 +19,10 @@ public class Board {
             }
         }
         // Initialize first 4 squares in center
-        GRID[3][3] = new Square(new Stone(StoneColor.BLACK));
-        GRID[3][4] = new Square(new Stone(StoneColor.WHITE));
-        GRID[4][3] = new Square(new Stone(StoneColor.WHITE));
-        GRID[4][4] = new Square(new Stone(StoneColor.BLACK));
+        GRID[3][3].setStone(StoneColor.BLACK);
+        GRID[3][4].setStone(StoneColor.WHITE);
+        GRID[4][3].setStone(StoneColor.WHITE);
+        GRID[4][4].setStone(StoneColor.BLACK);
 
 //        // Test
 //        GRID[3][3] = new Square(new Stone(StoneColor.WHITE));
@@ -102,7 +102,7 @@ public class Board {
             if (!square.hasStone()) {
                 builder.append(String.format("%2s ", "□"));
             } else {
-                if (square.getStone().getColor() == StoneColor.BLACK) {
+                if (square.getStoneColor() == StoneColor.BLACK) {
                     builder.append(String.format("%2s ", "B"));
                 } else {
                     builder.append(String.format("%2s ", "W"));
@@ -165,7 +165,7 @@ public class Board {
                     continue;
                 } else if (GRID[vertical][horizontal].hasStone()) {
                     // If a square that is touching the selected square contains a stone, check to see if the stone is the opposite color as the player's
-                    if (!GRID[vertical][horizontal].getStone().isPlayerColor(stoneColor)) {
+                    if (GRID[vertical][horizontal].hasOppositeColorStone(stoneColor)) {
                         int verticalShift = vertical - row;
                         int horizontalShift = horizontal - column;
 //                        System.out.println("Vertical shift: " + verticalShift + " Horizontal shift: " + horizontalShift + " Row: " + vertical + " Column: " + horizontal);
@@ -193,6 +193,41 @@ public class Board {
         return new int[]{verticalShift, horizontalShift};
     }
 
+    public ArrayList<int[]> findAllPossibleMoves(StoneColor stonecolor){
+        ArrayList<int[]> possibleMovesCoordinates = new ArrayList<int[]>();
+        for (int row = 0; row < getGRID().length; row++){
+            for (int column = 0; column < getGRID()[row].length; column++ ){
+                if (isValidMove(row, column, stonecolor)){
+                    possibleMovesCoordinates.add(new int[] {row, column});
+                }
+            }
+        }
+        return possibleMovesCoordinates;
+    }
+    public boolean hasValidMoves(StoneColor stoneColor){
+        ArrayList<int[]> validMoves = findAllPossibleMoves(stoneColor);
+        if (validMoves.size() == 0){
+            return false;
+        }
+        return true;
+    }
+
+    public int[] findMostProfitableMove(ArrayList<int[]> possibleMoves, StoneColor stoneColor){
+        int[] mostProfitableMove = null;
+        int highestProfitability = 0;
+        for (int[] possibleMove : possibleMoves) {
+            ArrayList<int[]>flippableStoneList = findFlippableStones(possibleMove[0], possibleMove[1], stoneColor);
+            int profitability =  flippableStoneList.size();
+            System.out.println("Move at row " + possibleMove[0] + ", column " + possibleMove[1] + " yields " + profitability);
+            if (profitability > highestProfitability){
+                mostProfitableMove = possibleMove;
+                highestProfitability = profitability;
+            }
+        }
+        System.out.println("Placed stone at: row " + mostProfitableMove[0]+ ", column " + mostProfitableMove[1]);
+        return mostProfitableMove;
+    }
+
     public boolean checkDirection(int verticalShift, int horizontalShift, int vertical, int horizontal, StoneColor stoneColor) {
         int newVertical = vertical + verticalShift;
         int newHorizontal = horizontal + horizontalShift;
@@ -201,8 +236,8 @@ public class Board {
             return false;
         }
         Square newSquare = GRID[newVertical][newHorizontal];
-        if (newSquare.getStone() != null) {
-            if (!newSquare.getStone().isPlayerColor(stoneColor)) {
+        if (newSquare.hasStone()) {
+            if (newSquare.hasOppositeColorStone(stoneColor)) {
                 return checkDirection(verticalShift, horizontalShift, newVertical, newHorizontal, stoneColor);
             } else {
                 return true;
@@ -219,7 +254,7 @@ public class Board {
                     continue;
                 } else if (GRID[vertical][horizontal].hasStone()) {
                     Square currentSquare = GRID[vertical][horizontal];
-                    if (!currentSquare.getStone().isPlayerColor(stoneColor)) {
+                    if (currentSquare.hasOppositeColorStone(stoneColor)) {
                         int[] direction = getDirection(vertical, row, horizontal, column);
                         boolean directionHasFlippableStones = checkDirection(direction[0], direction[1], vertical, horizontal, stoneColor);
                         if (directionHasFlippableStones) {
@@ -232,10 +267,10 @@ public class Board {
         return flippableStoneCoordinates;
     }
 
-    public void addFlippableStoneCoordinates(int[] direction, int vertical, int horizontal, StoneColor stoneColor, ArrayList<int[]> flippableStoneCoordinates){
+    public void addFlippableStoneCoordinates(int[] direction, int vertical, int horizontal, StoneColor stoneColor, ArrayList<int[]> flippableStoneCoordinates) {
         Square currentSquare = GRID[vertical][horizontal];
-        if (!currentSquare.getStone().isPlayerColor(stoneColor)){
-            flippableStoneCoordinates.add(new int [] {vertical, horizontal});
+        if (currentSquare.hasOppositeColorStone(stoneColor)) {
+            flippableStoneCoordinates.add(new int[]{vertical, horizontal});
             int newVertical = vertical + direction[0];
             int newHorizontal = horizontal + direction[1];
             addFlippableStoneCoordinates(direction, newVertical, newHorizontal, stoneColor, flippableStoneCoordinates);
@@ -244,5 +279,46 @@ public class Board {
 
     public static int getSIDE_LENGTH() {
         return SIDE_LENGTH;
+    }
+
+
+    // userWon(user.getPlayerColor()) -> boolean
+    //CHANGE THIS LINE/DELEGATE
+    public boolean userWon(StoneColor stoneColor) {
+        int userStoneCount = 0;
+        for (Square[] row : getGRID()) {
+            for (Square square : row) {
+                if (square.hasStone()) {
+                    if(!square.hasOppositeColorStone(stoneColor))
+                    userStoneCount++;
+                }
+            }
+        }
+        return (userStoneCount > 32);
+    }
+
+    public boolean isFull(){
+        int stoneCounter = 0;
+        int numberOfSquares = SIDE_LENGTH * SIDE_LENGTH;
+        for (Square[] row : getGRID()) {
+            for (Square square : row) {
+                if (square.hasStone()) {
+                    stoneCounter++;
+                }
+            }
+        }
+        return stoneCounter == numberOfSquares;
+    }
+
+    public void update(int row, int column, StoneColor stoneColor) {
+        ArrayList<int[]> flippableStoneCoordinates = findFlippableStones(row, column, stoneColor);
+        placeStone(row, column, stoneColor);
+        for (int[] flippableStoneCoordinate : flippableStoneCoordinates) {
+            int stoneRow = flippableStoneCoordinate[0];
+            int stoneColumn = flippableStoneCoordinate[1];
+
+
+            getGRID()[stoneRow][stoneColumn].flipStone();
+        }
     }
 }

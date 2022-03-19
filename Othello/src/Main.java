@@ -11,7 +11,7 @@ public class Main extends Application{
 
 
     public void start(Stage primaryStage) {
-        final GameSession model = new GameSession();
+        final GameSession model = new GameSession(true);
         final GameScreenView view = new GameScreenView();
         new GameScreenPresenter(model, view);
         final Scene scene = new Scene(view);

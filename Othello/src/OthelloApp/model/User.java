@@ -8,6 +8,8 @@ public class User extends Player{
         super(stoneColor);
     }
 
+
+
     public int[] move(){
         Scanner scanner = new Scanner(System.in);
         System.out.print("Please input a row number: ");
@@ -18,4 +20,8 @@ public class User extends Player{
         return coordinatePair;
     }
 
+    @Override
+    public String toString() {
+        return "User" + this.getPlayerColor();
+    }
 }
