@@ -2,12 +2,19 @@ package OthelloApp.view.gamescreen;
 
 
 import OthelloApp.model.Board;
+import OthelloApp.model.StoneColor;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 public class GameScreenView extends BorderPane {
     // private Node attributes (controls)
@@ -17,6 +24,7 @@ public class GameScreenView extends BorderPane {
     private Label computerScoreLabel;
     private Button rulesButton;
     private Button quitButton;
+    private Button computerTurnButton;
     private Label clock;
     private GridPane grid;
     private Button[][] gridButtons;
@@ -34,6 +42,7 @@ public class GameScreenView extends BorderPane {
         this.playerScoreLabel = new Label("Player: ");
         this.computerScoreLabel = new Label("Computer: ");
         this.rulesButton = new Button("Rules");
+        this.computerTurnButton = new Button("Play Opponent Turn");
         this.quitButton = new Button("Quit");
     }
 
@@ -42,21 +51,38 @@ public class GameScreenView extends BorderPane {
         layoutHboxBottom();
     }
 
-    public void layoutHboxTop(){
+    public void layoutHboxTop() {
         this.setTop(hBoxTopLabels);
         this.hBoxTopLabels.getChildren().addAll(playerScoreLabel, computerScoreLabel);
         this.hBoxTopLabels.setAlignment(Pos.CENTER);
         this.hBoxTopLabels.setPadding(new Insets(10, 10, 10, 10));
         this.setMargin(hBoxTopLabels, new Insets(10, 10, 10, 10));
-        this.hBoxTopLabels.setSpacing(20);
+        this.hBoxTopLabels.setSpacing(100);
     }
 
-    public void layoutHboxBottom(){
+    public void layoutHboxBottom() {
+
         this.setBottom(hBoxBottomButtons);
         this.hBoxBottomButtons.setAlignment(Pos.CENTER);
-        this.hBoxBottomButtons.getChildren().addAll(rulesButton, quitButton);
+        this.hBoxBottomButtons.getChildren().addAll(rulesButton, computerTurnButton, quitButton);
         this.hBoxBottomButtons.setPadding(new Insets(10, 10, 10, 10));
         this.setMargin(hBoxBottomButtons, new Insets(10, 10, 10, 10));
+        this.hBoxBottomButtons.setSpacing(100);
+    }
+
+    public String getButtonImageURL(StoneColor stoneColor) {
+        if (stoneColor == null) {
+            return "empty.png";
+        } else return switch (stoneColor) {
+            case WHITE -> "white.png";
+            case BLACK -> "black.png";
+
+        };
+    }
+
+    public void fireComputerTurnButton(Event e){
+        getComputerTurnButton().fire();
+        e.consume();
     }
 
     public Button setButtonBackgroundImage(Button button, String imageUrl) {
@@ -86,7 +112,8 @@ public class GameScreenView extends BorderPane {
 //        this.grid.setGridLinesVisible(true);
         this.grid.setVgap(10);
         this.grid.setHgap(10);
-        this.gridButtons = new Button[Board.getSIDE_LENGTH()][Board.getSIDE_LENGTH()];
+        // change so view doesn't see Board
+        this.gridButtons = new Button[8][8];
         for (int row = 0; row < this.gridButtons.length; row++) {
             for (int column = 0; column < this.gridButtons[row].length; column++) {
                 Button button = new Button();
@@ -96,6 +123,20 @@ public class GameScreenView extends BorderPane {
             }
         }
 
+    }
+
+    public void setClickableComputerTurnButton(boolean activePlayerIsComputer) {
+        this.computerTurnButton.setDisable(!activePlayerIsComputer);
+        //this.computerTurnButton.setDefaultButton(activePlayerIsComputer);
+    }
+    public void disableAllGridButtons() {
+        for (int row = 0; row < getGridButtons().length; row++) {
+            for (int column = 0; column < getGridButtons()[row].length; column++) {
+                Button button = getGridButtons()[row][column];
+                button.setDisable(true);
+
+            }
+        }
     }
 
 
@@ -133,6 +174,10 @@ public class GameScreenView extends BorderPane {
 
     public Button[][] getGridButtons() {
         return gridButtons;
+    }
+
+    public Button getComputerTurnButton() {
+        return computerTurnButton;
     }
 }
 

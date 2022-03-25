@@ -2,6 +2,9 @@ package OthelloApp.model;
 
 import java.util.ArrayList;
 
+import static OthelloApp.model.StoneColor.BLACK;
+import static OthelloApp.model.StoneColor.WHITE;
+
 public class Board {
     private final Square[][] GRID;
     private final static int SIDE_LENGTH = 8;
@@ -19,10 +22,10 @@ public class Board {
             }
         }
         // Initialize first 4 squares in center
-        GRID[3][3].setStone(StoneColor.BLACK);
-        GRID[3][4].setStone(StoneColor.WHITE);
-        GRID[4][3].setStone(StoneColor.WHITE);
-        GRID[4][4].setStone(StoneColor.BLACK);
+        GRID[3][3].setStone(BLACK);
+        GRID[3][4].setStone(WHITE);
+        GRID[4][3].setStone(WHITE);
+        GRID[4][4].setStone(BLACK);
 
 //        // Test
 //        GRID[3][3] = new Square(new Stone(StoneColor.WHITE));
@@ -61,9 +64,9 @@ public class Board {
         Used in the toString() method.
 
         This method first creates the top border of the visual representation of the
-        semester1.Minesweeper board. Next, it adds a blank row.
+        board. Next, it adds a blank row.
         After the blank row, it adds numbers indicating the index of each column of the
-        semester1.Minesweeper board. The column indexes allow the user to easily
+         board. The column indexes allow the user to easily
         choose which column coordinate of the Square he/she wants to check.
          */
 
@@ -98,17 +101,18 @@ public class Board {
 
          */
         for (Square square : row) {
-
-            if (!square.hasStone()) {
-                builder.append(String.format("%2s ", "□"));
-            } else {
-                if (square.getStoneColor() == StoneColor.BLACK) {
+            if (square.hasStone()) {
+                if (square.getStoneColor() == BLACK) {
                     builder.append(String.format("%2s ", "B"));
                 } else {
                     builder.append(String.format("%2s ", "W"));
                 }
+            } else {
+                builder.append(String.format("%2s ", "□"));
             }
+
         }
+
     }
 
     private void buildBoardRow(StringBuilder builder, Square[] row, int countRow) {
@@ -193,38 +197,39 @@ public class Board {
         return new int[]{verticalShift, horizontalShift};
     }
 
-    public ArrayList<int[]> findAllPossibleMoves(StoneColor stonecolor){
+    public ArrayList<int[]> findAllPossibleMoves(StoneColor stonecolor) {
         ArrayList<int[]> possibleMovesCoordinates = new ArrayList<int[]>();
-        for (int row = 0; row < getGRID().length; row++){
-            for (int column = 0; column < getGRID()[row].length; column++ ){
-                if (isValidMove(row, column, stonecolor)){
-                    possibleMovesCoordinates.add(new int[] {row, column});
+        for (int row = 0; row < getGRID().length; row++) {
+            for (int column = 0; column < getGRID()[row].length; column++) {
+                if (isValidMove(row, column, stonecolor)) {
+                    possibleMovesCoordinates.add(new int[]{row, column});
                 }
             }
         }
         return possibleMovesCoordinates;
     }
-    public boolean hasValidMoves(StoneColor stoneColor){
+
+    public boolean hasValidMoves(StoneColor stoneColor) {
         ArrayList<int[]> validMoves = findAllPossibleMoves(stoneColor);
-        if (validMoves.size() == 0){
+        if (validMoves.size() == 0) {
             return false;
         }
         return true;
     }
 
-    public int[] findMostProfitableMove(ArrayList<int[]> possibleMoves, StoneColor stoneColor){
+    public int[] findMostProfitableMove(ArrayList<int[]> possibleMoves, StoneColor stoneColor) {
         int[] mostProfitableMove = null;
         int highestProfitability = 0;
         for (int[] possibleMove : possibleMoves) {
-            ArrayList<int[]>flippableStoneList = findFlippableStones(possibleMove[0], possibleMove[1], stoneColor);
-            int profitability =  flippableStoneList.size();
+            ArrayList<int[]> flippableStoneList = findFlippableStones(possibleMove[0], possibleMove[1], stoneColor);
+            int profitability = flippableStoneList.size();
             System.out.println("Move at row " + possibleMove[0] + ", column " + possibleMove[1] + " yields " + profitability);
-            if (profitability > highestProfitability){
+            if (profitability > highestProfitability) {
                 mostProfitableMove = possibleMove;
                 highestProfitability = profitability;
             }
         }
-        System.out.println("Placed stone at: row " + mostProfitableMove[0]+ ", column " + mostProfitableMove[1]);
+        System.out.println("Placed stone at: row " + mostProfitableMove[0] + ", column " + mostProfitableMove[1]);
         return mostProfitableMove;
     }
 
@@ -282,22 +287,25 @@ public class Board {
     }
 
 
-    // userWon(user.getPlayerColor()) -> boolean
-    //CHANGE THIS LINE/DELEGATE
     public boolean userWon(StoneColor stoneColor) {
-        int userStoneCount = 0;
-        for (Square[] row : getGRID()) {
-            for (Square square : row) {
-                if (square.hasStone()) {
-                    if(!square.hasOppositeColorStone(stoneColor))
-                    userStoneCount++;
-                }
-            }
-        }
+        int userStoneCount = countStones(stoneColor);
         return (userStoneCount > 32);
     }
 
-    public boolean isFull(){
+    public int countStones(StoneColor stoneColor) {
+        int playerStoneCount = 0;
+        for (Square[] row : getGRID()) {
+            for (Square square : row) {
+                if (square.hasStone()) {
+                    if (!square.hasOppositeColorStone(stoneColor))
+                        playerStoneCount++;
+                }
+            }
+        }
+        return playerStoneCount;
+    }
+
+    public boolean isFull() {
         int stoneCounter = 0;
         int numberOfSquares = SIDE_LENGTH * SIDE_LENGTH;
         for (Square[] row : getGRID()) {
@@ -316,9 +324,9 @@ public class Board {
         for (int[] flippableStoneCoordinate : flippableStoneCoordinates) {
             int stoneRow = flippableStoneCoordinate[0];
             int stoneColumn = flippableStoneCoordinate[1];
-
-
             getGRID()[stoneRow][stoneColumn].flipStone();
         }
     }
+
+
 }

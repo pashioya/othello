@@ -13,7 +13,7 @@ public class Square {
     }
 
     public boolean hasStone() {
-        if (this.stone != null){
+        if (this.stone != null) {
             return true;
         } else {
             return false;
@@ -28,17 +28,19 @@ public class Square {
         this.stone = new Stone(stoneColor);
     }
 
-    public void flipStone(){
-        if (this.stone != null){
+    public void flipStone() {
+        if (this.stone != null) {
             getStone().flip();
         }
     }
 
-    public boolean hasOppositeColorStone(StoneColor stoneColor){
+    public boolean hasOppositeColorStone(StoneColor stoneColor) {
         return !getStone().isPlayerColor(stoneColor);
     }
 
-    public StoneColor getStoneColor(){
-        return getStone().getColor();
+    public StoneColor getStoneColor() {
+               return getStone().getColor();
+
+
     }
 }
