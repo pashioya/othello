@@ -4,8 +4,10 @@ package OthelloApp.view.gamescreen;
 import OthelloApp.model.Board;
 import OthelloApp.model.StoneColor;
 import javafx.event.Event;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -117,6 +119,7 @@ public class GameScreenView extends BorderPane {
         for (int row = 0; row < this.gridButtons.length; row++) {
             for (int column = 0; column < this.gridButtons[row].length; column++) {
                 Button button = new Button();
+                GridPane.setConstraints(button, column, row, 1, 1, HPos.CENTER, VPos.BASELINE, Priority.ALWAYS, Priority.ALWAYS);
                 setButtonBackgroundImage(button, "empty.png");
                 this.gridButtons[row][column] = button;
                 grid.add(button, column, row);
