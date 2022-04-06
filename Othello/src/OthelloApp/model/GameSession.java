@@ -19,6 +19,7 @@ public class GameSession {
     private Player[] players;
     private String sessionStartTime;
     private Player activePlayer;
+    private Turn currentTurn;
 
 //    private int sessionEndTime;
 //    private boolean isWon;
@@ -111,5 +112,18 @@ public class GameSession {
             setActivePlayer(getPlayers()[0]);
         }
 
+    }
+
+    public int[] findMostProfitableMove(){
+        StoneColor activePlayerColor = getActivePlayer().getPlayerColor();
+        ArrayList<int[]> possibleMoves = getBoard().findAllPossibleMoves(activePlayerColor);
+        int[] mostProfitableMove = getBoard().findMostProfitableMove(possibleMoves, activePlayerColor);
+        return mostProfitableMove;
+    }
+    public ArrayList<int[]> playComputerTurn(int[] mostProfitableMove){
+        StoneColor activePlayerColor = getActivePlayer().getPlayerColor();
+        ArrayList<int[]> flippableStoneCoordinates = getBoard().findFlippableStones(mostProfitableMove[0], mostProfitableMove[1], activePlayerColor);
+        updateBoard(mostProfitableMove[0], mostProfitableMove[1], activePlayerColor);
+        return flippableStoneCoordinates;
     }
 }

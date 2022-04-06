@@ -16,29 +16,29 @@ public class GameScreenPresenter {
     public GameScreenPresenter(GameSession model, GameScreenView view) {
         this.model = model;
         this.view = view;
-        this.model.getActivePlayer();
+        System.out.println(this.model.getActivePlayer());
         System.out.println(this.model.getBoard());
         updatePlayerScores();
-        this.view.setClickableComputerTurnButton(this.model.activePlayerIsComputer());
-
         addEventHandlers();
-        StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
-        setClickableGridButtons(activePlayerColor);
+        if (this.model.activePlayerIsComputer()) {
+            this.view.setClickableComputerTurnButton(true);
+            view.disableAllGridButtons();
+        } else {
+            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+            setClickableGridButtons(activePlayerColor);
+        }
         drawBoard();
     }
 
     class ComputerTurnHandler implements EventHandler<ActionEvent> {
         public void handle(ActionEvent event) {
-            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
-            ArrayList<int[]> possibleMoves = model.getBoard().findAllPossibleMoves(activePlayerColor);
-            int[] mostProfitableMove = model.getBoard().findMostProfitableMove(possibleMoves, activePlayerColor);
-            ArrayList<int[]> flippableStoneCoordinates = model.getBoard().findFlippableStones(mostProfitableMove[0], mostProfitableMove[1], activePlayerColor);
-            model.updateBoard(mostProfitableMove[0], mostProfitableMove[1], activePlayerColor);
+            int[] mostProfitableMove = model.findMostProfitableMove();
+            ArrayList<int[]> flippableStoneCoordinates = model.playComputerTurn(mostProfitableMove);
             setButtonImage(mostProfitableMove[0], mostProfitableMove[1]);
             updateView(flippableStoneCoordinates);
             updatePlayerScores();
             model.switchActivePlayer();
-            activePlayerColor = model.getActivePlayer().getPlayerColor();
+            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
             setClickableGridButtons(activePlayerColor);
             view.setClickableComputerTurnButton(model.activePlayerIsComputer());
         }
@@ -75,6 +75,7 @@ public class GameScreenPresenter {
                 view.setClickableComputerTurnButton(model.activePlayerIsComputer());
             }
         }
+
     }
 
 
@@ -146,19 +147,16 @@ public class GameScreenPresenter {
         }
     }
 
-    public void updatePlayerScores(){
+    public void updatePlayerScores() {
         Integer[] playerScores = this.model.getPlayerScores();
-        for (int i = 0; i < playerScores.length; i++){
+        for (int i = 0; i < playerScores.length; i++) {
             if (this.model.getPlayers()[i] instanceof User) {
                 this.view.getPlayerScoreLabel().setText(String.format("Player: %d", playerScores[i]));
-            }
-            else if (this.model.getPlayers()[i] instanceof Computer){
+            } else if (this.model.getPlayers()[i] instanceof Computer) {
                 this.view.getComputerScoreLabel().setText(String.format("Computer: %d", playerScores[i]));
             }
         }
     }
-
-
 }
 
 

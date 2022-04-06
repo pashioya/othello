@@ -30,6 +30,7 @@ public class GameScreenView extends BorderPane {
     private Label clock;
     private GridPane grid;
     private Button[][] gridButtons;
+    private final String FONT_FAMILY = "Consolas";
 
     public GameScreenView() {
         initialiseNodes();
@@ -51,6 +52,7 @@ public class GameScreenView extends BorderPane {
     private void layoutNodes() {
         layoutHboxTop();
         layoutHboxBottom();
+        styleNodes();
     }
 
     public void layoutHboxTop() {
@@ -70,6 +72,16 @@ public class GameScreenView extends BorderPane {
         this.hBoxBottomButtons.setPadding(new Insets(10, 10, 10, 10));
         this.setMargin(hBoxBottomButtons, new Insets(10, 10, 10, 10));
         this.hBoxBottomButtons.setSpacing(100);
+    }
+
+    public void styleNodes(){
+        Font font = new Font(FONT_FAMILY, 15);
+        playerScoreLabel.setFont(font);
+        computerScoreLabel.setFont(font);
+        rulesButton.setFont(font);
+        computerTurnButton.setFont(font);
+        quitButton.setFont(font);
+
     }
 
     public String getButtonImageURL(StoneColor stoneColor) {
