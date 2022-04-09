@@ -1,7 +1,6 @@
 package OthelloApp.view.gamescreen;
 
 
-import OthelloApp.model.Board;
 import OthelloApp.model.StoneColor;
 import javafx.event.Event;
 import javafx.geometry.HPos;
@@ -14,23 +13,20 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
 public class GameScreenView extends BorderPane {
     // private Node attributes (controls)
-    private HBox hBoxTopLabels;
+    private VBox vBoxTopLabels;
     private HBox hBoxBottomButtons;
     private Label playerScoreLabel;
     private Label computerScoreLabel;
+    private Label turnInstructionLabel;
     private Button rulesButton;
     private Button quitButton;
     private Button computerTurnButton;
     private Label clock;
     private GridPane grid;
     private Button[][] gridButtons;
-    private final String FONT_FAMILY = "Consolas";
+    private final static Font FONT = new Font("Consolas", 15);
 
     public GameScreenView() {
         initialiseNodes();
@@ -39,33 +35,37 @@ public class GameScreenView extends BorderPane {
 
     private void initialiseNodes() {
         // create and configure controls
-        this.hBoxTopLabels = new HBox();
+        this.vBoxTopLabels = new VBox();
         this.hBoxBottomButtons = new HBox();
         initializeGrid();
         this.playerScoreLabel = new Label("Player: ");
         this.computerScoreLabel = new Label("Computer: ");
+        this.turnInstructionLabel = new Label("Instructions appear here");
         this.rulesButton = new Button("Rules");
-        this.computerTurnButton = new Button("Play Opponent Turn");
+        this.computerTurnButton = new Button("Play Computer Turn");
         this.quitButton = new Button("Quit");
     }
 
     private void layoutNodes() {
-        layoutHboxTop();
+        layoutVboxTop();
+        this.grid.setPadding(new Insets(20));
         layoutHboxBottom();
         styleNodes();
     }
 
-    public void layoutHboxTop() {
-        this.setTop(hBoxTopLabels);
-        this.hBoxTopLabels.getChildren().addAll(playerScoreLabel, computerScoreLabel);
-        this.hBoxTopLabels.setAlignment(Pos.CENTER);
-        this.hBoxTopLabels.setPadding(new Insets(10, 10, 10, 10));
-        this.setMargin(hBoxTopLabels, new Insets(10, 10, 10, 10));
-        this.hBoxTopLabels.setSpacing(100);
+    public void layoutVboxTop() {
+        HBox hBoxPlayerScoreLabels = new HBox();
+        hBoxPlayerScoreLabels.getChildren().addAll(playerScoreLabel, computerScoreLabel);
+        hBoxPlayerScoreLabels.setAlignment(Pos.CENTER);
+        hBoxPlayerScoreLabels.setPadding(new Insets(10, 10, 10, 10));
+        hBoxPlayerScoreLabels.setSpacing(100);
+        vBoxTopLabels.getChildren().addAll(hBoxPlayerScoreLabels, turnInstructionLabel);
+        this.setTop(vBoxTopLabels);
+        this.setMargin(vBoxTopLabels, new Insets(10, 10, 10, 10));
+        vBoxTopLabels.setAlignment(Pos.CENTER);
     }
 
     public void layoutHboxBottom() {
-
         this.setBottom(hBoxBottomButtons);
         this.hBoxBottomButtons.setAlignment(Pos.CENTER);
         this.hBoxBottomButtons.getChildren().addAll(rulesButton, computerTurnButton, quitButton);
@@ -75,13 +75,12 @@ public class GameScreenView extends BorderPane {
     }
 
     public void styleNodes(){
-        Font font = new Font(FONT_FAMILY, 15);
-        playerScoreLabel.setFont(font);
-        computerScoreLabel.setFont(font);
-        rulesButton.setFont(font);
-        computerTurnButton.setFont(font);
-        quitButton.setFont(font);
-
+        playerScoreLabel.setFont(FONT);
+        computerScoreLabel.setFont(FONT);
+        turnInstructionLabel.setFont(FONT);
+        rulesButton.setFont(FONT);
+        computerTurnButton.setFont(FONT);
+        quitButton.setFont(FONT);
     }
 
     public String getButtonImageURL(StoneColor stoneColor) {
@@ -100,8 +99,8 @@ public class GameScreenView extends BorderPane {
     }
 
     public Button setButtonBackgroundImage(Button button, String imageUrl) {
-        int buttonWidth = 100;
-        int buttonHeight = 100;
+        int buttonWidth = 80;
+        int buttonHeight = 80;
         Image image = new Image(imageUrl, buttonWidth, buttonHeight, false, true, true);
 
         BackgroundImage backgroundImage = new BackgroundImage(image,
@@ -155,13 +154,6 @@ public class GameScreenView extends BorderPane {
     }
 
 
-    public HBox getHBoxTopLabels() {
-        return hBoxTopLabels;
-    }
-
-    public HBox getHBoxBottomButtons() {
-        return hBoxBottomButtons;
-    }
 
     public Label getPlayerScoreLabel() {
         return playerScoreLabel;
@@ -193,6 +185,10 @@ public class GameScreenView extends BorderPane {
 
     public Button getComputerTurnButton() {
         return computerTurnButton;
+    }
+
+    public Label getTurnInstructionLabel() {
+        return turnInstructionLabel;
     }
 }
 

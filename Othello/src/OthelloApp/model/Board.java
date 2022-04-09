@@ -221,7 +221,7 @@ public class Board {
         int[] mostProfitableMove = null;
         int highestProfitability = 0;
         for (int[] possibleMove : possibleMoves) {
-            ArrayList<int[]> flippableStoneList = findFlippableStones(possibleMove[0], possibleMove[1], stoneColor);
+            ArrayList<int[]> flippableStoneList = findFlippableStones(possibleMove, stoneColor);
             int profitability = flippableStoneList.size();
             System.out.println("Move at row " + possibleMove[0] + ", column " + possibleMove[1] + " yields " + profitability);
             if (profitability > highestProfitability) {
@@ -251,7 +251,9 @@ public class Board {
         return false;
     }
 
-    public ArrayList<int[]> findFlippableStones(int row, int column, StoneColor stoneColor) {
+    public ArrayList<int[]> findFlippableStones(int[] coordinates, StoneColor stoneColor) {
+        int row = coordinates[0];
+        int column = coordinates[1];
         ArrayList<int[]> flippableStoneCoordinates = new ArrayList<int[]>();
         for (int vertical = row - 1; vertical <= row + 1; vertical++) {
             for (int horizontal = column - 1; horizontal <= column + 1; horizontal++) {
@@ -318,9 +320,9 @@ public class Board {
         return stoneCounter == numberOfSquares;
     }
 
-    public void update(int row, int column, StoneColor stoneColor) {
-        ArrayList<int[]> flippableStoneCoordinates = findFlippableStones(row, column, stoneColor);
-        placeStone(row, column, stoneColor);
+    public void update(int[] coordinates, StoneColor stoneColor) {
+        ArrayList<int[]> flippableStoneCoordinates = findFlippableStones(coordinates, stoneColor);
+        placeStone(coordinates[0], coordinates[1], stoneColor);
         for (int[] flippableStoneCoordinate : flippableStoneCoordinates) {
             int stoneRow = flippableStoneCoordinate[0];
             int stoneColumn = flippableStoneCoordinate[1];

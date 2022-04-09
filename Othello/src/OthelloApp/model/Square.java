@@ -8,9 +8,6 @@ public class Square {
         this.stone = null;
     }
 
-    public Square(Stone stone) {
-        this.stone = stone;
-    }
 
     public boolean hasStone() {
         if (this.stone != null) {

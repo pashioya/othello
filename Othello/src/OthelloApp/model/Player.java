@@ -5,10 +5,11 @@ import java.util.Objects;
 
 public abstract class Player {
     private StoneColor stoneColor;
+    private String name;
 
-
-    public Player(StoneColor stoneColor) {
+    public Player(StoneColor stoneColor, String name) {
         this.stoneColor = stoneColor;
+        this.name = name;
     }
 
     public StoneColor getPlayerColor() {
@@ -26,5 +27,14 @@ public abstract class Player {
     @Override
     public int hashCode() {
         return Objects.hash(stoneColor);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

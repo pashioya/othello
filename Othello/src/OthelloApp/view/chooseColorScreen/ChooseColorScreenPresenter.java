@@ -25,7 +25,7 @@ public class ChooseColorScreenPresenter {
 
     private void showGameScreen(boolean userGoesFirst) {
         GameScreenView gameScreenView = new GameScreenView();
-        GameSession model = new GameSession(userGoesFirst);
+        GameSession model = new GameSession(userGoesFirst, "Dora");
         GameScreenPresenter gameScreenPresenter = new GameScreenPresenter(model, gameScreenView);
         view.getScene().setRoot(gameScreenView);
         gameScreenView.getScene().getWindow().sizeToScene();

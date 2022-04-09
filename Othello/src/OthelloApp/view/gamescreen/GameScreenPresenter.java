@@ -23,9 +23,12 @@ public class GameScreenPresenter {
         if (this.model.activePlayerIsComputer()) {
             this.view.setClickableComputerTurnButton(true);
             view.disableAllGridButtons();
+            view.getTurnInstructionLabel().setText("Click \"Play Computer Turn\" to make the computer place a stone");
         } else {
             StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+            this.view.setClickableComputerTurnButton(false);
             setClickableGridButtons(activePlayerColor);
+            view.getTurnInstructionLabel().setText("Click a highlighted square to place a stone");
         }
         drawBoard();
     }
@@ -33,47 +36,50 @@ public class GameScreenPresenter {
     class ComputerTurnHandler implements EventHandler<ActionEvent> {
         public void handle(ActionEvent event) {
             int[] mostProfitableMove = model.findMostProfitableMove();
-            ArrayList<int[]> flippableStoneCoordinates = model.playComputerTurn(mostProfitableMove);
-            setButtonImage(mostProfitableMove[0], mostProfitableMove[1]);
+            ArrayList<int[]> flippableStoneCoordinates = model.playTurn(mostProfitableMove);
+            setButtonImage(mostProfitableMove);
             updateView(flippableStoneCoordinates);
             updatePlayerScores();
             model.switchActivePlayer();
             StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
-            setClickableGridButtons(activePlayerColor);
+            if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
+                view.getTurnInstructionLabel().setText("Click a highlighted square to place a stone");
+                setClickableGridButtons(activePlayerColor);
+            } else{
+                view.getTurnInstructionLabel().setText("You cannot place a stone - Click \"Play Computer Move\" to make the Computer place a stone");
+                model.switchActivePlayer();
+            }
             view.setClickableComputerTurnButton(model.activePlayerIsComputer());
         }
     }
 
 
     class StoneHandler implements EventHandler<ActionEvent> {
-        private int row;
-        private int column;
+        private final int[] coordinates = new int[2];
 
         public StoneHandler(int row, int column) {
-            this.row = row;
-            this.column = column;
+            this.coordinates[0] = row;
+            this.coordinates[1] = column;
         }
 
         public void handle(ActionEvent event) {
-            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
-            ArrayList<int[]> flippableStoneCoordinates = model.getBoard().findFlippableStones(row, column, activePlayerColor);
-            model.updateBoard(row, column, activePlayerColor);
-            System.out.println(model.getBoard());
-            setButtonImage(row, column);
+            ArrayList<int[]> flippableStoneCoordinates = model.playTurn(coordinates);
+            setButtonImage(coordinates);
             updateView(flippableStoneCoordinates);
             updatePlayerScores();
             model.switchActivePlayer();
             // If the Computer can play a turn, then disable the buttons so the user can't click on them, and enable the button that allows the computer to take a turn
             if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
+                view.getTurnInstructionLabel().setText("Click \"Play Computer Turn\" to make the computer place a stone");
                 view.disableAllGridButtons();
-                view.setClickableComputerTurnButton(model.activePlayerIsComputer());
                 // If Computer can't, then switch back to user and let user pick another move
             } else {
+                view.getTurnInstructionLabel().setText("Computer unable to place a stone and forfeits turn - click another square to place a stone");
                 model.switchActivePlayer();
-                activePlayerColor = model.getActivePlayer().getPlayerColor();
+                StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
                 setClickableGridButtons(activePlayerColor);
-                view.setClickableComputerTurnButton(model.activePlayerIsComputer());
             }
+            view.setClickableComputerTurnButton(model.activePlayerIsComputer());
         }
 
     }
@@ -91,14 +97,14 @@ public class GameScreenPresenter {
     private void drawBoard() {
         for (int row = 0; row < model.getBoard().getGRID().length; row++) {
             for (int column = 0; column < model.getBoard().getGRID()[row].length; column++) {
-                setButtonImage(row, column);
+                setButtonImage(new int[]{row, column});
             }
         }
     }
 
-    private void setButtonImage(int row, int column) {
-        Square square = this.model.getBoard().getGRID()[row][column];
-        Button button = this.view.getGridButtons()[row][column];
+    private void setButtonImage(int[] coordinates) {
+        Square square = this.model.getBoard().getGRID()[coordinates[0]][coordinates[1]];
+        Button button = this.view.getGridButtons()[coordinates[0]][coordinates[1]];
         String imageURL = getButtonImageURL(square);
         this.view.setButtonBackgroundImage(button, imageURL);
     }
@@ -120,11 +126,7 @@ public class GameScreenPresenter {
         for (int row = 0; row < view.getGridButtons().length; row++) {
             for (int column = 0; column < view.getGridButtons()[row].length; column++) {
                 Button button = this.view.getGridButtons()[row][column];
-                if (buttonIsValidMove(row, column, possibleMoves)) {
-                    button.setDisable(false);
-                } else {
-                    button.setDisable(true);
-                }
+                button.setDisable(!(buttonIsValidMove(row, column, possibleMoves)));
             }
         }
     }
@@ -141,9 +143,9 @@ public class GameScreenPresenter {
         return false;
     }
 
-    private void updateView(ArrayList<int[]> flippableStoneCoordinates) {
-        for (int[] flippableStoneCoordinate : flippableStoneCoordinates) {
-            setButtonImage(flippableStoneCoordinate[0], flippableStoneCoordinate[1]);
+    private void updateView(ArrayList<int[]> flippableStoneCoordinatesList) {
+        for (int[] flippableStoneCoordinates : flippableStoneCoordinatesList) {
+            setButtonImage(flippableStoneCoordinates);
         }
     }
 
