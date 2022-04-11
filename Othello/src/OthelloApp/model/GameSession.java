@@ -144,6 +144,38 @@ public class GameSession {
             e.printStackTrace();
         }
     }
+    private void createTurnTable() {
+        try {
+            Statement statement = getStatement();
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS turns (" +
+                    "gamesession_id NUMERIC(20) CONSTRAINT pk_gamesession_id," +
+                    "turn_id NUMERIC(60) CONSTRAINT nn_tt_ti NOT NULL CONSTRAINT pk_turn_id Primary key," +
+                    "start_date_time VARCHAR(25)," +
+                    "move_date_time VARCHAR(25)," +
+                    "row NUMERIC(8)," +
+                    "col NUMERIC(8), " +
+                    "FOREIGN Key(gamesession_id) REFERENCES gamesessions (gamesession_id));"
+            );
+            closeDbConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private void createFlippedPiecesTable() {
+        try {
+            Statement statement = getStatement();
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS flippedpieces (" +
+                    "turn_id NUMERIC(60) CONSTRAINT nn_fp_ti NOT NULL," +
+                    "row NUMERIC(8)," +
+                    "col NUMERIC(8)," +
+                    "FOREIGN KEY (turn_id) REFERENCES turns (turn_id));"
+            );
+            closeDbConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public Integer[] getPlayerScores() {
         Integer[] playersPoints = new Integer[2];
@@ -231,4 +263,7 @@ public class GameSession {
             e.printStackTrace(); // error handling
         }
     }
+
+    //TODO ADD updateTurnsTable()
+    //TODO ADD updateFlippedPieces()
 }
