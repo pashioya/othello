@@ -1,6 +1,8 @@
 package OthelloApp.view.gamescreen;
 
 import OthelloApp.model.GameSession;
+import OthelloApp.view.endScreen.EndScreenStatPresenter;
+import OthelloApp.view.endScreen.EndScreenStatView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import OthelloApp.model.*;
@@ -23,12 +25,12 @@ public class GameScreenPresenter {
         if (this.model.activePlayerIsComputer()) {
             this.view.setClickableComputerTurnButton(true);
             view.disableAllGridButtons();
-            view.getTurnInstructionLabel().setText("Click \"Play Computer Turn\" to make the computer place a stone");
+            view.getTurnInstructionLabel().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
         } else {
             StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
             this.view.setClickableComputerTurnButton(false);
             setClickableGridButtons(activePlayerColor);
-            view.getTurnInstructionLabel().setText("Click a highlighted square to place a stone");
+            view.getTurnInstructionLabel().setText("Click a highlighted square to place a stone.");
         }
         drawBoard();
     }
@@ -42,14 +44,18 @@ public class GameScreenPresenter {
             updatePlayerScores();
             model.switchActivePlayer();
             StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
-            if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
-                view.getTurnInstructionLabel().setText("Click a highlighted square to place a stone");
-                setClickableGridButtons(activePlayerColor);
-            } else{
-                view.getTurnInstructionLabel().setText("You cannot place a stone - Click \"Play Computer Move\" to make the Computer place a stone");
-                model.switchActivePlayer();
+            if (model.isOver()) {
+                showEndScreen();
+            } else {
+                if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
+                    view.getTurnInstructionLabel().setText("Click a highlighted square to place a stone");
+                    setClickableGridButtons(activePlayerColor);
+                } else {
+                    view.getTurnInstructionLabel().setText("You cannot place a stone - Click \"Play Computer Move\" to make the Computer place a stone.");
+                    model.switchActivePlayer();
+                }
+                view.setClickableComputerTurnButton(model.activePlayerIsComputer());
             }
-            view.setClickableComputerTurnButton(model.activePlayerIsComputer());
         }
     }
 
@@ -68,18 +74,22 @@ public class GameScreenPresenter {
             updateView(flippableStoneCoordinates);
             updatePlayerScores();
             model.switchActivePlayer();
-            // If the Computer can play a turn, then disable the buttons so the user can't click on them, and enable the button that allows the computer to take a turn
-            if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
-                view.getTurnInstructionLabel().setText("Click \"Play Computer Turn\" to make the computer place a stone");
-                view.disableAllGridButtons();
-                // If Computer can't, then switch back to user and let user pick another move
+            if (model.isOver()) {
+                showEndScreen();
             } else {
-                view.getTurnInstructionLabel().setText("Computer unable to place a stone and forfeits turn - click another square to place a stone");
-                model.switchActivePlayer();
-                StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
-                setClickableGridButtons(activePlayerColor);
+                // If the Computer can play a turn, then disable the buttons so the user can't click on them, and enable the button that allows the computer to take a turn
+                if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
+                    view.getTurnInstructionLabel().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
+                    view.disableAllGridButtons();
+                    // If Computer can't, then switch back to user and let user pick another move
+                } else {
+                    view.getTurnInstructionLabel().setText("Computer unable to place a stone - Click another square to place a stone.");
+                    model.switchActivePlayer();
+                    StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+                    setClickableGridButtons(activePlayerColor);
+                }
+                view.setClickableComputerTurnButton(model.activePlayerIsComputer());
             }
-            view.setClickableComputerTurnButton(model.activePlayerIsComputer());
         }
 
     }
@@ -158,6 +168,13 @@ public class GameScreenPresenter {
                 this.view.getComputerScoreLabel().setText(String.format("Computer: %d", playerScores[i]));
             }
         }
+    }
+
+    private void showEndScreen() {
+        EndScreenStatView endScreenView = new EndScreenStatView();
+        EndScreenStatPresenter endScreenPresenter = new EndScreenStatPresenter(model, endScreenView);
+        view.getScene().setRoot(endScreenView);
+        endScreenView.getScene().getWindow().sizeToScene();
     }
 }
 

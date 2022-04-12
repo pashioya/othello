@@ -27,7 +27,7 @@ public final class DB_UTIL {
     public static void closeDbConnection() {
         try {
             statement.close();
-//            connection.close();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

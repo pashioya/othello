@@ -294,6 +294,11 @@ public class Board {
         return (userStoneCount > 32);
     }
 
+    public boolean isTied(StoneColor stoneColor) {
+        int userStoneCount = countStones(stoneColor);
+        return (userStoneCount == 32);
+    }
+
     public int countStones(StoneColor stoneColor) {
         int playerStoneCount = 0;
         for (Square[] row : getGRID()) {
