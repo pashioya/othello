@@ -6,9 +6,13 @@ import OthelloApp.view.endScreen.EndScreenStatView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import OthelloApp.model.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class GameScreenPresenter {
 
@@ -45,7 +49,8 @@ public class GameScreenPresenter {
             model.switchActivePlayer();
             StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
             if (model.isOver()) {
-                showEndScreen();
+                view.disableAllGridButtons();
+                showGameOverAlert();
             } else {
                 if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
                     view.getTurnInstructionLabel().setText("Click a highlighted square to place a stone");
@@ -75,7 +80,7 @@ public class GameScreenPresenter {
             updatePlayerScores();
             model.switchActivePlayer();
             if (model.isOver()) {
-                showEndScreen();
+                showGameOverAlert();
             } else {
                 // If the Computer can play a turn, then disable the buttons so the user can't click on them, and enable the button that allows the computer to take a turn
                 if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
@@ -95,6 +100,23 @@ public class GameScreenPresenter {
     }
 
 
+    private void showGameOverAlert(){
+        Alert gameOverAlert = new Alert(Alert.AlertType.INFORMATION);
+        gameOverAlert.setTitle("Game over!");
+        gameOverAlert.setHeaderText("Neither player can play any more turns");
+        gameOverAlert.setContentText("Click \"Continue\" to view the results of your game.");
+        gameOverAlert.getButtonTypes().clear();
+        ButtonType continueButton = new ButtonType("Continue");
+        ButtonType cancelButton = new ButtonType("Cancel");
+        gameOverAlert.getButtonTypes().addAll(continueButton, cancelButton);
+        Optional<ButtonType> result = gameOverAlert.showAndWait();
+        if (result.get() == continueButton){
+            showEndScreen();
+        } else {
+            gameOverAlert.close();
+        }
+    }
+
     private void addEventHandlers() {
         for (int row = 0; row < view.getGridButtons().length; row++) {
             for (int col = 0; col < view.getGridButtons()[row].length; col++) {
@@ -102,7 +124,45 @@ public class GameScreenPresenter {
             }
         }
         view.getComputerTurnButton().setOnAction(new ComputerTurnHandler());
+        view.getRulesButton().setOnAction(event -> {
+            Alert rulesInfoAlert = createRulesInfoAlert();
+            rulesInfoAlert.showAndWait();
+        });
+        view.getQuitButton().setOnAction(event -> {
+            Alert quitGameAlert = new Alert(Alert.AlertType.WARNING);
+            quitGameAlert.setTitle("Confirm quit game");
+            quitGameAlert.setHeaderText("All progress in this game will be lost.");
+            quitGameAlert.setContentText("Quit anyway?");
+            quitGameAlert.getButtonTypes().clear();
+            ButtonType continueButton = new ButtonType("Continue");
+            ButtonType cancelButton = new ButtonType("Cancel");
+            quitGameAlert.getButtonTypes().addAll(continueButton, cancelButton);
+            Optional<ButtonType> result = quitGameAlert.showAndWait();
+            if (result.get() == continueButton){
+                Stage stage = (Stage)view.getScene().getWindow();
+                stage.close();
+            } else {
+                event.consume();
+            }
+        });
     }
+    public Alert createRulesInfoAlert(){
+        Alert rulesInfoAlert = new Alert(Alert.AlertType.INFORMATION);
+        rulesInfoAlert.setTitle("Othello Rules");
+        rulesInfoAlert.setHeaderText("Othello Rules");
+        rulesInfoAlert.setContentText("Othello is a two-player game. One player plays black stones and the other player plays white stones. " +
+                "The game begins with four stones (two white and two black) in the center of the board. The player that plays black stones makes the first move.\n\n" +
+                "Players make moves by placing stone of their respective colors on the board. " +
+                "A move is valid only if the placed stone outflanks an opposite-colored stone (or row of opposite-colored stones). " +
+                "A stone or row of stones is outflanked when it is bordered by opposite-colored stones at each end. " +
+                "Each player must outflank opposite-colored stones and flip them so they have the player's color. \n\n" +
+                "If a player is not able to flip any stones, the player forfeits his/her turn and the other player plays again. " +
+                "Players may not voluntarily forfeit a turn if a move is available.\n\n" +
+                "The game is over when neither player can make a move. The player with the most stones of his/her color wins the game."
+        );
+        return rulesInfoAlert;
+    }
+
 
     private void drawBoard() {
         for (int row = 0; row < model.getBoard().getGRID().length; row++) {
@@ -176,6 +236,8 @@ public class GameScreenPresenter {
         view.getScene().setRoot(endScreenView);
         endScreenView.getScene().getWindow().sizeToScene();
     }
+
+
 }
 
 

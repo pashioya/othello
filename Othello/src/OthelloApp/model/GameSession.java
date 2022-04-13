@@ -27,7 +27,6 @@ public class GameSession {
     private boolean isOver;
 
     public GameSession(boolean userGoesFirst, String userName) {
-        setIdNo();
         this.board = new Board();
         this.players = new Player[2];
         initializePlayers(userGoesFirst, userName);
@@ -39,6 +38,7 @@ public class GameSession {
         this.isWon = false;
         this.turns = new ArrayList<Turn>();
         createGameSessionsTable();
+        setIdNo();
         this.activeTurn = new Turn(this.activePlayer.getName());
 
     }
@@ -58,15 +58,6 @@ public class GameSession {
 
     public boolean isOver() {
         return board.isFull();
-    }
-
-    public boolean userWon() {
-        for (Player player : players) {
-            if (player instanceof User) {
-                return board.userWon(player.getPlayerColor());
-            }
-        }
-        return false;
     }
 
     private double getTimeElapsed() {
@@ -93,6 +84,10 @@ public class GameSession {
         this.endTimeMilisec = endTimeMilisec;
     }
 
+    public ArrayList<Turn> getTurns() {
+        return turns;
+    }
+
     public void setIdNo() {
         try {
             Statement statement = getStatement();
@@ -108,6 +103,31 @@ public class GameSession {
         }
     }
 
+
+
+
+    // -----------------------------------------------------------------
+
+    public boolean userWon() {
+        for (Player player : players) {
+            if (player instanceof User) {
+                return board.userWon(player.getPlayerColor());
+            }
+        }
+        return false;
+    }
+
+
+
+    public boolean isTied(){
+        for (Player player : players) {
+            if (player instanceof User) {
+                return board.isTied(player.getPlayerColor());
+            }
+        }
+        return false;
+    }
+
     public void initializePlayers(boolean userGoesFirst, String userName) {
         if (userGoesFirst) {
             this.players[0] = new User(StoneColor.BLACK, userName);
@@ -117,9 +137,6 @@ public class GameSession {
             this.players[1] = new User(StoneColor.WHITE, userName);
         }
     }
-
-
-    // -----------------------------------------------------------------
 
     public void updateBoard(int[] coordinates, StoneColor playerColor) {
         activeTurn.setPlacedCoordinate(coordinates);
@@ -144,38 +161,6 @@ public class GameSession {
             e.printStackTrace();
         }
     }
-    private void createTurnTable() {
-        try {
-            Statement statement = getStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS turns (" +
-                    "gamesession_id NUMERIC(20) CONSTRAINT pk_gamesession_id," +
-                    "turn_id NUMERIC(60) CONSTRAINT nn_tt_ti NOT NULL CONSTRAINT pk_turn_id Primary key," +
-                    "start_date_time VARCHAR(25)," +
-                    "move_date_time VARCHAR(25)," +
-                    "row NUMERIC(8)," +
-                    "col NUMERIC(8), " +
-                    "FOREIGN Key(gamesession_id) REFERENCES gamesessions (gamesession_id));"
-            );
-            closeDbConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    private void createFlippedPiecesTable() {
-        try {
-            Statement statement = getStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS flippedpieces (" +
-                    "turn_id NUMERIC(60) CONSTRAINT nn_fp_ti NOT NULL," +
-                    "row NUMERIC(8)," +
-                    "col NUMERIC(8)," +
-                    "FOREIGN KEY (turn_id) REFERENCES turns (turn_id));"
-            );
-            closeDbConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public Integer[] getPlayerScores() {
         Integer[] playersPoints = new Integer[2];
@@ -208,6 +193,7 @@ public class GameSession {
     }
 
     public void switchActivePlayer() {
+        this.activeTurn.setEndTime();
         if (this.activeTurn.getPlacedCoordinate() != null) {
             this.activeTurn.save(getIdNo());
         }
@@ -236,14 +222,15 @@ public class GameSession {
         StoneColor activePlayerColor = getActivePlayer().getPlayerColor();
         ArrayList<int[]> flippableStoneCoordinates = getBoard().findFlippableStones(moveCoordinates, activePlayerColor);
         updateBoard(moveCoordinates, activePlayerColor);
+        System.out.println(getBoard());
         updateGameSessionsTable();
-        System.out.println(board);
         return flippableStoneCoordinates;
     }
 
     public void updateGameSessionsTable() {
         setEndTimeMilisec(System.currentTimeMillis());
         try {
+            System.out.println("Opening connection to 'gamesessions' table on turn" + activeTurn.getTurnId());
             Statement statement = getStatement();
             statement.executeUpdate("INSERT INTO gamesessions (gamesession_id, start_date_time, time_elapsed, is_over, user_won, username, computer_name) " +
                     "VALUES ("
@@ -259,11 +246,24 @@ public class GameSession {
                     "       is_over = EXCLUDED.is_over, " +
                     "       user_won = EXCLUDED.user_won ");
             closeDbConnection();
+            System.out.println("Closed connection to 'gamesessions' table ");
         } catch (SQLException e) {
             e.printStackTrace(); // error handling
         }
     }
 
-    //TODO ADD updateTurnsTable()
-    //TODO ADD updateFlippedPieces()
+    public Turn getMostProfitableUserTurn(){
+        int maxFlipped = 0;
+        Turn mostProfitableTurn = null;
+        for (Turn turn : turns) {
+            if (turn.getName().equals(getUserName())){
+                if (turn.getFlippedStoneCoordinates().size() > maxFlipped){
+                    maxFlipped = turn.getFlippedStoneCoordinates().size();
+                    mostProfitableTurn = turn;
+                }
+            }
+        }
+        return mostProfitableTurn;
+    }
+
 }

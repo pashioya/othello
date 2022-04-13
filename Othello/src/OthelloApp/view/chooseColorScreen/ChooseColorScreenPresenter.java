@@ -15,17 +15,16 @@ public class ChooseColorScreenPresenter {
     }
 
     private void addEventHandlers() {
-        view.getBlackButton().setOnAction(e -> {
-            showGameScreen(true);
-        });
-        view.getWhiteButton().setOnAction(e -> {
-            showGameScreen(false);
+        view.getStartButton().setOnAction(e -> {
+            boolean userGoesFirst = view.getSelectedColorButtonText().toLowerCase().equals("black") ? true : false;
+            String userName = view.getNameField().getText();
+            showGameScreen(userGoesFirst, userName);
         });
     }
 
-    private void showGameScreen(boolean userGoesFirst) {
+    private void showGameScreen(boolean userGoesFirst, String userName) {
         GameScreenView gameScreenView = new GameScreenView();
-        GameSession model = new GameSession(userGoesFirst, "Dora");
+        GameSession model = new GameSession(userGoesFirst, userName);
         GameScreenPresenter gameScreenPresenter = new GameScreenPresenter(model, gameScreenView);
         view.getScene().setRoot(gameScreenView);
         gameScreenView.getScene().getWindow().sizeToScene();
