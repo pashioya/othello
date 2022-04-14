@@ -9,14 +9,16 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
 public class GameScreenView extends BorderPane {
     // private Node attributes (controls)
-    private VBox vBoxTopLabels;
+    private VBox vBoxMenuTopLabels;
     private HBox hBoxBottomButtons;
+    private MenuItem helpMenuItem;
     private Label playerScoreLabel;
     private Label computerScoreLabel;
     private Label turnInstructionLabel;
@@ -26,7 +28,8 @@ public class GameScreenView extends BorderPane {
     private Label clock;
     private GridPane grid;
     private Button[][] gridButtons;
-    private final static Font FONT = new Font("Consolas", 15);
+    private final static Font TITLE_FONT = new Font("Consolas", 40);
+    private final static Font BODY_FONT = new Font("Consolas", 15);
 
     public GameScreenView() {
         initialiseNodes();
@@ -35,7 +38,7 @@ public class GameScreenView extends BorderPane {
 
     private void initialiseNodes() {
         // create and configure controls
-        this.vBoxTopLabels = new VBox();
+        this.vBoxMenuTopLabels = new VBox();
         this.hBoxBottomButtons = new HBox();
         initializeGrid();
         this.playerScoreLabel = new Label("Player: ");
@@ -59,10 +62,10 @@ public class GameScreenView extends BorderPane {
         hBoxPlayerScoreLabels.setAlignment(Pos.CENTER);
         hBoxPlayerScoreLabels.setPadding(new Insets(10, 10, 10, 10));
         hBoxPlayerScoreLabels.setSpacing(100);
-        vBoxTopLabels.getChildren().addAll(hBoxPlayerScoreLabels, turnInstructionLabel);
-        this.setTop(vBoxTopLabels);
-        this.setMargin(vBoxTopLabels, new Insets(10, 10, 10, 10));
-        vBoxTopLabels.setAlignment(Pos.CENTER);
+        vBoxMenuTopLabels.getChildren().addAll(hBoxPlayerScoreLabels, turnInstructionLabel);
+        this.setTop(vBoxMenuTopLabels);
+        this.setMargin(vBoxMenuTopLabels, new Insets(10, 10, 10, 10));
+        vBoxMenuTopLabels.setAlignment(Pos.CENTER);
     }
 
     public void layoutHboxBottom() {
@@ -75,12 +78,13 @@ public class GameScreenView extends BorderPane {
     }
 
     public void styleNodes(){
-        playerScoreLabel.setFont(FONT);
-        computerScoreLabel.setFont(FONT);
-        turnInstructionLabel.setFont(FONT);
-        rulesButton.setFont(FONT);
-        computerTurnButton.setFont(FONT);
-        quitButton.setFont(FONT);
+        playerScoreLabel.setFont(BODY_FONT);
+        computerScoreLabel.setFont(BODY_FONT);
+        turnInstructionLabel.setFont(BODY_FONT);
+        rulesButton.setFont(BODY_FONT);
+        computerTurnButton.setFont(BODY_FONT);
+        quitButton.setFont(BODY_FONT);
+        Font font = new Font("Consolas", 10);
     }
 
     public String getButtonImageURL(StoneColor stoneColor) {
