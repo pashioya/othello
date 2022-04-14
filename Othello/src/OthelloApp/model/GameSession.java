@@ -23,9 +23,6 @@ public class GameSession {
     private final long startTimeMilisec;
     private long endTimeMilisec;
 
-    private boolean isWon;
-    private boolean isOver;
-
     public GameSession(boolean userGoesFirst, String userName) {
         this.board = new Board();
         this.players = new Player[2];
@@ -34,8 +31,6 @@ public class GameSession {
         this.startDateTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SS").format(new Date());
         this.startTimeMilisec = System.currentTimeMillis();
         this.endTimeMilisec = 0;
-        this.isOver = false;
-        this.isWon = false;
         this.turns = new ArrayList<Turn>();
         createGameSessionsTable();
         setIdNo();
@@ -57,7 +52,7 @@ public class GameSession {
     }
 
     public boolean isOver() {
-        return board.isFull();
+        return (board.isFull() || board.containsOnlyOneColorStone());
     }
 
     private double getTimeElapsed() {

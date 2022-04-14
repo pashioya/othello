@@ -10,9 +10,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class ChooseColorScreenView extends BorderPane {
-    private Label chooseAColor;
+    private Text chooseAColor;
     private GridPane colorChoicesGrid;
     private Label userName;
     private TextField nameField;
@@ -31,7 +32,7 @@ public class ChooseColorScreenView extends BorderPane {
     }
 
     private void initializeNodes() {
-        this.chooseAColor = new Label("Choose a color");
+        this.chooseAColor = new Text("Choose a color");
 
         this.blackButton = new RadioButton("Black");
         this.whiteButton = new RadioButton("White");
@@ -75,13 +76,9 @@ public class ChooseColorScreenView extends BorderPane {
     }
 
     private void layoutColorChoiceUserNameGrid() {
-//        colorChoicesGrid.setGridLinesVisible(true);
         ImageView blackStoneImage = new ImageView(new Image("black.png"));
         ImageView whiteStoneImage = new ImageView(new Image("white.png"));
-        blackStoneImage.setFitWidth(IMAGE_DIMENSION);
-        blackStoneImage.setFitHeight(IMAGE_DIMENSION);
-        whiteStoneImage.setFitWidth(IMAGE_DIMENSION);
-        whiteStoneImage.setFitHeight(IMAGE_DIMENSION);
+        setImageDimensions(blackStoneImage, whiteStoneImage);
         GridPane.setConstraints(blackStoneImage, 0, 0, 1, 1, HPos.CENTER, VPos.BOTTOM);
         GridPane.setConstraints(whiteStoneImage, 1, 0, 1, 1, HPos.CENTER, VPos.BOTTOM);
         GridPane.setConstraints(blackButton, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
@@ -92,15 +89,20 @@ public class ChooseColorScreenView extends BorderPane {
         setRowAndColumnConstraints();
     }
 
+    private void setImageDimensions(ImageView blackStoneImage, ImageView whiteStoneImage){
+        blackStoneImage.setFitWidth(IMAGE_DIMENSION);
+        blackStoneImage.setFitHeight(IMAGE_DIMENSION);
+        whiteStoneImage.setFitWidth(IMAGE_DIMENSION);
+        whiteStoneImage.setFitHeight(IMAGE_DIMENSION);
+    }
+
     private void layoutBottomGrid(){
         GridPane gridNameInputButtons = new GridPane();
-//        gridNameInputButtons.setGridLinesVisible(true);
         nameField.setPrefWidth(250);
         GridPane.setConstraints(userName, 0,0, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER);
         GridPane.setConstraints(nameField, 1,0, 1, 1, HPos.LEFT, VPos.CENTER, Priority.ALWAYS, Priority.NEVER);
         GridPane.setConstraints(backButton, 0, 1, 1, 1, HPos.LEFT, VPos.CENTER, Priority.ALWAYS, Priority.NEVER);
         GridPane.setConstraints(startButton, 1, 1, 1, 1, HPos.RIGHT, VPos.CENTER, Priority.ALWAYS, Priority.NEVER);
-//        gridNameInputButtons.setPadding(new Insets(10));
         gridNameInputButtons.setVgap(10);
         gridNameInputButtons.getChildren().addAll(userName, nameField, backButton, startButton);
         this.setBottom(gridNameInputButtons);
@@ -121,8 +123,6 @@ public class ChooseColorScreenView extends BorderPane {
             colorChoicesGrid.getColumnConstraints().add(columnConstraints);
         }
     }
-
-
 
     public Button getBackButton() {
         return backButton;

@@ -11,12 +11,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class EndScreenStatView extends BorderPane {
-    private Label gameOutcomeLabel;
-    private Label scoreLabel;
+    private Text gameOutcome;
+    private Text score;
     private Label averageDurationLabel;
     private Label mostProfitableMoveLabel;
 
@@ -29,7 +31,11 @@ public class EndScreenStatView extends BorderPane {
     private RadioButton moveProfitabilityHistogramRadioButton;
 
     private Button playAgainButton;
-    private final String FONT_FAMILY = "Consolas";
+    private Button allGameStatisticsButton;
+    private static final Font TITLE_FONT = new Font("Consolas", 30);
+    private static final Font SUBTITLE_FONT = new Font("Consolas", 20);
+    private static final Font BODY_FONT = new Font("Consolas", 15);
+
 
     public EndScreenStatView() {
         initializeNodes();
@@ -38,8 +44,8 @@ public class EndScreenStatView extends BorderPane {
     }
 
     private void initializeNodes(){
-        this.gameOutcomeLabel = new Label();
-        this.scoreLabel = new Label();
+        this.gameOutcome = new Text();
+        this.score = new Text();
 
         ToggleGroup toggleGroup = new ToggleGroup();
         this.moveProfitabilityRadioButton = new RadioButton("Number of Stones Flipped per Move");
@@ -72,14 +78,17 @@ public class EndScreenStatView extends BorderPane {
 
         this.averageDurationLabel = new Label();
         this.mostProfitableMoveLabel = new Label();
+
+        this.playAgainButton = new Button("Play Again");
+        this.allGameStatisticsButton = new Button("View All Games Statistics");
     }
 
     private void layoutNodes(){
         this.setPadding(new Insets(10));
-        VBox topLabels = new VBox();
-        topLabels.getChildren().addAll(gameOutcomeLabel, scoreLabel);
-        this.setTop(topLabels);
-        topLabels.setAlignment(Pos.CENTER);
+        VBox topTexts = new VBox();
+        topTexts.getChildren().addAll(gameOutcome, score);
+        this.setTop(topTexts);
+        topTexts.setAlignment(Pos.CENTER);
 
         this.setCenter(profitabilitiesPerMoveChart);
 
@@ -95,32 +104,33 @@ public class EndScreenStatView extends BorderPane {
         this.setRight(rightStatisticsLabels);
         BorderPane.setMargin(rightStatisticsLabels, new Insets(200, 10, 200, 10));
         rightStatisticsLabels.setSpacing(15);
+
+        HBox bottomButtons = new HBox();
+        bottomButtons.getChildren().addAll(playAgainButton, allGameStatisticsButton);
+
     }
 
     private void styleNodes(){
-        Font fontTitle = new Font(FONT_FAMILY, 30);
-        Font fontSubtitle = new Font(FONT_FAMILY, 20);
-        Font fontBody = new Font(FONT_FAMILY, 15);
         final double MAX_WIDTH = 200;
-        gameOutcomeLabel.setFont(fontTitle);
-        scoreLabel.setFont(fontSubtitle);
-        moveProfitabilityRadioButton.setFont(fontBody);
+        gameOutcome.setFont(TITLE_FONT);
+        score.setFont(SUBTITLE_FONT);
+        moveProfitabilityRadioButton.setFont(BODY_FONT);
         moveProfitabilityRadioButton.setMaxWidth(MAX_WIDTH);
         moveProfitabilityRadioButton.setWrapText(true);
 
-        moveDurationRadioButton.setFont(fontBody);
+        moveDurationRadioButton.setFont(BODY_FONT);
         moveDurationRadioButton.setMaxWidth(MAX_WIDTH);
         moveDurationRadioButton.setWrapText(true);
 
-        moveProfitabilityHistogramRadioButton.setFont(fontBody);
+        moveProfitabilityHistogramRadioButton.setFont(BODY_FONT);
         moveProfitabilityHistogramRadioButton.setMaxWidth(MAX_WIDTH);
         moveProfitabilityHistogramRadioButton.setWrapText(true);
 
-        mostProfitableMoveLabel.setFont(fontBody);
+        mostProfitableMoveLabel.setFont(BODY_FONT);
         mostProfitableMoveLabel.setMaxWidth(MAX_WIDTH);
         mostProfitableMoveLabel.setWrapText(true);
 
-        averageDurationLabel.setFont(fontBody);
+        averageDurationLabel.setFont(BODY_FONT);
         averageDurationLabel.setMaxWidth(MAX_WIDTH);
         averageDurationLabel.setWrapText(true);
 
@@ -138,12 +148,12 @@ public class EndScreenStatView extends BorderPane {
         return moveProfitabilityHistogramRadioButton;
     }
 
-    public Label getGameOutcomeLabel() {
-        return gameOutcomeLabel;
+    public Text getGameOutcome() {
+        return gameOutcome;
     }
 
-    public Label getScoreLabel() {
-        return scoreLabel;
+    public Text getScore() {
+        return score;
     }
 
     public ScatterChart<Number, Number> getProfitabilitiesPerMoveChart() {

@@ -34,12 +34,12 @@ public class EndScreenStatPresenter {
 
     private void updateView() {
         if (model.isTied()) {
-            view.getGameOutcomeLabel().setText("It's a tie!");
+            view.getGameOutcome().setText("It's a tie!");
         } else {
             if (model.userWon()) {
-                view.getGameOutcomeLabel().setText("Congratulations! You win!");
+                view.getGameOutcome().setText("Congratulations! You win!");
             } else {
-                view.getGameOutcomeLabel().setText("You lose! Better luck next time.");
+                view.getGameOutcome().setText("You lose! Better luck next time.");
             }
         }
         displayUserScore();
@@ -80,7 +80,7 @@ public class EndScreenStatPresenter {
         Integer[] playerScores = this.model.getPlayerScores();
         for (int i = 0; i < playerScores.length; i++) {
             if (this.model.getPlayers()[i] instanceof User) {
-                this.view.getScoreLabel().setText(String.format("Your score: %d stones", playerScores[i]));
+                this.view.getScore().setText(String.format("Your score: %d stones", playerScores[i]));
             }
         }
     }

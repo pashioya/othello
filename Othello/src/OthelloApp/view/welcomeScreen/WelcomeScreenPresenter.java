@@ -5,6 +5,9 @@ import OthelloApp.view.chooseColorScreen.ChooseColorScreenPresenter;
 import OthelloApp.view.chooseColorScreen.ChooseColorScreenView;
 import OthelloApp.view.gamescreen.GameScreenPresenter;
 import OthelloApp.view.gamescreen.GameScreenView;
+import OthelloApp.view.rulesScreen.RulesScreenPresenter;
+import OthelloApp.view.rulesScreen.RulesScreenView;
+import javafx.stage.Stage;
 
 public class WelcomeScreenPresenter {
     private final WelcomeScreenView view;
@@ -18,6 +21,9 @@ public class WelcomeScreenPresenter {
         view.getNewGameButton().setOnAction(event ->{
             showChooseColorScreen();
         });
+        view.getRulesButton().setOnAction(event -> {
+            showRulesScreen();
+        });
     }
 
     private void showChooseColorScreen(){
@@ -25,5 +31,16 @@ public class WelcomeScreenPresenter {
         ChooseColorScreenPresenter ChooseColorScreenPresenter = new ChooseColorScreenPresenter(chooseColorScreenView);
         view.getScene().setRoot(chooseColorScreenView);
         chooseColorScreenView.getScene().getWindow().sizeToScene();
+        Stage stage = (Stage) chooseColorScreenView.getScene().getWindow();
+        stage.centerOnScreen();
+    }
+
+    private void showRulesScreen(){
+        RulesScreenView rulesScreenView = new RulesScreenView();
+        RulesScreenPresenter rulesScreenPresenter = new RulesScreenPresenter(rulesScreenView);
+        view.getScene().setRoot(rulesScreenView);
+        rulesScreenView.getScene().getWindow().sizeToScene();
+        Stage stage = (Stage) rulesScreenView.getScene().getWindow();
+        stage.centerOnScreen();
     }
 }

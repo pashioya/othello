@@ -15,6 +15,8 @@ public class WelcomeScreenView extends VBox{
     private Button rulesButton;
     private Button gameStatisticsButton;
     private final static Font BODY_FONT = new Font("Consolas", 20);
+    private final static double IMAGE_WIDTH = 500;
+    private final static double BUTTON_WIDTH = 200;
 
     public WelcomeScreenView() {
         initializeNodes();
@@ -30,13 +32,14 @@ public class WelcomeScreenView extends VBox{
     private void layoutNodes(){
         ImageView othelloImageView = new ImageView(othelloImage);
         othelloImageView.setPreserveRatio(true);
-        othelloImageView.setFitWidth(500);
-        newGameButton.setPrefWidth(200);
-        gameStatisticsButton.setPrefWidth(200);
-        rulesButton.setPrefWidth(200);
+        othelloImageView.setFitWidth(IMAGE_WIDTH);
+        newGameButton.setPrefWidth(BUTTON_WIDTH);
+        gameStatisticsButton.setPrefWidth(BUTTON_WIDTH);
+        rulesButton.setPrefWidth(BUTTON_WIDTH);
         this.getChildren().addAll(othelloImageView, newGameButton, gameStatisticsButton, rulesButton);
         this.setSpacing(20);
         this.setAlignment(Pos.TOP_CENTER);
+        VBox.setMargin(rulesButton, new Insets(0, 0, 50, 0));
         setFonts();
     }
 
