@@ -6,6 +6,8 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static OthelloApp.db_util.DB_UTIL.closeDbConnection;
 import static OthelloApp.db_util.DB_UTIL.getStatement;
@@ -55,7 +57,7 @@ public class GameSession {
         return (board.isFull() || board.containsOnlyOneColorStone());
     }
 
-    private double getTimeElapsed() {
+    public double getTimeElapsed() {
         return (double) (endTimeMilisec - startTimeMilisec) / 1000;
     }
 
@@ -146,27 +148,36 @@ public class GameSession {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS gamesessions (" +
                     "gamesession_id NUMERIC(20) CONSTRAINT pk_gamesession_id PRIMARY KEY, " +
                     "start_date_time VARCHAR(50) CONSTRAINT nn_gs_start_date_time NOT NULL, " +
-                    "time_elapsed NUMERIC(10,2) DEFAULT 0, " +
+                    "time_elapsed NUMERIC(10,3) DEFAULT 0, " +
                     "is_over BOOLEAN DEFAULT FALSE, " +
                     "user_won BOOLEAN DEFAULT FALSE, " +
                     "username VARCHAR(25) CONSTRAINT nn_username NOT NULL, " +
-                    "computer_name VARCHAR(25) CONSTRAINT nn_computer_name NOT NULL);");
+                    "computer_name VARCHAR(25) CONSTRAINT nn_computer_name NOT NULL, "+
+                    "number_stones_user NUMERIC(2) DEFAULT 0);");
             closeDbConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public Integer[] getPlayerScores() {
-        Integer[] playersPoints = new Integer[2];
+    public HashMap<Player, Integer> getPlayerScores() {
+        HashMap<Player, Integer> playersScores = new HashMap<>();
         for (int i = 0; i < getPlayers().length; i++) {
             Player player = getPlayers()[i];
-            StoneColor playerColor = player.getPlayerColor();
-            int playerPoints = getBoard().countStones(playerColor);
-            System.out.println(playerPoints);
-            playersPoints[i] = playerPoints;
+            int playerPoints = getBoard().countStones(player.getPlayerColor());
+            playersScores.put(player, playerPoints);
         }
-        return playersPoints;
+        return playersScores;
+    }
+
+    public int getUserScore(){
+        HashMap<Player, Integer> playerScores = getPlayerScores();
+        for (Map.Entry<Player, Integer> playerScore : playerScores.entrySet()) {
+            if (playerScore.getKey() instanceof User) {
+                return playerScore.getValue();
+            }
+        }
+        return 0;
     }
 
     public String getUserName() {
@@ -225,9 +236,8 @@ public class GameSession {
     public void updateGameSessionsTable() {
         setEndTimeMilisec(System.currentTimeMillis());
         try {
-            System.out.println("Opening connection to 'gamesessions' table on turn" + activeTurn.getTurnId());
             Statement statement = getStatement();
-            statement.executeUpdate("INSERT INTO gamesessions (gamesession_id, start_date_time, time_elapsed, is_over, user_won, username, computer_name) " +
+            statement.executeUpdate("INSERT INTO gamesessions (gamesession_id, start_date_time, time_elapsed, is_over, user_won, username, computer_name, number_stones_user) " +
                     "VALUES ("
                     + getIdNo() + ", '"
                     + getStartDateTime() + "', "
@@ -235,13 +245,15 @@ public class GameSession {
                     + isOver() + ", "
                     + userWon() + ", '"
                     + getUserName() + "', '"
-                    + getComputerName() + "') " +
+                    + getComputerName() + "', "
+                    + getUserScore() + " " +
+                    ") " +
                     "ON CONFLICT (gamesession_id) DO UPDATE " +
                     "SET  time_elapsed= EXCLUDED.time_elapsed, " +
                     "       is_over = EXCLUDED.is_over, " +
-                    "       user_won = EXCLUDED.user_won ");
+                    "       user_won = EXCLUDED.user_won, " +
+                    "       number_stones_user = EXCLUDED.number_stones_user ");
             closeDbConnection();
-            System.out.println("Closed connection to 'gamesessions' table ");
         } catch (SQLException e) {
             e.printStackTrace(); // error handling
         }
@@ -259,6 +271,16 @@ public class GameSession {
             }
         }
         return mostProfitableTurn;
+    }
+
+    public ArrayList<Integer> getUserMoveProfitabilitiesList(){
+        ArrayList<Integer> userMoveProfitabilities = new ArrayList<>();
+        for (Turn turn : getTurns()) {
+            if (turn.getName().equals(getUserName())) {
+                userMoveProfitabilities.add(turn.getFlippedStoneCoordinates().size());
+            }
+        }
+        return userMoveProfitabilities;
     }
 
 }

@@ -1,37 +1,39 @@
 package OthelloApp.view.gamescreen;
 
-import OthelloApp.model.GameSession;
+import OthelloApp.model.*;
 import OthelloApp.view.endScreen.EndScreenStatPresenter;
 import OthelloApp.view.endScreen.EndScreenStatView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import OthelloApp.model.*;
+import OthelloApp.model.GameSession.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class GameScreenPresenter {
 
-    private final GameSession model;
+    private final Game model;
     private final GameScreenView view;
 
-    public GameScreenPresenter(GameSession model, GameScreenView view) {
+    public GameScreenPresenter(Game model, GameScreenView view) {
         this.model = model;
         this.view = view;
-        System.out.println(this.model.getActivePlayer());
-        System.out.println(this.model.getBoard());
+        System.out.println(this.model.getActiveSession().getActivePlayer());
+        System.out.println(this.model.getActiveSession().getBoard());
         updatePlayerScores();
         addEventHandlers();
-        if (this.model.activePlayerIsComputer()) {
+        if (this.model.getActiveSession().activePlayerIsComputer()) {
             this.view.setClickableComputerTurnButton(true);
             view.disableAllGridButtons();
             view.getTurnInstruction().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
         } else {
-            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+            StoneColor activePlayerColor = model.getActiveSession().getActivePlayer().getPlayerColor();
             this.view.setClickableComputerTurnButton(false);
             setClickableGridButtons(activePlayerColor);
             view.getTurnInstruction().setText("Click a highlighted square to place a stone.");
@@ -41,25 +43,25 @@ public class GameScreenPresenter {
 
     class ComputerTurnHandler implements EventHandler<ActionEvent> {
         public void handle(ActionEvent event) {
-            int[] mostProfitableMove = model.findMostProfitableMove();
-            ArrayList<int[]> flippableStoneCoordinates = model.playTurn(mostProfitableMove);
+            int[] mostProfitableMove = model.getActiveSession().findMostProfitableMove();
+            ArrayList<int[]> flippableStoneCoordinates = model.getActiveSession().playTurn(mostProfitableMove);
             setButtonImage(mostProfitableMove);
             updateView(flippableStoneCoordinates);
             updatePlayerScores();
-            model.switchActivePlayer();
-            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
-            if (model.isOver()) {
+            model.getActiveSession().switchActivePlayer();
+            StoneColor activePlayerColor = model.getActiveSession().getActivePlayer().getPlayerColor();
+            if (model.getActiveSession().isOver()) {
                 view.disableAllGridButtons();
                 showGameOverAlert();
             } else {
-                if (model.getBoard().hasValidMoves(activePlayerColor)) {
+                if (model.getActiveSession().getBoard().hasValidMoves(activePlayerColor)) {
                     view.getTurnInstruction().setText("Click a highlighted square to place a stone.");
                     setClickableGridButtons(activePlayerColor);
                 } else {
                     view.getTurnInstruction().setText("You cannot place a stone - Click \"Play Computer Move\" to make the Computer place a stone.");
-                    model.switchActivePlayer();
+                    model.getActiveSession().switchActivePlayer();
                 }
-                view.setClickableComputerTurnButton(model.activePlayerIsComputer());
+                view.setClickableComputerTurnButton(model.getActiveSession().activePlayerIsComputer());
             }
         }
     }
@@ -74,26 +76,27 @@ public class GameScreenPresenter {
         }
 
         public void handle(ActionEvent event) {
-            ArrayList<int[]> flippableStoneCoordinates = model.playTurn(coordinates);
+            ArrayList<int[]> flippableStoneCoordinates = model.getActiveSession().playTurn(coordinates);
             setButtonImage(coordinates);
             updateView(flippableStoneCoordinates);
             updatePlayerScores();
-            model.switchActivePlayer();
-            if (model.isOver()) {
+            model.getActiveSession().switchActivePlayer();
+            if (model.getActiveSession().isOver()) {
+                view.disableAllGridButtons();
                 showGameOverAlert();
             } else {
                 // If the Computer can play a turn, then disable the buttons so the user can't click on them, and enable the button that allows the computer to take a turn
-                if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
+                if (model.getActiveSession().getBoard().hasValidMoves(model.getActiveSession().getActivePlayer().getPlayerColor())) {
                     view.getTurnInstruction().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
                     view.disableAllGridButtons();
                     // If Computer can't, then switch back to user and let user pick another move
                 } else {
                     view.getTurnInstruction().setText("Computer unable to place a stone - Click another square to place a stone.");
-                    model.switchActivePlayer();
-                    StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+                    model.getActiveSession().switchActivePlayer();
+                    StoneColor activePlayerColor = model.getActiveSession().getActivePlayer().getPlayerColor();
                     setClickableGridButtons(activePlayerColor);
                 }
-                view.setClickableComputerTurnButton(model.activePlayerIsComputer());
+                view.setClickableComputerTurnButton(model.getActiveSession().activePlayerIsComputer());
             }
         }
 
@@ -165,15 +168,15 @@ public class GameScreenPresenter {
 
 
     private void drawBoard() {
-        for (int row = 0; row < model.getBoard().getGRID().length; row++) {
-            for (int column = 0; column < model.getBoard().getGRID()[row].length; column++) {
+        for (int row = 0; row < model.getActiveSession().getBoard().getGRID().length; row++) {
+            for (int column = 0; column < model.getActiveSession().getBoard().getGRID()[row].length; column++) {
                 setButtonImage(new int[]{row, column});
             }
         }
     }
 
     private void setButtonImage(int[] coordinates) {
-        Square square = this.model.getBoard().getGRID()[coordinates[0]][coordinates[1]];
+        Square square = this.model.getActiveSession().getBoard().getGRID()[coordinates[0]][coordinates[1]];
         Button button = this.view.getGridButtons()[coordinates[0]][coordinates[1]];
         String imageURL = getButtonImageURL(square);
         this.view.setButtonBackgroundImage(button, imageURL);
@@ -192,7 +195,7 @@ public class GameScreenPresenter {
     }
 
     private void setClickableGridButtons(StoneColor stoneColor) {
-        ArrayList<int[]> possibleMoves = this.model.getBoard().findAllPossibleMoves(stoneColor);
+        ArrayList<int[]> possibleMoves = this.model.getActiveSession().getBoard().findAllPossibleMoves(stoneColor);
         for (int row = 0; row < view.getGridButtons().length; row++) {
             for (int column = 0; column < view.getGridButtons()[row].length; column++) {
                 Button button = this.view.getGridButtons()[row][column];
@@ -219,15 +222,16 @@ public class GameScreenPresenter {
         }
     }
 
-    public void updatePlayerScores() {
-        Integer[] playerScores = this.model.getPlayerScores();
-        for (int i = 0; i < playerScores.length; i++) {
-            if (this.model.getPlayers()[i] instanceof User) {
-                this.view.getPlayerScoreLabel().setText(String.format("Player: %d", playerScores[i]));
-            } else if (this.model.getPlayers()[i] instanceof Computer) {
-                this.view.getComputerScore().setText(String.format("Computer: %d", playerScores[i]));
+    private void updatePlayerScores() {
+        HashMap<Player, Integer> playerScores = this.model.getActiveSession().getPlayerScores();
+        for (Map.Entry<Player, Integer> playerScore : playerScores.entrySet()) {
+            if (playerScore.getKey() instanceof User) {
+                this.view.getPlayerScoreLabel().setText(String.format("Player: %d", playerScore.getValue()));
+            } else {
+                this.view.getComputerScore().setText(String.format("Computer: %d", playerScore.getValue()));
             }
         }
+
     }
 
     private void showEndScreen() {

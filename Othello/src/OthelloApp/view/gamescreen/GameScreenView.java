@@ -192,6 +192,8 @@ public class GameScreenView extends BorderPane {
     public Text getTurnInstruction() {
         return turnInstruction;
     }
+
+
 }
 
 

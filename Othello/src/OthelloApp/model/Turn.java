@@ -20,7 +20,6 @@ public class Turn {
     private long endTimeMilisec;
     private int[] placedCoordinate;
     private ArrayList<int[]> flippedStoneCoordinates;
-    private String endTime;
 
     public Turn(String name) {
         if (turnCount == 0) {
@@ -60,7 +59,6 @@ public class Turn {
     public void saveTurn(int gameSessionID) {
         // use turnID, placedCoordinate, userType, and startTimeMilisec to update the SQL database
         try {
-            System.out.println("Opening connection to 'turns' table on turn " + getTurnId());
             Statement statement = getStatement();
             statement.executeUpdate("INSERT INTO turns (gamesession_id, turn_id, player_name, start_date_time, time_elapsed, placed_stone_row, placed_stone_column) " +
                     "VALUES ("
@@ -72,7 +70,6 @@ public class Turn {
                     + getPlacedCoordinate()[0] + ", "
                     + getPlacedCoordinate()[1] + ")");
             closeDbConnection();
-            System.out.println("Closed connection to 'turns' table");
         } catch (SQLException e) {
             e.printStackTrace(); // error handling
         }
@@ -117,7 +114,6 @@ public class Turn {
         // use turnID and flippedStoneCoordinates to update the SQL database
         if (flippedStoneCoordinates.size() > 0) {
             try {
-                System.out.println("Opening connection to 'flipped_pieces' table on turn " + getTurnId());
                 Statement statement = getStatementAutoCommitFalse();
                 statement.executeUpdate("BEGIN TRANSACTION;");
                 for (int[] flippedStoneCoordinate : getFlippedStoneCoordinates()) {
@@ -130,7 +126,6 @@ public class Turn {
                 }
                 statement.executeUpdate("COMMIT;");
                 closeDbConnection();
-                System.out.println("Closed connection to 'flipped_pieces' table");
             } catch (SQLException e) {
                 e.printStackTrace(); // error handling
             }

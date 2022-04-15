@@ -1,10 +1,8 @@
 package OthelloApp.view.welcomeScreen;
 
-import OthelloApp.model.GameSession;
+import OthelloApp.model.Game;
 import OthelloApp.view.chooseColorScreen.ChooseColorScreenPresenter;
 import OthelloApp.view.chooseColorScreen.ChooseColorScreenView;
-import OthelloApp.view.gamescreen.GameScreenPresenter;
-import OthelloApp.view.gamescreen.GameScreenView;
 import OthelloApp.view.rulesScreen.RulesScreenPresenter;
 import OthelloApp.view.rulesScreen.RulesScreenView;
 import javafx.stage.Stage;
@@ -23,6 +21,9 @@ public class WelcomeScreenPresenter {
         });
         view.getRulesButton().setOnAction(event -> {
             showRulesScreen();
+        });
+        view.getGameStatisticsButton().setOnAction(event ->{
+//            showAllGameStatisticsScreen();
         });
     }
 
@@ -43,4 +44,6 @@ public class WelcomeScreenPresenter {
         Stage stage = (Stage) rulesScreenView.getScene().getWindow();
         stage.centerOnScreen();
     }
+
+
 }

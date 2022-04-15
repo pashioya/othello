@@ -59,7 +59,7 @@ public class RulesScreenView extends GridPane {
         this.gameEndHeader = new Text("Game End");
         this.gameEnd = new Text("""
                 The game is over when neither player can make a move. The player with the most stones of his/her color on the board wins the game. 
-                The game ends if a board is not full and the board only contains stones of one player's color.
+                The game may also end if a board is not full and the board only contains stones of one player's color.
                 """);
         this.gameEndImage = new Image("gameEnd.jpg");
         this.backButton = new Button("Back");

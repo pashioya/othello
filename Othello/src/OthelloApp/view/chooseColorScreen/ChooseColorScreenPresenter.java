@@ -1,5 +1,6 @@
 package OthelloApp.view.chooseColorScreen;
 
+import OthelloApp.model.Game;
 import OthelloApp.model.GameSession;
 import OthelloApp.view.gamescreen.GameScreenPresenter;
 import OthelloApp.view.gamescreen.GameScreenView;
@@ -31,7 +32,7 @@ public class ChooseColorScreenPresenter {
 
     private void showGameScreen(boolean userGoesFirst, String userName) {
         GameScreenView gameScreenView = new GameScreenView();
-        GameSession model = new GameSession(userGoesFirst, userName);
+        Game model = new Game(userGoesFirst, userName);
         GameScreenPresenter gameScreenPresenter = new GameScreenPresenter(model, gameScreenView);
         view.getScene().setRoot(gameScreenView);
         gameScreenView.getScene().getWindow().sizeToScene();
