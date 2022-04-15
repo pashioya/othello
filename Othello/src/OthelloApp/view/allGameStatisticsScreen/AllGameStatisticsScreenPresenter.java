@@ -1,10 +1,18 @@
 package OthelloApp.view.allGameStatisticsScreen;
 
 import OthelloApp.model.Game;
-import OthelloApp.model.Turn;
+import OthelloApp.view.chooseColorScreen.ChooseColorScreenPresenter;
+import OthelloApp.view.chooseColorScreen.ChooseColorScreenView;
+import OthelloApp.view.endScreen.EndScreenStatPresenter;
+import OthelloApp.view.endScreen.EndScreenStatView;
+import javafx.event.ActionEvent;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AllGameStatisticsScreenPresenter {
     private final AllGameStatisticsScreenView view;
@@ -18,11 +26,20 @@ public class AllGameStatisticsScreenPresenter {
     }
 
 
-    public void addEventHandlers() {
+    private void addEventHandlers() {
+        view.getPlayAgainButton().setOnAction(event -> {
+            showChooseColorScreen();
+        });
+        view.getBackButton().setOnAction(event -> {
+            showEndScreen();
+        });
+        view.getQuitButton().setOnAction(event -> {
+            showQuitAlert(event);
+        });
 
     }
 
-    public void updateView() {
+    private void updateView() {
         setActiveSessionScoreVSAverage();
         fillSessionDurationsChart();
         setSessionDurationsPercentile();
@@ -47,9 +64,6 @@ public class AllGameStatisticsScreenPresenter {
 
     private void fillSessionDurationsChart() {
         List<Double> durations = model.getSessionDurations();
-        for (Double duration : durations) {
-            System.out.println(duration);
-        }
         this.view.getSessionDurationsChart().getData().clear();
         XYChart.Series<Number, Number> sessionDurations = new XYChart.Series<>();
         sessionDurations.setName("Game Durations in Seconds");
@@ -64,5 +78,41 @@ public class AllGameStatisticsScreenPresenter {
         String.format("Your game duration (%.2f seconds) is in the %.1f percentile of game durations",
                 model.getActiveSession().getTimeElapsed(),
                 model.getActiveSessionDurationPercentile()));
+    }
+
+    private void showChooseColorScreen(){
+        ChooseColorScreenView chooseColorScreenView = new ChooseColorScreenView();
+        ChooseColorScreenPresenter ChooseColorScreenPresenter = new ChooseColorScreenPresenter(chooseColorScreenView);
+        view.getScene().setRoot(chooseColorScreenView);
+        chooseColorScreenView.getScene().getWindow().sizeToScene();
+        Stage stage = (Stage) chooseColorScreenView.getScene().getWindow();
+        stage.centerOnScreen();
+    }
+
+    private void showEndScreen() {
+        EndScreenStatView endScreenView = new EndScreenStatView();
+        EndScreenStatPresenter endScreenPresenter = new EndScreenStatPresenter(model, endScreenView);
+        view.getScene().setRoot(endScreenView);
+        endScreenView.getScene().getWindow().sizeToScene();
+        Stage stage = (Stage) endScreenView.getScene().getWindow();
+        stage.centerOnScreen();
+    }
+
+    private void showQuitAlert(ActionEvent event){
+        Alert quitGameAlert = new Alert(Alert.AlertType.WARNING);
+        quitGameAlert.setTitle("Confirm quit");
+        quitGameAlert.setHeaderText("Quit game and exit?");
+        quitGameAlert.setContentText("Click \"Continue\" to exit");
+        quitGameAlert.getButtonTypes().clear();
+        ButtonType continueButton = new ButtonType("Continue");
+        ButtonType cancelButton = new ButtonType("Cancel");
+        quitGameAlert.getButtonTypes().addAll(continueButton, cancelButton);
+        Optional<ButtonType> result = quitGameAlert.showAndWait();
+        if (result.get() == continueButton){
+            Stage stage = (Stage)view.getScene().getWindow();
+            stage.close();
+        } else {
+            event.consume();
+        }
     }
 }

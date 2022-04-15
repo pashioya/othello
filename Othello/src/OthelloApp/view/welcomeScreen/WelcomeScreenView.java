@@ -13,7 +13,6 @@ public class WelcomeScreenView extends VBox{
     private final Image othelloImage = new Image("othelloImage.png");
     private Button newGameButton;
     private Button rulesButton;
-    private Button gameStatisticsButton;
     private final static Font BODY_FONT = new Font("Consolas", 20);
     private final static double IMAGE_WIDTH = 500;
     private final static double BUTTON_WIDTH = 200;
@@ -26,7 +25,6 @@ public class WelcomeScreenView extends VBox{
     private void initializeNodes(){
         this.newGameButton = new Button("New Game");
         this.rulesButton = new Button("Rules");
-        this.gameStatisticsButton = new Button("Game Statistics");
     }
 
     private void layoutNodes(){
@@ -34,9 +32,8 @@ public class WelcomeScreenView extends VBox{
         othelloImageView.setPreserveRatio(true);
         othelloImageView.setFitWidth(IMAGE_WIDTH);
         newGameButton.setPrefWidth(BUTTON_WIDTH);
-        gameStatisticsButton.setPrefWidth(BUTTON_WIDTH);
         rulesButton.setPrefWidth(BUTTON_WIDTH);
-        this.getChildren().addAll(othelloImageView, newGameButton, gameStatisticsButton, rulesButton);
+        this.getChildren().addAll(othelloImageView, newGameButton, rulesButton);
         this.setSpacing(20);
         this.setAlignment(Pos.TOP_CENTER);
         VBox.setMargin(rulesButton, new Insets(0, 0, 50, 0));
@@ -45,7 +42,6 @@ public class WelcomeScreenView extends VBox{
 
     public void setFonts(){
         newGameButton.setFont(BODY_FONT);
-        gameStatisticsButton.setFont(BODY_FONT);
         rulesButton.setFont(BODY_FONT);
     }
 
@@ -55,9 +51,5 @@ public class WelcomeScreenView extends VBox{
 
     public Button getRulesButton() {
         return rulesButton;
-    }
-
-    public Button getGameStatisticsButton() {
-        return gameStatisticsButton;
     }
 }

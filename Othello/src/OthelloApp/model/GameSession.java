@@ -85,7 +85,7 @@ public class GameSession {
         return turns;
     }
 
-    public void setIdNo() {
+    private void setIdNo() {
         try {
             Statement statement = getStatement();
             ResultSet resultset = statement.executeQuery("SELECT nextval('seq_gamesession_id')");
@@ -125,7 +125,7 @@ public class GameSession {
         return false;
     }
 
-    public void initializePlayers(boolean userGoesFirst, String userName) {
+    private void initializePlayers(boolean userGoesFirst, String userName) {
         if (userGoesFirst) {
             this.players[0] = new User(StoneColor.BLACK, userName);
             this.players[1] = new Computer(StoneColor.WHITE, "basicAI");
@@ -135,7 +135,7 @@ public class GameSession {
         }
     }
 
-    public void updateBoard(int[] coordinates, StoneColor playerColor) {
+    private void updateBoard(int[] coordinates, StoneColor playerColor) {
         activeTurn.setPlacedCoordinate(coordinates);
         activeTurn.setFlippedStoneCoordinates(board.findFlippableStones(coordinates, playerColor));
         board.update(coordinates, playerColor);
@@ -189,7 +189,7 @@ public class GameSession {
         return null;
     }
 
-    public String getComputerName() {
+    private String getComputerName() {
         for (Player player : players) {
             if (player instanceof Computer) {
                 return player.getName();
@@ -212,7 +212,7 @@ public class GameSession {
     }
 
 
-    public void createNewTurn(Player player) {
+    private void createNewTurn(Player player) {
         this.turns.add(this.activeTurn);
         this.activeTurn = new Turn(player.getName());
     }
@@ -233,7 +233,7 @@ public class GameSession {
         return flippableStoneCoordinates;
     }
 
-    public void updateGameSessionsTable() {
+    private void updateGameSessionsTable() {
         setEndTimeMilisec(System.currentTimeMillis());
         try {
             Statement statement = getStatement();

@@ -5,7 +5,6 @@ import OthelloApp.view.endScreen.EndScreenStatPresenter;
 import OthelloApp.view.endScreen.EndScreenStatView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import OthelloApp.model.GameSession.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -70,7 +69,7 @@ public class GameScreenPresenter {
     class StoneHandler implements EventHandler<ActionEvent> {
         private final int[] coordinates = new int[2];
 
-        public StoneHandler(int row, int column) {
+        private StoneHandler(int row, int column) {
             this.coordinates[0] = row;
             this.coordinates[1] = column;
         }
@@ -106,7 +105,7 @@ public class GameScreenPresenter {
     private void showGameOverAlert(){
         Alert gameOverAlert = new Alert(Alert.AlertType.INFORMATION);
         gameOverAlert.setTitle("Game over!");
-        gameOverAlert.setHeaderText("Neither player can play any more turns");
+        gameOverAlert.setHeaderText("Neither player can play any more turns.");
         gameOverAlert.setContentText("Click \"Continue\" to view the results of your game.");
         gameOverAlert.getButtonTypes().clear();
         ButtonType continueButton = new ButtonType("Continue");
@@ -128,28 +127,33 @@ public class GameScreenPresenter {
         }
         view.getComputerTurnButton().setOnAction(new ComputerTurnHandler());
         view.getRulesButton().setOnAction(event -> {
-            Alert rulesInfoAlert = createRulesInfoAlert();
+            Alert rulesInfoAlert = craeteRulesInfoAlert();
             rulesInfoAlert.showAndWait();
         });
         view.getQuitButton().setOnAction(event -> {
-            Alert quitGameAlert = new Alert(Alert.AlertType.WARNING);
-            quitGameAlert.setTitle("Confirm quit game");
-            quitGameAlert.setHeaderText("All progress in this game will be lost.");
-            quitGameAlert.setContentText("Quit anyway?");
-            quitGameAlert.getButtonTypes().clear();
-            ButtonType continueButton = new ButtonType("Continue");
-            ButtonType cancelButton = new ButtonType("Cancel");
-            quitGameAlert.getButtonTypes().addAll(continueButton, cancelButton);
-            Optional<ButtonType> result = quitGameAlert.showAndWait();
-            if (result.get() == continueButton){
-                Stage stage = (Stage)view.getScene().getWindow();
-                stage.close();
-            } else {
-                event.consume();
-            }
+            showQuitGameAlert(event);
         });
     }
-    public Alert createRulesInfoAlert(){
+
+    private void showQuitGameAlert(ActionEvent event){
+        Alert quitGameAlert = new Alert(Alert.AlertType.WARNING);
+        quitGameAlert.setTitle("Confirm quit game");
+        quitGameAlert.setHeaderText("All progress in this game will be lost.");
+        quitGameAlert.setContentText("Quit anyway?");
+        quitGameAlert.getButtonTypes().clear();
+        ButtonType continueButton = new ButtonType("Continue");
+        ButtonType cancelButton = new ButtonType("Cancel");
+        quitGameAlert.getButtonTypes().addAll(continueButton, cancelButton);
+        Optional<ButtonType> result = quitGameAlert.showAndWait();
+        if (result.get() == continueButton){
+            Stage stage = (Stage)view.getScene().getWindow();
+            stage.close();
+        } else {
+            event.consume();
+        }
+    }
+
+    private Alert craeteRulesInfoAlert(){
         Alert rulesInfoAlert = new Alert(Alert.AlertType.INFORMATION);
         rulesInfoAlert.setTitle("Othello Rules");
         rulesInfoAlert.setHeaderText("Rules");
@@ -161,7 +165,7 @@ public class GameScreenPresenter {
                 "Each player must outflank opposite-colored stones and flip them so they have the player's color. \n\n" +
                 "If a player is not able to flip any stones, the player forfeits his/her turn and the other player plays again. " +
                 "Players may not voluntarily forfeit a turn if a move is available.\n\n" +
-                "The game is over when neither player can make a move. The player with the most stones of his/her color wins the game."
+                "The game is over when neither player can make a move. The player with the most stones of his/her color on the board wins the game."
         );
         return rulesInfoAlert;
     }
@@ -183,7 +187,6 @@ public class GameScreenPresenter {
     }
 
 
-    // PUT IN VIEW!
     private String getButtonImageURL(Square square) {
         if (!square.hasStone()) {
             return "empty.png";
@@ -205,7 +208,7 @@ public class GameScreenPresenter {
     }
 
 
-    public boolean buttonIsValidMove(int buttonRow, int buttonColumn, ArrayList<int[]> possibleMoves) {
+    private boolean buttonIsValidMove(int buttonRow, int buttonColumn, ArrayList<int[]> possibleMoves) {
         for (int[] possibleMove : possibleMoves) {
             int possibleMoveRow = possibleMove[0];
             int possibleMoveColumn = possibleMove[1];

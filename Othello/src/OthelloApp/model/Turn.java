@@ -12,7 +12,6 @@ import static java.lang.System.currentTimeMillis;
 
 public class Turn {
     static int turnCount = 0;
-
     private final int turnId;
     private final String name;
     private final String startDateTime;
@@ -56,7 +55,7 @@ public class Turn {
         saveFlippedPieces(gameSessionID);
     }
 
-    public void saveTurn(int gameSessionID) {
+    private void saveTurn(int gameSessionID) {
         // use turnID, placedCoordinate, userType, and startTimeMilisec to update the SQL database
         try {
             Statement statement = getStatement();
@@ -110,7 +109,7 @@ public class Turn {
         }
     }
 
-    public void saveFlippedPieces(int gameSessionID) {
+    private void saveFlippedPieces(int gameSessionID) {
         // use turnID and flippedStoneCoordinates to update the SQL database
         if (flippedStoneCoordinates.size() > 0) {
             try {

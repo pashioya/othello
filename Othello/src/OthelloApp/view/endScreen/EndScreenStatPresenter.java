@@ -128,19 +128,19 @@ public class EndScreenStatPresenter {
 
     }
 
-    public void displayUserScore() {
+    private void displayUserScore() {
         int userScore = this.model.getActiveSession().getUserScore();
         this.view.getScore().setText(String.format("Your score: %d stones", userScore));
     }
 
-    public void displayMostProfitableMove() {
+    private void displayMostProfitableMove() {
         Turn mostProfitableTurn = this.model.getActiveSession().getMostProfitableUserTurn();
         this.view.getMostProfitableMove().setText(String.format("Your most profitable move: #%d with %d flipped stones",
                 mostProfitableTurn.getTurnId(),
                 mostProfitableTurn.getFlippedStoneCoordinates().size()));
     }
 
-    public void displayAverageMoveDuration() {
+    private void displayAverageMoveDuration() {
         double totalUserMoveDuration = 0;
         double userMovesCount = 0;
         for (Turn turn : model.getActiveSession().getTurns()) {

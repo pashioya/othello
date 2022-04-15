@@ -22,9 +22,6 @@ public class WelcomeScreenPresenter {
         view.getRulesButton().setOnAction(event -> {
             showRulesScreen();
         });
-        view.getGameStatisticsButton().setOnAction(event ->{
-//            showAllGameStatisticsScreen();
-        });
     }
 
     private void showChooseColorScreen(){

@@ -2,7 +2,6 @@ package OthelloApp.model;
 
 public class Square {
     private Stone stone;
-    private boolean hasStone;
 
     public Square() {
         this.stone = null;
@@ -37,7 +36,5 @@ public class Square {
 
     public StoneColor getStoneColor() {
                return getStone().getColor();
-
-
     }
 }

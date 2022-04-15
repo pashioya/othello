@@ -16,6 +16,7 @@ public class AllGameStatisticsScreenView extends BorderPane {
     private Text activeSessionDurationPercentile;
     private ScatterChart<Number, Number> sessionDurationsChart;
     private Button playAgainButton;
+    private Button backButton;
     private Button quitButton;
 
     private static final Font TITLE_FONT = new Font("Consolas", 30);
@@ -40,6 +41,7 @@ public class AllGameStatisticsScreenView extends BorderPane {
         this.sessionDurationsChart = new ScatterChart<Number,Number>(xAxisGameSessionNo, yAxisSessionDurations);
 
         this.playAgainButton = new Button ("Play Again");
+        this.backButton = new Button("Back");
         this.quitButton = new Button ("Quit");
     }
 
@@ -49,7 +51,7 @@ public class AllGameStatisticsScreenView extends BorderPane {
         this.setCenter(this.sessionDurationsChart);
         this.setRight(this.activeSessionDurationPercentile);
         HBox bottomButtons = new HBox();
-        bottomButtons.getChildren().addAll(playAgainButton, quitButton);
+        bottomButtons.getChildren().addAll(backButton, playAgainButton, quitButton);
         bottomButtons.setSpacing(200);
         bottomButtons.setAlignment(Pos.CENTER);
         this.setBottom(bottomButtons);
@@ -89,5 +91,9 @@ public class AllGameStatisticsScreenView extends BorderPane {
 
     public Button getQuitButton() {
         return quitButton;
+    }
+
+    public Button getBackButton() {
+        return backButton;
     }
 }

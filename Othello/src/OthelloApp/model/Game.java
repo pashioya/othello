@@ -55,10 +55,6 @@ public class Game {
         }
     }
 
-    public ArrayList<Integer> getSessionsUserScores() {
-        return sessionsUserScores;
-    }
-
     public ArrayList<Double> getSessionDurations() {
         fillSessionDurations();
         return sessionDurations;
@@ -69,6 +65,7 @@ public class Game {
     }
 
     public double getAverageScore() {
+        fillSessionsUserScores();
         Double sum = 0.0;
         if (!sessionsUserScores.isEmpty()) {
             for (Integer sessionsUserScore : sessionsUserScores) {
@@ -84,7 +81,6 @@ public class Game {
         Collections.sort(sessionDurations);
         double nBelow = 0.0;
         for (Double sessionDuration : sessionDurations) {
-            System.out.println(sessionDuration + " " + activeSession.getTimeElapsed());
             if (sessionDuration < activeSession.getTimeElapsed()) {
                 nBelow++;
             }

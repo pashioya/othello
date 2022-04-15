@@ -152,7 +152,7 @@ public class Board {
         return GRID;
     }
 
-    public boolean isValidMove(int row, int column, StoneColor stoneColor) {
+    private boolean isValidMove(int row, int column, StoneColor stoneColor) {
         boolean isValid = false;
 
         // If the quare at the selected coordinate already contains a square, the move isn't valid -> return false
@@ -186,12 +186,12 @@ public class Board {
         return isValid;
     }
 
-    public void placeStone(int row, int column, StoneColor stoneColor) {
+    private void placeStone(int row, int column, StoneColor stoneColor) {
         this.GRID[row][column].setStone(stoneColor);
 
     }
 
-    public int[] getDirection(int vertical, int row, int horizontal, int column) {
+    private int[] getDirection(int vertical, int row, int horizontal, int column) {
         int verticalShift = vertical - row;
         int horizontalShift = horizontal - column;
         return new int[]{verticalShift, horizontalShift};
@@ -233,7 +233,7 @@ public class Board {
         return mostProfitableMove;
     }
 
-    public boolean checkDirection(int verticalShift, int horizontalShift, int vertical, int horizontal, StoneColor stoneColor) {
+    private boolean checkDirection(int verticalShift, int horizontalShift, int vertical, int horizontal, StoneColor stoneColor) {
         int newVertical = vertical + verticalShift;
         int newHorizontal = horizontal + horizontalShift;
         // check if not out of bounds:
@@ -274,7 +274,7 @@ public class Board {
         return flippableStoneCoordinates;
     }
 
-    public void addFlippableStoneCoordinates(int[] direction, int vertical, int horizontal, StoneColor stoneColor, ArrayList<int[]> flippableStoneCoordinates) {
+    private void addFlippableStoneCoordinates(int[] direction, int vertical, int horizontal, StoneColor stoneColor, ArrayList<int[]> flippableStoneCoordinates) {
         Square currentSquare = GRID[vertical][horizontal];
         if (currentSquare.hasOppositeColorStone(stoneColor)) {
             flippableStoneCoordinates.add(new int[]{vertical, horizontal});
@@ -282,10 +282,6 @@ public class Board {
             int newHorizontal = horizontal + direction[1];
             addFlippableStoneCoordinates(direction, newVertical, newHorizontal, stoneColor, flippableStoneCoordinates);
         }
-    }
-
-    public static int getSIDE_LENGTH() {
-        return SIDE_LENGTH;
     }
 
 
@@ -350,6 +346,4 @@ public class Board {
             getGRID()[stoneRow][stoneColumn].flipStone();
         }
     }
-
-
 }
