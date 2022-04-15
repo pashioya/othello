@@ -325,6 +325,22 @@ public class Board {
         return stoneCounter == numberOfSquares;
     }
 
+    public boolean containsOnlyOneColorStone(){
+        int whiteStoneCounter = 0;
+        int blackStoneCounter = 0;
+        for (Square[] row: getGRID()){
+            for (Square square: row){
+                if (square.hasStone()){
+                    switch(square.getStoneColor()){
+                        case WHITE -> whiteStoneCounter++;
+                        case BLACK -> blackStoneCounter++;
+                    }
+                }
+            }
+        }
+        return (whiteStoneCounter == 0 || blackStoneCounter == 0);
+    }
+
     public void update(int[] coordinates, StoneColor stoneColor) {
         ArrayList<int[]> flippableStoneCoordinates = findFlippableStones(coordinates, stoneColor);
         placeStone(coordinates[0], coordinates[1], stoneColor);

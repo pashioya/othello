@@ -9,19 +9,17 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class GameScreenView extends BorderPane {
-    // private Node attributes (controls)
-    private VBox vBoxMenuTopLabels;
+    private VBox vBoxTopTexts;
     private HBox hBoxBottomButtons;
-    private MenuItem helpMenuItem;
-    private Label playerScoreLabel;
-    private Label computerScoreLabel;
-    private Label turnInstructionLabel;
+    private Text playerScore;
+    private Text computerScore;
+    private Text turnInstruction;
     private Button rulesButton;
     private Button quitButton;
     private Button computerTurnButton;
@@ -38,12 +36,12 @@ public class GameScreenView extends BorderPane {
 
     private void initialiseNodes() {
         // create and configure controls
-        this.vBoxMenuTopLabels = new VBox();
+        this.vBoxTopTexts = new VBox();
         this.hBoxBottomButtons = new HBox();
         initializeGrid();
-        this.playerScoreLabel = new Label("Player: ");
-        this.computerScoreLabel = new Label("Computer: ");
-        this.turnInstructionLabel = new Label("Instructions appear here");
+        this.playerScore = new Text("Player: ");
+        this.computerScore = new Text("Computer: ");
+        this.turnInstruction = new Text();
         this.rulesButton = new Button("Rules");
         this.computerTurnButton = new Button("Play Computer Turn");
         this.quitButton = new Button("Quit");
@@ -57,15 +55,15 @@ public class GameScreenView extends BorderPane {
     }
 
     public void layoutVboxTop() {
-        HBox hBoxPlayerScoreLabels = new HBox();
-        hBoxPlayerScoreLabels.getChildren().addAll(playerScoreLabel, computerScoreLabel);
-        hBoxPlayerScoreLabels.setAlignment(Pos.CENTER);
-        hBoxPlayerScoreLabels.setPadding(new Insets(10, 10, 10, 10));
-        hBoxPlayerScoreLabels.setSpacing(100);
-        vBoxMenuTopLabels.getChildren().addAll(hBoxPlayerScoreLabels, turnInstructionLabel);
-        this.setTop(vBoxMenuTopLabels);
-        this.setMargin(vBoxMenuTopLabels, new Insets(10, 10, 10, 10));
-        vBoxMenuTopLabels.setAlignment(Pos.CENTER);
+        HBox hBoxPlayerScores = new HBox();
+        hBoxPlayerScores.getChildren().addAll(playerScore, computerScore);
+        hBoxPlayerScores.setAlignment(Pos.CENTER);
+        hBoxPlayerScores.setPadding(new Insets(10, 10, 10, 10));
+        hBoxPlayerScores.setSpacing(100);
+        vBoxTopTexts.getChildren().addAll(hBoxPlayerScores, turnInstruction);
+        this.setTop(vBoxTopTexts);
+        this.setMargin(vBoxTopTexts, new Insets(10, 10, 10, 10));
+        vBoxTopTexts.setAlignment(Pos.CENTER);
     }
 
     public void layoutHboxBottom() {
@@ -78,9 +76,9 @@ public class GameScreenView extends BorderPane {
     }
 
     public void styleNodes(){
-        playerScoreLabel.setFont(BODY_FONT);
-        computerScoreLabel.setFont(BODY_FONT);
-        turnInstructionLabel.setFont(BODY_FONT);
+        playerScore.setFont(BODY_FONT);
+        computerScore.setFont(BODY_FONT);
+        turnInstruction.setFont(BODY_FONT);
         rulesButton.setFont(BODY_FONT);
         computerTurnButton.setFont(BODY_FONT);
         quitButton.setFont(BODY_FONT);
@@ -145,8 +143,8 @@ public class GameScreenView extends BorderPane {
 
     public void setClickableComputerTurnButton(boolean activePlayerIsComputer) {
         this.computerTurnButton.setDisable(!activePlayerIsComputer);
-        //this.computerTurnButton.setDefaultButton(activePlayerIsComputer);
     }
+
     public void disableAllGridButtons() {
         for (int row = 0; row < getGridButtons().length; row++) {
             for (int column = 0; column < getGridButtons()[row].length; column++) {
@@ -159,12 +157,12 @@ public class GameScreenView extends BorderPane {
 
 
 
-    public Label getPlayerScoreLabel() {
-        return playerScoreLabel;
+    public Text getPlayerScoreLabel() {
+        return playerScore;
     }
 
-    public Label getComputerScoreLabel() {
-        return computerScoreLabel;
+    public Text getComputerScore() {
+        return computerScore;
     }
 
     public Button getRulesButton() {
@@ -191,9 +189,11 @@ public class GameScreenView extends BorderPane {
         return computerTurnButton;
     }
 
-    public Label getTurnInstructionLabel() {
-        return turnInstructionLabel;
+    public Text getTurnInstruction() {
+        return turnInstruction;
     }
+
+
 }
 
 

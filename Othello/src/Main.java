@@ -13,23 +13,14 @@ import javafx.stage.Stage;
 
 public class Main extends Application{
 
-//    private void setGlobalEventHandler(GameScreenView view) {
-//        view.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-//            if (e.getCode() == KeyCode.ENTER) {
-//                view.fireComputerTurnButton(e);
-//            }
-//        });
-//    }
-
-
     public void start(Stage primaryStage) {
         final WelcomeScreenView viewWelcome = new WelcomeScreenView();
         new WelcomeScreenPresenter(viewWelcome);
         final Scene scene = new Scene(viewWelcome);
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
-        primaryStage.setMinWidth(500);
-        primaryStage.setMinHeight(500);
+//        primaryStage.setMinWidth(500);
+//        primaryStage.setMinHeight(500);
         primaryStage.show();
     }
 
