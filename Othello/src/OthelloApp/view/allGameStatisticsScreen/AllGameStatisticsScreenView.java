@@ -71,6 +71,7 @@ public class AllGameStatisticsScreenView extends BorderPane {
         this.activeSessionScoreVSAverage.setFont(SUBTITLE_FONT);
         this.playAgainButton.setFont(BODY_FONT);
         this.quitButton.setFont(BODY_FONT);
+        this.backButton.setFont(BODY_FONT);
     }
 
     public Text getActiveSessionScoreVSAverage() {

@@ -43,8 +43,6 @@ public class EndScreenStatPresenter {
 
     }
 
-
-
     private void updateView() {
         if (model.getActiveSession().isTied()) {
             view.getGameOutcome().setText("It's a tie!");

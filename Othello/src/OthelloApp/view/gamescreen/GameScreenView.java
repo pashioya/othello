@@ -85,22 +85,7 @@ public class GameScreenView extends BorderPane {
         Font font = new Font("Consolas", 10);
     }
 
-    public String getButtonImageURL(StoneColor stoneColor) {
-        if (stoneColor == null) {
-            return "empty.png";
-        } else return switch (stoneColor) {
-            case WHITE -> "white.png";
-            case BLACK -> "black.png";
-
-        };
-    }
-
-    public void fireComputerTurnButton(Event e){
-        getComputerTurnButton().fire();
-        e.consume();
-    }
-
-    public Button setButtonBackgroundImage(Button button, String imageUrl) {
+    Button setButtonBackgroundImage(Button button, String imageUrl) {
         int buttonWidth = 80;
         int buttonHeight = 80;
         Image image = new Image(imageUrl, buttonWidth, buttonHeight, false, true, true);
@@ -141,11 +126,11 @@ public class GameScreenView extends BorderPane {
 
     }
 
-    public void setClickableComputerTurnButton(boolean activePlayerIsComputer) {
+    void setClickableComputerTurnButton(boolean activePlayerIsComputer) {
         this.computerTurnButton.setDisable(!activePlayerIsComputer);
     }
 
-    public void disableAllGridButtons() {
+    void disableAllGridButtons() {
         for (int row = 0; row < getGridButtons().length; row++) {
             for (int column = 0; column < getGridButtons()[row].length; column++) {
                 Button button = getGridButtons()[row][column];
@@ -154,7 +139,6 @@ public class GameScreenView extends BorderPane {
             }
         }
     }
-
 
 
     public Text getPlayerScoreLabel() {
@@ -171,14 +155,6 @@ public class GameScreenView extends BorderPane {
 
     public Button getQuitButton() {
         return quitButton;
-    }
-
-    public Label getClock() {
-        return clock;
-    }
-
-    public GridPane getGrid() {
-        return grid;
     }
 
     public Button[][] getGridButtons() {

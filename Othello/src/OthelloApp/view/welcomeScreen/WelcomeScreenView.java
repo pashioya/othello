@@ -40,7 +40,7 @@ public class WelcomeScreenView extends VBox{
         setFonts();
     }
 
-    public void setFonts(){
+    private void setFonts(){
         newGameButton.setFont(BODY_FONT);
         rulesButton.setFont(BODY_FONT);
     }
