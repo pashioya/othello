@@ -1,6 +1,7 @@
 package OthelloApp.view.allGameStatisticsScreen;
 
-import OthelloApp.model.Game;
+import OthelloApp.model.GameSession;
+import OthelloApp.model.GameStatistics;
 import OthelloApp.view.chooseColorScreen.ChooseColorScreenPresenter;
 import OthelloApp.view.chooseColorScreen.ChooseColorScreenView;
 import OthelloApp.view.endScreen.EndScreenStatPresenter;
@@ -16,9 +17,9 @@ import java.util.Optional;
 
 public class AllGameStatisticsScreenPresenter {
     private final AllGameStatisticsScreenView view;
-    private final Game model;
+    private final GameStatistics model;
 
-    public AllGameStatisticsScreenPresenter(AllGameStatisticsScreenView view, Game model) {
+    public AllGameStatisticsScreenPresenter(AllGameStatisticsScreenView view, GameStatistics model) {
         this.view = view;
         this.model = model;
         addEventHandlers();
@@ -46,21 +47,22 @@ public class AllGameStatisticsScreenPresenter {
     }
 
     private void setActiveSessionScoreVSAverage() {
-        if (model.getActiveSession().getUserScore() > model.getAverageScore()){
+        if (model.getLastSessionScore() > model.getAverageScore()){
             this.view.getActiveSessionScoreVSAverage().setText(
-                    String.format("Your score (%d) was %.2f stones higher than the average score (%.2f)",
-                            model.getActiveSession().getUserScore(),
-                            Double.valueOf(model.getActiveSession().getUserScore()) - model.getAverageScore(),
+                    String.format("The last game's score (%d) was %.2f stones higher than the average score (%.2f)",
+                            model.getLastSessionScore(),
+                            Double.valueOf(model.getLastSessionScore()) - model.getAverageScore(),
                             model.getAverageScore()));
         } else {
             this.view.getActiveSessionScoreVSAverage().setText(
-                    String.format("Your score (%d) was %.2f stones lower than the average score (%.2f)",
-                            model.getActiveSession().getUserScore(),
-                            model.getAverageScore() - Double.valueOf(model.getActiveSession().getUserScore()),
+                    String.format("The last game's socre (%d) was %.2f stones lower than the average score (%.2f)",
+                            model.getLastSessionScore(),
+                            model.getAverageScore() - Double.valueOf(model.getLastSessionScore()),
                             model.getAverageScore()));
         }
-
     }
+
+
 
     private void fillSessionDurationsChart() {
         List<Double> durations = model.getSessionDurations();
@@ -76,8 +78,8 @@ public class AllGameStatisticsScreenPresenter {
     private void setSessionDurationsPercentile() {
         view.getActiveSessionDurationPercentile().setText(
         String.format("Your game duration (%.2f seconds) is in the %.1f percentile of game durations",
-                model.getActiveSession().getTimeElapsed(),
-                model.getActiveSessionDurationPercentile()));
+                model.getLastSessionDuration(),
+                model.getLastSessionDurationPercentile()));
     }
 
     private void showChooseColorScreen(){
@@ -91,7 +93,7 @@ public class AllGameStatisticsScreenPresenter {
 
     private void showEndScreen() {
         EndScreenStatView endScreenView = new EndScreenStatView();
-        EndScreenStatPresenter endScreenPresenter = new EndScreenStatPresenter(model, endScreenView);
+        EndScreenStatPresenter endScreenPresenter = new EndScreenStatPresenter(new GameSession(true, "test"), endScreenView);
         view.getScene().setRoot(endScreenView);
         endScreenView.getScene().getWindow().sizeToScene();
         Stage stage = (Stage) endScreenView.getScene().getWindow();

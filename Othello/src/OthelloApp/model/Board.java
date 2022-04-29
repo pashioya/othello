@@ -14,7 +14,7 @@ public class Board {
         initializeBoard();
     }
 
-    public void initializeBoard() {
+    private void initializeBoard() {
         // Create empty board
         for (int row = 0; row < SIDE_LENGTH; row++) {
             for (int col = 0; col < GRID[row].length; col++) {

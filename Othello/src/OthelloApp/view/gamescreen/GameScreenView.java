@@ -14,6 +14,10 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+
 public class GameScreenView extends BorderPane {
     private VBox vBoxTopTexts;
     private HBox hBoxBottomButtons;
@@ -23,15 +27,17 @@ public class GameScreenView extends BorderPane {
     private Button rulesButton;
     private Button quitButton;
     private Button computerTurnButton;
-    private Label clock;
+    private Text timer;
     private GridPane grid;
     private Button[][] gridButtons;
-    private final static Font TITLE_FONT = new Font("Consolas", 40);
     private final static Font BODY_FONT = new Font("Consolas", 15);
+
+    private final long startMilliseconds = System.currentTimeMillis();
 
     public GameScreenView() {
         initialiseNodes();
         layoutNodes();
+        updateTimer();
     }
 
     private void initialiseNodes() {
@@ -39,6 +45,7 @@ public class GameScreenView extends BorderPane {
         this.vBoxTopTexts = new VBox();
         this.hBoxBottomButtons = new HBox();
         initializeGrid();
+        this.timer = new Text();
         this.playerScore = new Text("Player: ");
         this.computerScore = new Text("Computer: ");
         this.turnInstruction = new Text();
@@ -56,7 +63,7 @@ public class GameScreenView extends BorderPane {
 
     public void layoutVboxTop() {
         HBox hBoxPlayerScores = new HBox();
-        hBoxPlayerScores.getChildren().addAll(playerScore, computerScore);
+        hBoxPlayerScores.getChildren().addAll(timer, playerScore, computerScore);
         hBoxPlayerScores.setAlignment(Pos.CENTER);
         hBoxPlayerScores.setPadding(new Insets(10, 10, 10, 10));
         hBoxPlayerScores.setSpacing(100);
@@ -76,13 +83,13 @@ public class GameScreenView extends BorderPane {
     }
 
     public void styleNodes(){
+        timer.setFont(BODY_FONT);
         playerScore.setFont(BODY_FONT);
         computerScore.setFont(BODY_FONT);
         turnInstruction.setFont(BODY_FONT);
         rulesButton.setFont(BODY_FONT);
         computerTurnButton.setFont(BODY_FONT);
         quitButton.setFont(BODY_FONT);
-        Font font = new Font("Consolas", 10);
     }
 
     Button setButtonBackgroundImage(Button button, String imageUrl) {
@@ -169,6 +176,27 @@ public class GameScreenView extends BorderPane {
         return turnInstruction;
     }
 
+    private void setTimerText(){
+        long millisecondsElapsed = System.currentTimeMillis()-startMilliseconds;
+        String hours = (TimeUnit.MILLISECONDS.toHours(millisecondsElapsed) < 10) ? String.format("0%d:", TimeUnit.MILLISECONDS.toHours(millisecondsElapsed)) : String.format("%d:", TimeUnit.MILLISECONDS.toHours(millisecondsElapsed));
+        String minutes = ((TimeUnit.MILLISECONDS.toMinutes(millisecondsElapsed) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisecondsElapsed))) < 10) ? String.format("0%d:", TimeUnit.MILLISECONDS.toMinutes(millisecondsElapsed) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisecondsElapsed))) : String.format("%d:", TimeUnit.MILLISECONDS.toMinutes(millisecondsElapsed) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisecondsElapsed)));
+        String seconds = ((TimeUnit.MILLISECONDS.toSeconds(millisecondsElapsed) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisecondsElapsed)) < 10)) ? String.format("0%d", TimeUnit.MILLISECONDS.toSeconds(millisecondsElapsed) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisecondsElapsed))) : String.format("%d", TimeUnit.MILLISECONDS.toSeconds(millisecondsElapsed) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisecondsElapsed)));
+        StringBuilder timerText = new StringBuilder();
+        timerText.append(hours);
+        timerText.append(minutes);
+        timerText.append(seconds);
+        timer.setText(timerText.toString());
+    }
+    private void updateTimer(){
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                setTimerText();
+            }
+        };
+        timer.schedule(timerTask, 0, 1000);
+    }
 
 }
 

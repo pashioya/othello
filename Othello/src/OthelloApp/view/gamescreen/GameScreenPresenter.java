@@ -17,22 +17,22 @@ import java.util.Optional;
 
 public class GameScreenPresenter {
 
-    private final Game model;
+    private final GameSession model;
     private final GameScreenView view;
 
-    public GameScreenPresenter(Game model, GameScreenView view) {
+    public GameScreenPresenter(GameSession model, GameScreenView view) {
         this.model = model;
         this.view = view;
-        System.out.println(this.model.getActiveSession().getActivePlayer());
-        System.out.println(this.model.getActiveSession().getBoard());
+        System.out.println(this.model.getActivePlayer());
+        System.out.println(this.model.getBoard());
         updatePlayerScores();
         addEventHandlers();
-        if (this.model.getActiveSession().activePlayerIsComputer()) {
+        if (this.model.activePlayerIsComputer()) {
             this.view.setClickableComputerTurnButton(true);
             view.disableAllGridButtons();
             view.getTurnInstruction().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
         } else {
-            StoneColor activePlayerColor = model.getActiveSession().getActivePlayer().getPlayerColor();
+            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
             this.view.setClickableComputerTurnButton(false);
             setClickableGridButtons(activePlayerColor);
             view.getTurnInstruction().setText("Click a highlighted square to place a stone.");
@@ -42,25 +42,25 @@ public class GameScreenPresenter {
 
     class ComputerTurnHandler implements EventHandler<ActionEvent> {
         public void handle(ActionEvent event) {
-            int[] mostProfitableMove = model.getActiveSession().findMostProfitableMove();
-            ArrayList<int[]> flippableStoneCoordinates = model.getActiveSession().playTurn(mostProfitableMove);
+            int[] mostProfitableMove = model.findMostProfitableMove();
+            ArrayList<int[]> flippableStoneCoordinates = model.updateStones(mostProfitableMove);
             setButtonImage(mostProfitableMove);
             updateView(flippableStoneCoordinates);
             updatePlayerScores();
-            model.getActiveSession().switchActivePlayer();
-            StoneColor activePlayerColor = model.getActiveSession().getActivePlayer().getPlayerColor();
-            if (model.getActiveSession().isOver()) {
+            model.switchActivePlayer();
+            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+            if (model.isOver()) {
                 view.disableAllGridButtons();
                 showGameOverAlert();
             } else {
-                if (model.getActiveSession().getBoard().hasValidMoves(activePlayerColor)) {
+                if (model.getBoard().hasValidMoves(activePlayerColor)) {
                     view.getTurnInstruction().setText("Click a highlighted square to place a stone.");
                     setClickableGridButtons(activePlayerColor);
                 } else {
                     view.getTurnInstruction().setText("You cannot place a stone - Click \"Play Computer Move\" to make the Computer place a stone.");
-                    model.getActiveSession().switchActivePlayer();
+                    model.switchActivePlayer();
                 }
-                view.setClickableComputerTurnButton(model.getActiveSession().activePlayerIsComputer());
+                view.setClickableComputerTurnButton(model.activePlayerIsComputer());
             }
         }
     }
@@ -75,27 +75,27 @@ public class GameScreenPresenter {
         }
 
         public void handle(ActionEvent event) {
-            ArrayList<int[]> flippableStoneCoordinates = model.getActiveSession().playTurn(coordinates);
+            ArrayList<int[]> flippableStoneCoordinates = model.updateStones(coordinates);
             setButtonImage(coordinates);
             updateView(flippableStoneCoordinates);
             updatePlayerScores();
-            model.getActiveSession().switchActivePlayer();
-            if (model.getActiveSession().isOver()) {
+            model.switchActivePlayer();
+            if (model.isOver()) {
                 view.disableAllGridButtons();
                 showGameOverAlert();
             } else {
                 // If the Computer can play a turn, then disable the buttons so the user can't click on them, and enable the button that allows the computer to take a turn
-                if (model.getActiveSession().getBoard().hasValidMoves(model.getActiveSession().getActivePlayer().getPlayerColor())) {
+                if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
                     view.getTurnInstruction().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
                     view.disableAllGridButtons();
                     // If Computer can't, then switch back to user and let user pick another move
                 } else {
                     view.getTurnInstruction().setText("Computer unable to place a stone - Click another square to place a stone.");
-                    model.getActiveSession().switchActivePlayer();
-                    StoneColor activePlayerColor = model.getActiveSession().getActivePlayer().getPlayerColor();
+                    model.switchActivePlayer();
+                    StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
                     setClickableGridButtons(activePlayerColor);
                 }
-                view.setClickableComputerTurnButton(model.getActiveSession().activePlayerIsComputer());
+                view.setClickableComputerTurnButton(model.activePlayerIsComputer());
             }
         }
 
@@ -127,7 +127,7 @@ public class GameScreenPresenter {
         }
         view.getComputerTurnButton().setOnAction(new ComputerTurnHandler());
         view.getRulesButton().setOnAction(event -> {
-            Alert rulesInfoAlert = craeteRulesInfoAlert();
+            Alert rulesInfoAlert = createRulesInfoAlert();
             rulesInfoAlert.showAndWait();
         });
         view.getQuitButton().setOnAction(event -> {
@@ -153,7 +153,7 @@ public class GameScreenPresenter {
         }
     }
 
-    private Alert craeteRulesInfoAlert(){
+    private Alert createRulesInfoAlert(){
         Alert rulesInfoAlert = new Alert(Alert.AlertType.INFORMATION);
         rulesInfoAlert.setTitle("Othello Rules");
         rulesInfoAlert.setHeaderText("Rules");
@@ -172,15 +172,15 @@ public class GameScreenPresenter {
 
 
     private void drawBoard() {
-        for (int row = 0; row < model.getActiveSession().getBoard().getGRID().length; row++) {
-            for (int column = 0; column < model.getActiveSession().getBoard().getGRID()[row].length; column++) {
+        for (int row = 0; row < model.getBoard().getGRID().length; row++) {
+            for (int column = 0; column < model.getBoard().getGRID()[row].length; column++) {
                 setButtonImage(new int[]{row, column});
             }
         }
     }
 
     private void setButtonImage(int[] coordinates) {
-        Square square = this.model.getActiveSession().getBoard().getGRID()[coordinates[0]][coordinates[1]];
+        Square square = this.model.getBoard().getGRID()[coordinates[0]][coordinates[1]];
         Button button = this.view.getGridButtons()[coordinates[0]][coordinates[1]];
         String imageURL = getButtonImageURL(square);
         this.view.setButtonBackgroundImage(button, imageURL);
@@ -198,7 +198,7 @@ public class GameScreenPresenter {
     }
 
     private void setClickableGridButtons(StoneColor stoneColor) {
-        ArrayList<int[]> possibleMoves = this.model.getActiveSession().getBoard().findAllPossibleMoves(stoneColor);
+        ArrayList<int[]> possibleMoves = this.model.getBoard().findAllPossibleMoves(stoneColor);
         for (int row = 0; row < view.getGridButtons().length; row++) {
             for (int column = 0; column < view.getGridButtons()[row].length; column++) {
                 Button button = this.view.getGridButtons()[row][column];
@@ -226,7 +226,7 @@ public class GameScreenPresenter {
     }
 
     private void updatePlayerScores() {
-        HashMap<Player, Integer> playerScores = this.model.getActiveSession().getPlayerScores();
+        HashMap<Player, Integer> playerScores = this.model.getPlayerScores();
         for (Map.Entry<Player, Integer> playerScore : playerScores.entrySet()) {
             if (playerScore.getKey() instanceof User) {
                 this.view.getPlayerScoreLabel().setText(String.format("Player: %d", playerScore.getValue()));

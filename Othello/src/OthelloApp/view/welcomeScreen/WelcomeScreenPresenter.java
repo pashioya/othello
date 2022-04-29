@@ -1,6 +1,5 @@
 package OthelloApp.view.welcomeScreen;
 
-import OthelloApp.model.Game;
 import OthelloApp.view.chooseColorScreen.ChooseColorScreenPresenter;
 import OthelloApp.view.chooseColorScreen.ChooseColorScreenView;
 import OthelloApp.view.rulesScreen.RulesScreenPresenter;

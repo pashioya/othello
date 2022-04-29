@@ -57,20 +57,38 @@ public class Turn {
 
     private void saveTurn(int gameSessionID) {
         // use turnID, placedCoordinate, userType, and startTimeMilisec to update the SQL database
-        try {
-            Statement statement = getStatement();
-            statement.executeUpdate("INSERT INTO turns (gamesession_id, turn_id, player_name, start_date_time, time_elapsed, placed_stone_row, placed_stone_column) " +
-                    "VALUES ("
-                    + gameSessionID + ", "
-                    + getTurnId() + ", '"
-                    + getName() + "', '"
-                    + getStartDateTime() + "', "
-                    + getTimeElapsed() + ", "
-                    + getPlacedCoordinate()[0] + ", "
-                    + getPlacedCoordinate()[1] + ")");
-            closeDbConnection();
-        } catch (SQLException e) {
-            e.printStackTrace(); // error handling
+        if (getPlacedCoordinate() != null) {
+            try {
+                Statement statement = getStatement();
+                statement.executeUpdate("INSERT INTO turns (gamesession_id, turn_id, player_name, start_date_time, time_elapsed, placed_stone_row, placed_stone_column) " +
+                        "VALUES ("
+                        + gameSessionID + ", "
+                        + getTurnId() + ", '"
+                        + getName() + "', '"
+                        + getStartDateTime() + "', "
+                        + getTimeElapsed() + ", "
+                        + getPlacedCoordinate()[0] + ", "
+                        + getPlacedCoordinate()[1] + ")");
+                closeDbConnection();
+            } catch (SQLException e) {
+                e.printStackTrace(); // error handling
+            }
+        } else {
+            try {
+                Statement statement = getStatement();
+                statement.executeUpdate("INSERT INTO turns (gamesession_id, turn_id, player_name, start_date_time, time_elapsed, placed_stone_row, placed_stone_column) " +
+                        "VALUES ("
+                        + gameSessionID + ", "
+                        + getTurnId() + ", '"
+                        + getName() + "', '"
+                        + getStartDateTime() + "', "
+                        + getTimeElapsed() + ", "
+                        + null + ", "
+                        + null + ")");
+                closeDbConnection();
+            } catch (SQLException e) {
+                e.printStackTrace(); // error handling
+            }
         }
     }
 

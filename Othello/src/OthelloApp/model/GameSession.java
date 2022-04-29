@@ -200,9 +200,7 @@ public class GameSession {
 
     public void switchActivePlayer() {
         this.activeTurn.setEndTime();
-        if (this.activeTurn.getPlacedCoordinate() != null) {
-            this.activeTurn.save(getIdNo());
-        }
+        this.activeTurn.save(getIdNo());
         if (getActivePlayer().equals(getPlayers()[0])) {
             setActivePlayer(getPlayers()[1]);
         } else {
@@ -224,7 +222,7 @@ public class GameSession {
         return mostProfitableMove;
     }
 
-    public ArrayList<int[]> playTurn(int[] moveCoordinates) {
+    public ArrayList<int[]> updateStones(int[] moveCoordinates) {
         StoneColor activePlayerColor = getActivePlayer().getPlayerColor();
         ArrayList<int[]> flippableStoneCoordinates = getBoard().findFlippableStones(moveCoordinates, activePlayerColor);
         updateBoard(moveCoordinates, activePlayerColor);

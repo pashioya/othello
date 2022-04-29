@@ -1,7 +1,9 @@
 package OthelloApp.view.endScreen;
 
-import OthelloApp.model.Game;
+
+import OthelloApp.model.GameSession;
 import OthelloApp.model.GameSession.*;
+import OthelloApp.model.GameStatistics;
 import OthelloApp.model.Turn;
 import OthelloApp.view.allGameStatisticsScreen.AllGameStatisticsScreenPresenter;
 import OthelloApp.view.allGameStatisticsScreen.AllGameStatisticsScreenView;
@@ -13,10 +15,10 @@ import javafx.stage.Stage;
 import java.util.*;
 
 public class EndScreenStatPresenter {
-    private final Game model;
+    private final GameSession model;
     private final EndScreenStatView view;
 
-    public EndScreenStatPresenter(Game model, EndScreenStatView view) {
+    public EndScreenStatPresenter(GameSession model, EndScreenStatView view) {
         this.model = model;
         this.view = view;
         addEventHandlers();
@@ -44,10 +46,10 @@ public class EndScreenStatPresenter {
     }
 
     private void updateView() {
-        if (model.getActiveSession().isTied()) {
+        if (model.isTied()) {
             view.getGameOutcome().setText("It's a tie!");
         } else {
-            if (model.getActiveSession().userWon()) {
+            if (model.userWon()) {
                 view.getGameOutcome().setText("Congratulations! You win!");
             } else {
                 view.getGameOutcome().setText("You lose! Better luck next time.");
@@ -65,8 +67,8 @@ public class EndScreenStatPresenter {
         XYChart.Series<Number, Number> playerMoves = new XYChart.Series<>();
         playerMoves.setName("Flipped Stones by Move Number");
 
-        for (Turn turn : model.getActiveSession().getTurns()) {
-            if (turn.getName().equals(model.getActiveSession().getUserName())) {
+        for (Turn turn : model.getTurns()) {
+            if (turn.getName().equals(model.getUserName())) {
                 playerMoves.getData().add(new XYChart.Data<Number, Number>(turn.getTurnId(), turn.getFlippedStoneCoordinates().size()));
             }
         }
@@ -78,8 +80,8 @@ public class EndScreenStatPresenter {
         view.getDurationsPerMoveChart().getData().clear();
         XYChart.Series<Number, Number> playerMoves = new XYChart.Series<>();
         playerMoves.setName("Move Durations in Seconds by Move Number");
-        for (Turn turn : model.getActiveSession().getTurns()) {
-            if (turn.getName().equals(model.getActiveSession().getUserName())) {
+        for (Turn turn : model.getTurns()) {
+            if (turn.getName().equals(model.getUserName())) {
                 playerMoves.getData().add(new XYChart.Data<Number, Number>(turn.getTurnId(), turn.getTimeElapsed()));
             }
         }
@@ -88,7 +90,7 @@ public class EndScreenStatPresenter {
     }
 
     private void displayMoveProfitabilitiesHistogram() {
-        ArrayList<Integer> userMoveProfitabilities = model.getActiveSession().getUserMoveProfitabilitiesList();
+        ArrayList<Integer> userMoveProfitabilities = model.getUserMoveProfitabilitiesList();
         HashMap<Integer, Integer> profitabilitiesFrequencies = getFrequencyDictionary(userMoveProfitabilities);
         fillHistogram(profitabilitiesFrequencies);
         view.setCenter(view.getProfitabilitiesHistogram());
@@ -127,12 +129,12 @@ public class EndScreenStatPresenter {
     }
 
     private void displayUserScore() {
-        int userScore = this.model.getActiveSession().getUserScore();
+        int userScore = this.model.getUserScore();
         this.view.getScore().setText(String.format("Your score: %d stones", userScore));
     }
 
     private void displayMostProfitableMove() {
-        Turn mostProfitableTurn = this.model.getActiveSession().getMostProfitableUserTurn();
+        Turn mostProfitableTurn = this.model.getMostProfitableUserTurn();
         this.view.getMostProfitableMove().setText(String.format("Your most profitable move: #%d with %d flipped stones",
                 mostProfitableTurn.getTurnId(),
                 mostProfitableTurn.getFlippedStoneCoordinates().size()));
@@ -141,8 +143,8 @@ public class EndScreenStatPresenter {
     private void displayAverageMoveDuration() {
         double totalUserMoveDuration = 0;
         double userMovesCount = 0;
-        for (Turn turn : model.getActiveSession().getTurns()) {
-            if (turn.getName().equals(model.getActiveSession().getUserName())) {
+        for (Turn turn : model.getTurns()) {
+            if (turn.getName().equals(model.getUserName())) {
                 totalUserMoveDuration += turn.getTimeElapsed();
                 userMovesCount += 1;
             }
@@ -178,10 +180,10 @@ public class EndScreenStatPresenter {
 
     private HashMap<Integer, Integer> getOutlierMovesMap() {
         HashMap<Integer, Integer> outlierMovesMap = new HashMap<>();
-        ArrayList<Integer> userMoveProfitabilities = model.getActiveSession().getUserMoveProfitabilitiesList();
+        ArrayList<Integer> userMoveProfitabilities = model.getUserMoveProfitabilitiesList();
         Collections.sort(userMoveProfitabilities);
-        for (Turn turn : model.getActiveSession().getTurns()) {
-            if (turn.getName().equals(model.getActiveSession().getUserName())) {
+        for (Turn turn : model.getTurns()) {
+            if (turn.getName().equals(model.getUserName())) {
                 if (isOutlier(turn.getFlippedStoneCoordinates().size(), userMoveProfitabilities)) {
                     outlierMovesMap.put(turn.getTurnId(), turn.getFlippedStoneCoordinates().size());
                 }
@@ -258,7 +260,7 @@ public class EndScreenStatPresenter {
 
         private void showAllGameStatisticsScreen(){
         AllGameStatisticsScreenView allGameStatisticsScreenView = new AllGameStatisticsScreenView();
-        AllGameStatisticsScreenPresenter allGameStatisticsScreenPresenter = new AllGameStatisticsScreenPresenter(allGameStatisticsScreenView, model);
+        AllGameStatisticsScreenPresenter allGameStatisticsScreenPresenter = new AllGameStatisticsScreenPresenter(allGameStatisticsScreenView, new GameStatistics());
         view.getScene().setRoot(allGameStatisticsScreenView);
         allGameStatisticsScreenView.getScene().getWindow().sizeToScene();
         Stage stage = (Stage) allGameStatisticsScreenView.getScene().getWindow();

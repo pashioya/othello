@@ -9,14 +9,13 @@ import java.util.Collections;
 import static OthelloApp.db_util.DB_UTIL.closeDbConnection;
 import static OthelloApp.db_util.DB_UTIL.getStatement;
 
-public class Game {
+public class GameStatistics {
     private ArrayList<Integer> sessionsUserScores;
     private ArrayList<Double> sessionDurations;
-    private GameSession activeSession;
 
 
-    public Game(boolean userGoesFirst, String userName) {
-        activeSession = new GameSession(userGoesFirst, userName);
+    public GameStatistics() {
+
         sessionsUserScores = new ArrayList<>();
         sessionDurations = new ArrayList<>();
         fillSessionsUserScores();
@@ -60,9 +59,7 @@ public class Game {
         return sessionDurations;
     }
 
-    public GameSession getActiveSession() {
-        return activeSession;
-    }
+
 
     public double getAverageScore() {
         fillSessionsUserScores();
@@ -76,12 +73,50 @@ public class Game {
         return sum;
     }
 
-    public double getActiveSessionDurationPercentile() {
+    public int getLastSessionScore(){
+        int lastSessionScore =0;
+        try {
+            Statement statement = getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT number_stones_user from gamesessions " +
+                                                            "WHERE is_over=true " +
+                                                            "AND gamesession_id= ( " +
+                                                            "SELECT MAX(gamesession_id) FROM gamesessions )");
+            while (resultSet.next()) {
+                lastSessionScore = resultSet.getInt(1); // gets the result of name
+            }
+            closeDbConnection();
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+        }
+        return lastSessionScore;
+    }
+
+    public double getLastSessionDuration(){
+        double lastSessionDuration = 0;
+        try {
+            Statement statement = getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT time_elapsed from gamesessions " +
+                    "WHERE is_over=true " +
+                    "AND gamesession_id= ( " +
+                    "SELECT MAX(gamesession_id) FROM gamesessions )");
+            while (resultSet.next()) {
+                lastSessionDuration = resultSet.getDouble(1); // gets the result of name
+            }
+            closeDbConnection();
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+        }
+        return lastSessionDuration;
+    }
+
+    public double getLastSessionDurationPercentile() {
         fillSessionDurations();
         Collections.sort(sessionDurations);
         double nBelow = 0.0;
         for (Double sessionDuration : sessionDurations) {
-            if (sessionDuration < activeSession.getTimeElapsed()) {
+            if (sessionDuration < getLastSessionDuration()) {
                 nBelow++;
             }
         }
