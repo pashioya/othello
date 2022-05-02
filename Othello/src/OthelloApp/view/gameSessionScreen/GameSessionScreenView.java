@@ -1,24 +1,24 @@
-package OthelloApp.view.gamescreen;
+package OthelloApp.view.gameSessionScreen;
 
 
-import OthelloApp.model.StoneColor;
-import javafx.event.Event;
+import javafx.animation.FadeTransition;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-public class GameScreenView extends BorderPane {
+public class GameSessionScreenView extends BorderPane {
     private VBox vBoxTopTexts;
     private HBox hBoxBottomButtons;
     private Text playerScore;
@@ -31,10 +31,9 @@ public class GameScreenView extends BorderPane {
     private GridPane grid;
     private Button[][] gridButtons;
     private final static Font BODY_FONT = new Font("Consolas", 15);
-
     private final long startMilliseconds = System.currentTimeMillis();
 
-    public GameScreenView() {
+    public GameSessionScreenView() {
         initialiseNodes();
         layoutNodes();
         updateTimer();
@@ -82,7 +81,8 @@ public class GameScreenView extends BorderPane {
         this.hBoxBottomButtons.setSpacing(100);
     }
 
-    public void styleNodes(){
+    public void styleNodes() {
+        grid.setBackground(new Background(new BackgroundFill(Color.GREEN, new CornerRadii(0), Insets.EMPTY)));
         timer.setFont(BODY_FONT);
         playerScore.setFont(BODY_FONT);
         computerScore.setFont(BODY_FONT);
@@ -90,6 +90,23 @@ public class GameScreenView extends BorderPane {
         rulesButton.setFont(BODY_FONT);
         computerTurnButton.setFont(BODY_FONT);
         quitButton.setFont(BODY_FONT);
+//        for (int row = 0; row < this.gridButtons.length; row++) {
+//            for (int column = 0; column < this.gridButtons[row].length; column++) {
+//                Button button = this.gridButtons[row][column];
+//                button.setStyle(";");
+//            }
+//        }
+    }
+
+    public void setButtonOpacity(int row, int column, boolean hasStone, boolean isValidMove) {
+        Button button = getGridButtons()[row][column];
+        if (hasStone) {
+            button.setStyle("-fx-opacity: 1;");
+        } else if (isValidMove) {
+            button.setStyle("-fx-opacity: 0.8;");
+        } else {
+            button.setStyle("-fx-opacity: 0.1;");
+        }
     }
 
     Button setButtonBackgroundImage(Button button, String imageUrl) {
@@ -137,16 +154,11 @@ public class GameScreenView extends BorderPane {
         this.computerTurnButton.setDisable(!activePlayerIsComputer);
     }
 
-    void disableAllGridButtons() {
-        for (int row = 0; row < getGridButtons().length; row++) {
-            for (int column = 0; column < getGridButtons()[row].length; column++) {
-                Button button = getGridButtons()[row][column];
-                button.setDisable(true);
 
-            }
-        }
+    void disableButton(int row, int column) {
+        Button button = getGridButtons()[row][column];
+        button.setDisable(true);
     }
-
 
     public Text getPlayerScoreLabel() {
         return playerScore;
@@ -176,8 +188,8 @@ public class GameScreenView extends BorderPane {
         return turnInstruction;
     }
 
-    private void setTimerText(){
-        long millisecondsElapsed = System.currentTimeMillis()-startMilliseconds;
+    private void setTimerText() {
+        long millisecondsElapsed = System.currentTimeMillis() - startMilliseconds;
         String hours = (TimeUnit.MILLISECONDS.toHours(millisecondsElapsed) < 10) ? String.format("0%d:", TimeUnit.MILLISECONDS.toHours(millisecondsElapsed)) : String.format("%d:", TimeUnit.MILLISECONDS.toHours(millisecondsElapsed));
         String minutes = ((TimeUnit.MILLISECONDS.toMinutes(millisecondsElapsed) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisecondsElapsed))) < 10) ? String.format("0%d:", TimeUnit.MILLISECONDS.toMinutes(millisecondsElapsed) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisecondsElapsed))) : String.format("%d:", TimeUnit.MILLISECONDS.toMinutes(millisecondsElapsed) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisecondsElapsed)));
         String seconds = ((TimeUnit.MILLISECONDS.toSeconds(millisecondsElapsed) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisecondsElapsed)) < 10)) ? String.format("0%d", TimeUnit.MILLISECONDS.toSeconds(millisecondsElapsed) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisecondsElapsed))) : String.format("%d", TimeUnit.MILLISECONDS.toSeconds(millisecondsElapsed) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisecondsElapsed)));
@@ -187,7 +199,8 @@ public class GameScreenView extends BorderPane {
         timerText.append(seconds);
         timer.setText(timerText.toString());
     }
-    private void updateTimer(){
+
+    private void updateTimer() {
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
@@ -198,6 +211,35 @@ public class GameScreenView extends BorderPane {
         timer.schedule(timerTask, 0, 1000);
     }
 
+    public void fadeBetweenImages(Button button, String URL, double duration) {
+        fadeOut(button, duration);
+        String newURL = null;
+        if (URL == "black.png") {
+            newURL = "white.png";
+        } else {
+            newURL = "black.png";
+        }
+        setButtonBackgroundImage(button, URL);
+        fadeIn(button, duration);
+    }
+
+    private void fadeOut(Button button, double duration) {
+        FadeTransition fadeTransitionOut = new FadeTransition();
+        fadeTransitionOut.setNode(button);
+        fadeTransitionOut.setDuration(new Duration(duration / 2));
+        fadeTransitionOut.setFromValue(1.0);
+        fadeTransitionOut.setToValue(0);
+        fadeTransitionOut.play();
+    }
+
+    private void fadeIn(Button button, double duration) {
+        FadeTransition fadeTransitionIn = new FadeTransition();
+        fadeTransitionIn.setNode(button);
+        fadeTransitionIn.setDuration(new Duration(duration / 2));
+        fadeTransitionIn.setFromValue(0.0);
+        fadeTransitionIn.setToValue(1.0);
+        fadeTransitionIn.play();
+    }
 }
 
 

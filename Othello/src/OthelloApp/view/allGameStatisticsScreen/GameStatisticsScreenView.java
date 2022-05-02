@@ -10,12 +10,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class AllGameStatisticsScreenView extends BorderPane {
+public class GameStatisticsScreenView extends BorderPane {
     private Text title;
     private Text activeSessionScoreVSAverage;
     private Text activeSessionDurationPercentile;
     private ScatterChart<Number, Number> sessionDurationsChart;
-    private Button playAgainButton;
+    private Button newGameButton;
     private Button backButton;
     private Button quitButton;
 
@@ -24,7 +24,7 @@ public class AllGameStatisticsScreenView extends BorderPane {
     private static final Font BODY_FONT = new Font("Consolas", 15);
     private static final double MAX_WIDTH = 200;
 
-    public AllGameStatisticsScreenView() {
+    public GameStatisticsScreenView() {
         initializeNodes();
         layoutNodes();
     }
@@ -40,7 +40,7 @@ public class AllGameStatisticsScreenView extends BorderPane {
         yAxisSessionDurations.setLabel("Session Durations (Seconds)");
         this.sessionDurationsChart = new ScatterChart<Number,Number>(xAxisGameSessionNo, yAxisSessionDurations);
 
-        this.playAgainButton = new Button ("Play Again");
+        this.newGameButton = new Button ("New Game");
         this.backButton = new Button("Back");
         this.quitButton = new Button ("Quit");
     }
@@ -51,7 +51,7 @@ public class AllGameStatisticsScreenView extends BorderPane {
         this.setCenter(this.sessionDurationsChart);
         this.setRight(this.activeSessionDurationPercentile);
         HBox bottomButtons = new HBox();
-        bottomButtons.getChildren().addAll(backButton, playAgainButton, quitButton);
+        bottomButtons.getChildren().addAll(backButton, newGameButton, quitButton);
         bottomButtons.setSpacing(200);
         bottomButtons.setAlignment(Pos.CENTER);
         this.setBottom(bottomButtons);
@@ -69,7 +69,7 @@ public class AllGameStatisticsScreenView extends BorderPane {
         this.title.setFont(TITLE_FONT);
         this.activeSessionDurationPercentile.setFont(SUBTITLE_FONT);
         this.activeSessionScoreVSAverage.setFont(SUBTITLE_FONT);
-        this.playAgainButton.setFont(BODY_FONT);
+        this.newGameButton.setFont(BODY_FONT);
         this.quitButton.setFont(BODY_FONT);
         this.backButton.setFont(BODY_FONT);
     }
@@ -86,8 +86,8 @@ public class AllGameStatisticsScreenView extends BorderPane {
         return sessionDurationsChart;
     }
 
-    public Button getPlayAgainButton() {
-        return playAgainButton;
+    public Button getNewGameButton() {
+        return newGameButton;
     }
 
     public Button getQuitButton() {

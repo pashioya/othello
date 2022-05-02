@@ -26,15 +26,6 @@ public class Board {
         GRID[3][4].setStone(WHITE);
         GRID[4][3].setStone(WHITE);
         GRID[4][4].setStone(BLACK);
-
-//        // Test
-//        GRID[3][3] = new Square(new Stone(StoneColor.WHITE));
-//        GRID[3][4] = new Square(new Stone(StoneColor.WHITE));
-//        GRID[4][3] = new Square(new Stone(StoneColor.WHITE));
-//        GRID[4][4] = new Square(new Stone(StoneColor.BLACK));
-//        GRID[5][4] = new Square(new Stone(StoneColor.WHITE));
-//        GRID[6][5] = new Square(new Stone(StoneColor.BLACK));
-//        GRID[3][5] = new Square(new Stone(StoneColor.BLACK));
     }
 
     //---------------TO STRING METHODS---------------
@@ -221,16 +212,20 @@ public class Board {
         int[] mostProfitableMove = null;
         int highestProfitability = 0;
         for (int[] possibleMove : possibleMoves) {
-            ArrayList<int[]> flippableStoneList = findFlippableStones(possibleMove, stoneColor);
-            int profitability = flippableStoneList.size();
-            System.out.println("Move at row " + possibleMove[0] + ", column " + possibleMove[1] + " yields " + profitability);
+            int profitability = getMoveProfitability(possibleMove, stoneColor);
+//            System.out.println("Move at row " + possibleMove[0] + ", column " + possibleMove[1] + " yields " + profitability);
             if (profitability > highestProfitability) {
                 mostProfitableMove = possibleMove;
                 highestProfitability = profitability;
             }
         }
-        System.out.println("Placed stone at: row " + mostProfitableMove[0] + ", column " + mostProfitableMove[1]);
+//        System.out.println("Placed stone at: row " + mostProfitableMove[0] + ", column " + mostProfitableMove[1]);
         return mostProfitableMove;
+    }
+
+    private int getMoveProfitability(int[] possibleMove, StoneColor stoneColor){
+        ArrayList<int[]> flippableStoneList = findFlippableStones(possibleMove, stoneColor);
+        return flippableStoneList.size();
     }
 
     private boolean checkDirection(int verticalShift, int horizontalShift, int vertical, int horizontal, StoneColor stoneColor) {
@@ -287,13 +282,16 @@ public class Board {
 
     public boolean userWon(StoneColor stoneColor) {
         int userStoneCount = countStones(stoneColor);
-        return (userStoneCount > 32);
+        StoneColor oppositeColor = null;
+        if (stoneColor == WHITE){
+            oppositeColor = BLACK;
+        } else {
+            oppositeColor = WHITE;
+        }
+        // user wins if she/he has more than 32 stones or the opponent has no more stones on the board
+        return (userStoneCount > 32) || (countStones(oppositeColor) == 0);
     }
 
-    public boolean isTied(StoneColor stoneColor) {
-        int userStoneCount = countStones(stoneColor);
-        return (userStoneCount == 32);
-    }
 
     public int countStones(StoneColor stoneColor) {
         int playerStoneCount = 0;

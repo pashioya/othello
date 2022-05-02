@@ -11,5 +11,14 @@
     <orderEntry type="library" name="postgresql-42.3.1" level="project" />
     <orderEntry type="module" module-name="t9_othello" />
     <orderEntry type="library" name="JavaFX" level="application" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/easy-rules-core-4.1.1-20201206.215123-1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

@@ -16,7 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class EndScreenStatView extends BorderPane {
+public class GameSessionStatisticsView extends BorderPane {
     private Text gameOutcome;
     private Text score;
     private Text averageDuration;
@@ -40,7 +40,7 @@ public class EndScreenStatView extends BorderPane {
     private static final double MAX_WIDTH = 200;
 
 
-    public EndScreenStatView() {
+    public GameSessionStatisticsView() {
         initializeNodes();
         layoutNodes();
     }

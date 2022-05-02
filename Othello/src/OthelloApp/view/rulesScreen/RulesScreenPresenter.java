@@ -1,8 +1,6 @@
 package OthelloApp.view.rulesScreen;
 
-import OthelloApp.view.welcomeScreen.WelcomeScreenPresenter;
-import OthelloApp.view.welcomeScreen.WelcomeScreenView;
-import javafx.stage.Stage;
+import static OthelloApp.screen_navigation_util.SCREEN_NAVIGATION_UTIL.showWelcomeScreen;
 
 public class RulesScreenPresenter {
     private final RulesScreenView view;
@@ -14,16 +12,9 @@ public class RulesScreenPresenter {
 
     private void addEventHandlers(){
         view.getBackButton().setOnAction(event -> {
-            showWelcomeScreen();
+            showWelcomeScreen(view);
         });
     }
 
-    private void showWelcomeScreen(){
-        WelcomeScreenView welcomeScreenView = new WelcomeScreenView();
-        WelcomeScreenPresenter welcomeScreenPresenter = new WelcomeScreenPresenter(welcomeScreenView);
-        view.getScene().setRoot(welcomeScreenView);
-        welcomeScreenView.getScene().getWindow().sizeToScene();
-        Stage stage = (Stage) welcomeScreenView.getScene().getWindow();
-        stage.centerOnScreen();
-    }
+
 }

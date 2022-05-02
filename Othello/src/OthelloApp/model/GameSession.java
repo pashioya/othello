@@ -4,10 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static OthelloApp.db_util.DB_UTIL.closeDbConnection;
 import static OthelloApp.db_util.DB_UTIL.getStatement;
@@ -25,10 +22,10 @@ public class GameSession {
     private final long startTimeMilisec;
     private long endTimeMilisec;
 
-    public GameSession(boolean userGoesFirst, String userName) {
+    public GameSession(boolean userGoesFirst, String userName, String difficultyMode) {
         this.board = new Board();
         this.players = new Player[2];
-        initializePlayers(userGoesFirst, userName);
+        initializePlayers(userGoesFirst, userName, difficultyMode);
         this.activePlayer = this.players[0];
         this.startDateTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SS").format(new Date());
         this.startTimeMilisec = System.currentTimeMillis();
@@ -100,9 +97,6 @@ public class GameSession {
         }
     }
 
-
-
-
     // -----------------------------------------------------------------
 
     public boolean userWon() {
@@ -115,22 +109,12 @@ public class GameSession {
     }
 
 
-
-    public boolean isTied(){
-        for (Player player : players) {
-            if (player instanceof User) {
-                return board.isTied(player.getPlayerColor());
-            }
-        }
-        return false;
-    }
-
-    private void initializePlayers(boolean userGoesFirst, String userName) {
+    private void initializePlayers(boolean userGoesFirst, String userName, String difficultyMode) {
         if (userGoesFirst) {
             this.players[0] = new User(StoneColor.BLACK, userName);
-            this.players[1] = new Computer(StoneColor.WHITE, "basicAI");
+            this.players[1] = new Computer(StoneColor.WHITE, difficultyMode);
         } else {
-            this.players[0] = new Computer(StoneColor.BLACK, "basicAI");
+            this.players[0] = new Computer(StoneColor.BLACK, difficultyMode);
             this.players[1] = new User(StoneColor.WHITE, userName);
         }
     }
@@ -152,7 +136,7 @@ public class GameSession {
                     "is_over BOOLEAN DEFAULT FALSE, " +
                     "user_won BOOLEAN DEFAULT FALSE, " +
                     "username VARCHAR(25) CONSTRAINT nn_username NOT NULL, " +
-                    "computer_name VARCHAR(25) CONSTRAINT nn_computer_name NOT NULL, "+
+                    "computer_name VARCHAR(25) CONSTRAINT nn_computer_name NOT NULL, " +
                     "number_stones_user NUMERIC(2) DEFAULT 0);");
             closeDbConnection();
         } catch (SQLException e) {
@@ -170,7 +154,7 @@ public class GameSession {
         return playersScores;
     }
 
-    public int getUserScore(){
+    public int getUserScore() {
         HashMap<Player, Integer> playerScores = getPlayerScores();
         for (Map.Entry<Player, Integer> playerScore : playerScores.entrySet()) {
             if (playerScore.getKey() instanceof User) {
@@ -215,11 +199,74 @@ public class GameSession {
         this.activeTurn = new Turn(player.getName());
     }
 
-    public int[] findMostProfitableMove() {
+    public int[] chooseMove() {
+        System.out.println("Computer choosing move");
+        int[] chosenMove = null;
         StoneColor activePlayerColor = getActivePlayer().getPlayerColor();
         ArrayList<int[]> possibleMoves = getBoard().findAllPossibleMoves(activePlayerColor);
-        int[] mostProfitableMove = getBoard().findMostProfitableMove(possibleMoves, activePlayerColor);
-        return mostProfitableMove;
+        System.out.println("options: ");
+        for (int[] possibleMove : possibleMoves) {
+            System.out.println("row: " + possibleMove[0] + " column: " + possibleMove[1]);
+        }
+        switch (getActivePlayer().getName()) {
+            case "medium":
+                chosenMove = getBoard().findMostProfitableMove(possibleMoves, activePlayerColor);
+                break;
+            case "hard" :
+                ArrayList<int[]> filteredMoves = filterPossibleMoves(possibleMoves);
+                System.out.println("filtered options: ");
+                for (int[] filteredMove : filteredMoves) {
+                    System.out.println("row: " + filteredMove[0] + " column: " + filteredMove[1]);
+                }
+                chosenMove = getBoard().findMostProfitableMove(filteredMoves, activePlayerColor);
+                break;
+            default:
+               Random random = new Random();
+               chosenMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
+        }
+        return chosenMove;
+    }
+
+    private boolean coordinateIsCorner(int[] coordinates){
+        int[] cornerTopLeft = {0,0};
+        int[] cornerTopRight = {0,7};
+        int[] cornerBottomLeft = {7,0};
+        int[] cornerBottomRight = {7,7};
+        return (Arrays.equals(cornerTopLeft, coordinates) || Arrays.equals(cornerTopRight, coordinates) || Arrays.equals(cornerBottomLeft, coordinates) || Arrays.equals(cornerBottomRight, coordinates));
+
+    }
+
+    private boolean coordinateIsSafeSide(int[] coordinates){
+        return (
+                ((coordinates[0] == 0) && (coordinates[1] > 1) && (coordinates[1] < 6)) ||
+                ((coordinates[0] == 7) && (coordinates[1] > 1) && (coordinates[1] < 6)) ||
+                ((coordinates[1] == 0) && (coordinates[0] > 1) && (coordinates[0] < 6))||
+                ((coordinates[1] == 7) && (coordinates[0] > 1) && (coordinates[0] < 6))
+        );
+    }
+    private ArrayList<int[]> filterPossibleMoves(ArrayList<int[]> possibleMoves){
+        ArrayList<int[]> filteredMoves = new ArrayList<>();
+        for (int[] possibleMove : possibleMoves) {
+            if (coordinateIsCorner(possibleMove)){
+                filteredMoves.add(possibleMove);
+            }
+        }
+        if (!filteredMoves.isEmpty()) {
+            System.out.println("corners available");
+            return filteredMoves;
+        } else {
+            for (int[] possibleMove : possibleMoves) {
+                if (coordinateIsSafeSide(possibleMove)){
+                    filteredMoves.add(possibleMove);
+                }
+            }
+        }
+        if (!filteredMoves.isEmpty()){
+            System.out.println("sides available");
+            return filteredMoves;
+        }
+        System.out.println("neither corners nor sides available");
+        return possibleMoves;
     }
 
     public ArrayList<int[]> updateStones(int[] moveCoordinates) {
@@ -256,29 +303,4 @@ public class GameSession {
             e.printStackTrace(); // error handling
         }
     }
-
-    public Turn getMostProfitableUserTurn(){
-        int maxFlipped = 0;
-        Turn mostProfitableTurn = null;
-        for (Turn turn : turns) {
-            if (turn.getName().equals(getUserName())){
-                if (turn.getFlippedStoneCoordinates().size() > maxFlipped){
-                    maxFlipped = turn.getFlippedStoneCoordinates().size();
-                    mostProfitableTurn = turn;
-                }
-            }
-        }
-        return mostProfitableTurn;
-    }
-
-    public ArrayList<Integer> getUserMoveProfitabilitiesList(){
-        ArrayList<Integer> userMoveProfitabilities = new ArrayList<>();
-        for (Turn turn : getTurns()) {
-            if (turn.getName().equals(getUserName())) {
-                userMoveProfitabilities.add(turn.getFlippedStoneCoordinates().size());
-            }
-        }
-        return userMoveProfitabilities;
-    }
-
 }

@@ -1,8 +1,6 @@
-package OthelloApp.view.gamescreen;
+package OthelloApp.view.gameSessionScreen;
 
 import OthelloApp.model.*;
-import OthelloApp.view.endScreen.EndScreenStatPresenter;
-import OthelloApp.view.endScreen.EndScreenStatView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -15,12 +13,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class GameScreenPresenter {
+import static OthelloApp.screen_navigation_util.SCREEN_NAVIGATION_UTIL.showGameSessionStatisticsScreen;
+
+public class GameSessionScreenPresenter {
 
     private final GameSession model;
-    private final GameScreenView view;
+    private final GameSessionScreenView view;
 
-    public GameScreenPresenter(GameSession model, GameScreenView view) {
+    public GameSessionScreenPresenter(GameSession model, GameSessionScreenView view) {
         this.model = model;
         this.view = view;
         System.out.println(this.model.getActivePlayer());
@@ -29,7 +29,7 @@ public class GameScreenPresenter {
         addEventHandlers();
         if (this.model.activePlayerIsComputer()) {
             this.view.setClickableComputerTurnButton(true);
-            view.disableAllGridButtons();
+            disableAllGridButtons();
             view.getTurnInstruction().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
         } else {
             StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
@@ -42,15 +42,17 @@ public class GameScreenPresenter {
 
     class ComputerTurnHandler implements EventHandler<ActionEvent> {
         public void handle(ActionEvent event) {
-            int[] mostProfitableMove = model.findMostProfitableMove();
-            ArrayList<int[]> flippableStoneCoordinates = model.updateStones(mostProfitableMove);
-            setButtonImage(mostProfitableMove);
-            updateView(flippableStoneCoordinates);
-            updatePlayerScores();
+            int[] mostProfitableMove = model.chooseMove();
+            if (mostProfitableMove != null) {
+                ArrayList<int[]> flippableStoneCoordinates = model.updateStones(mostProfitableMove);
+                setButtonImage(mostProfitableMove);
+                updateView(flippableStoneCoordinates);
+                updatePlayerScores();
+            }
             model.switchActivePlayer();
             StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
             if (model.isOver()) {
-                view.disableAllGridButtons();
+                disableAllGridButtons();
                 showGameOverAlert();
             } else {
                 if (model.getBoard().hasValidMoves(activePlayerColor)) {
@@ -81,13 +83,13 @@ public class GameScreenPresenter {
             updatePlayerScores();
             model.switchActivePlayer();
             if (model.isOver()) {
-                view.disableAllGridButtons();
+                disableAllGridButtons();
                 showGameOverAlert();
             } else {
                 // If the Computer can play a turn, then disable the buttons so the user can't click on them, and enable the button that allows the computer to take a turn
                 if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
                     view.getTurnInstruction().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
-                    view.disableAllGridButtons();
+                    disableAllGridButtons();
                     // If Computer can't, then switch back to user and let user pick another move
                 } else {
                     view.getTurnInstruction().setText("Computer unable to place a stone - Click another square to place a stone.");
@@ -102,7 +104,17 @@ public class GameScreenPresenter {
     }
 
 
-    private void showGameOverAlert(){
+    void disableAllGridButtons() {
+        for (int row = 0; row < model.getBoard().getGRID().length; row++) {
+            for (int column = 0; column < model.getBoard().getGRID()[row].length; column++) {
+                view.disableButton(row, column);
+                view.setButtonOpacity(row, column, model.getBoard().getGRID()[row][column].hasStone(), false);
+            }
+        }
+    }
+
+
+    private void showGameOverAlert() {
         Alert gameOverAlert = new Alert(Alert.AlertType.INFORMATION);
         gameOverAlert.setTitle("Game over!");
         gameOverAlert.setHeaderText("Neither player can play any more turns.");
@@ -112,12 +124,13 @@ public class GameScreenPresenter {
         ButtonType cancelButton = new ButtonType("Cancel");
         gameOverAlert.getButtonTypes().addAll(continueButton, cancelButton);
         Optional<ButtonType> result = gameOverAlert.showAndWait();
-        if (result.get() == continueButton){
-            showEndScreen();
+        if (result.get() == continueButton) {
+            showGameSessionStatisticsScreen(view);
         } else {
             gameOverAlert.close();
         }
     }
+
 
     private void addEventHandlers() {
         for (int row = 0; row < view.getGridButtons().length; row++) {
@@ -135,7 +148,7 @@ public class GameScreenPresenter {
         });
     }
 
-    private void showQuitGameAlert(ActionEvent event){
+    private void showQuitGameAlert(ActionEvent event) {
         Alert quitGameAlert = new Alert(Alert.AlertType.WARNING);
         quitGameAlert.setTitle("Confirm quit game");
         quitGameAlert.setHeaderText("All progress in this game will be lost.");
@@ -145,15 +158,15 @@ public class GameScreenPresenter {
         ButtonType cancelButton = new ButtonType("Cancel");
         quitGameAlert.getButtonTypes().addAll(continueButton, cancelButton);
         Optional<ButtonType> result = quitGameAlert.showAndWait();
-        if (result.get() == continueButton){
-            Stage stage = (Stage)view.getScene().getWindow();
+        if (result.get() == continueButton) {
+            Stage stage = (Stage) view.getScene().getWindow();
             stage.close();
         } else {
             event.consume();
         }
     }
 
-    private Alert createRulesInfoAlert(){
+    private Alert createRulesInfoAlert() {
         Alert rulesInfoAlert = new Alert(Alert.AlertType.INFORMATION);
         rulesInfoAlert.setTitle("Othello Rules");
         rulesInfoAlert.setHeaderText("Rules");
@@ -193,7 +206,6 @@ public class GameScreenPresenter {
         } else return switch (square.getStone().getColor()) {
             case WHITE -> "white.png";
             case BLACK -> "black.png";
-
         };
     }
 
@@ -203,6 +215,7 @@ public class GameScreenPresenter {
             for (int column = 0; column < view.getGridButtons()[row].length; column++) {
                 Button button = this.view.getGridButtons()[row][column];
                 button.setDisable(!(buttonIsValidMove(row, column, possibleMoves)));
+                view.setButtonOpacity(row, column, model.getBoard().getGRID()[row][column].hasStone(), buttonIsValidMove(row, column, possibleMoves));
             }
         }
     }
@@ -220,9 +233,17 @@ public class GameScreenPresenter {
     }
 
     private void updateView(ArrayList<int[]> flippableStoneCoordinatesList) {
+        final double imageTransitionDuration = 2000;
         for (int[] flippableStoneCoordinates : flippableStoneCoordinatesList) {
-            setButtonImage(flippableStoneCoordinates);
+            fadeTransition(flippableStoneCoordinates, imageTransitionDuration);
         }
+    }
+
+    private void fadeTransition(int[] flippableStoneCoordinates, double imageTransitionDuration) {
+        Square square = model.getBoard().getGRID()[flippableStoneCoordinates[0]][flippableStoneCoordinates[1]];
+        String URL = getButtonImageURL(square);
+        Button button = view.getGridButtons()[flippableStoneCoordinates[0]][flippableStoneCoordinates[1]];
+        view.fadeBetweenImages(button, URL, imageTransitionDuration);
     }
 
     private void updatePlayerScores() {
@@ -236,16 +257,6 @@ public class GameScreenPresenter {
         }
 
     }
-
-    private void showEndScreen() {
-        EndScreenStatView endScreenView = new EndScreenStatView();
-        EndScreenStatPresenter endScreenPresenter = new EndScreenStatPresenter(model, endScreenView);
-        view.getScene().setRoot(endScreenView);
-        endScreenView.getScene().getWindow().sizeToScene();
-        Stage stage = (Stage) endScreenView.getScene().getWindow();
-        stage.centerOnScreen();
-    }
-
 
 }
 
