@@ -7,7 +7,6 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -21,7 +20,6 @@ public class GameSessionStatisticsView extends BorderPane {
     private Text score;
     private Text averageDuration;
     private Text mostProfitableMove;
-
     private Text outlierMoves;
 
     private ScatterChart<Number, Number> profitabilitiesPerMoveChart;
@@ -32,7 +30,8 @@ public class GameSessionStatisticsView extends BorderPane {
     private RadioButton moveDurationRadioButton;
     private RadioButton moveProfitabilityHistogramRadioButton;
 
-    private Button playAgainButton;
+    private Button newGameButton;
+    private Button replayLastGameSessionButton;
     private Button allGameStatisticsButton;
     private static final Font TITLE_FONT = new Font("Consolas", 30);
     private static final Font SUBTITLE_FONT = new Font("Consolas", 20);
@@ -62,7 +61,7 @@ public class GameSessionStatisticsView extends BorderPane {
         xAxisMoveNumberProfitabilities.setLabel("Move Number");
         xAxisMoveNumberProfitabilities.setTickUnit(1);
         NumberAxis yAxisProfitabilities = new  NumberAxis();
-        yAxisProfitabilities.setLabel("Number of Flipped Pieces");
+        yAxisProfitabilities.setLabel("Number of Flipped Stones");
         yAxisProfitabilities.setTickUnit(1);
         yAxisProfitabilities.setMinorTickVisible(false);
         this.profitabilitiesPerMoveChart = new ScatterChart<Number,Number>(xAxisMoveNumberProfitabilities, yAxisProfitabilities);
@@ -75,14 +74,17 @@ public class GameSessionStatisticsView extends BorderPane {
         this.durationsPerMoveChart = new ScatterChart<Number,Number>(xAxisMoveNumberDurations, yAxisDurations);
 
         CategoryAxis xAxisMoveProfitabilityBins = new CategoryAxis();
+        xAxisMoveProfitabilityBins.setLabel("Number of Flipped Stones in Move");
         NumberAxis yAxisFrequency = new  NumberAxis();
+        yAxisFrequency.setLabel("Frequency");
         this.profitabilitiesHistogram = new BarChart<String, Number>(xAxisMoveProfitabilityBins, yAxisFrequency);
 
         this.averageDuration = new Text();
         this.mostProfitableMove = new Text();
         this.outlierMoves = new Text();
 
-        this.playAgainButton = new Button("Play Again");
+        this.newGameButton = new Button("New Game");
+        this.replayLastGameSessionButton = new Button ("Replay Last GameSession");
         this.allGameStatisticsButton = new Button("View All Games Statistics");
     }
 
@@ -120,7 +122,7 @@ public class GameSessionStatisticsView extends BorderPane {
 
     private void layoutBottomButtons(){
         HBox bottomButtons = new HBox();
-        bottomButtons.getChildren().addAll(playAgainButton, allGameStatisticsButton);
+        bottomButtons.getChildren().addAll(newGameButton, allGameStatisticsButton, replayLastGameSessionButton);
         bottomButtons.setAlignment(Pos.CENTER);
         bottomButtons.setSpacing(100);
         BorderPane.setMargin(bottomButtons, new Insets(20));
@@ -135,9 +137,10 @@ public class GameSessionStatisticsView extends BorderPane {
         moveProfitabilityHistogramRadioButton.setFont(BODY_FONT);
         mostProfitableMove.setFont(BODY_FONT);
         averageDuration.setFont(BODY_FONT);
-        playAgainButton.setFont(BODY_FONT);
+        newGameButton.setFont(BODY_FONT);
         allGameStatisticsButton.setFont(BODY_FONT);
         outlierMoves.setFont(BODY_FONT);
+        replayLastGameSessionButton.setFont(BODY_FONT);
     }
 
     private void setWidthWrapNodes(){
@@ -193,8 +196,8 @@ public class GameSessionStatisticsView extends BorderPane {
         return averageDuration;
     }
 
-    public Button getPlayAgainButton() {
-        return playAgainButton;
+    public Button getNewGameButton() {
+        return newGameButton;
     }
 
     public Text getOutlierMoves() {
@@ -203,5 +206,9 @@ public class GameSessionStatisticsView extends BorderPane {
 
     public Button getAllGameStatisticsButton() {
         return allGameStatisticsButton;
+    }
+
+    public Button getReplayLastGameSessionButton() {
+        return replayLastGameSessionButton;
     }
 }

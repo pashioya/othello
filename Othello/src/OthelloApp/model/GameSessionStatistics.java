@@ -107,7 +107,7 @@ public class GameSessionStatistics {
         return sum;
     }
 
-    private void fillComputerMoveProfitabilitiesMap(){
+    private void fillComputerMoveProfitabilitiesMap() {
         try {
             Statement statement = getStatement();
             ResultSet resultSet = statement.executeQuery("SELECT t.turn_id, COUNT(*) " +
@@ -187,7 +187,6 @@ public class GameSessionStatistics {
     public boolean isTied() {
         return score == 32;
     }
-
 
 
     public HashMap<Integer, Integer> getUserMoveProfitabilitiesMap() {
@@ -300,5 +299,60 @@ public class GameSessionStatistics {
 
     public HashMap<Integer, Integer> getComputerMoveProfitabilitiesMap() {
         return computerMoveProfitabilitiesMap;
+    }
+
+    public boolean userWentFirst() {
+        List<String> computerModes = List.of("easy", "medium", "hard");
+        String playerName = null;
+        try {
+            Statement statement = getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT player_name from turns WHERE gamesession_id=" + gameSessionID +
+                    " FETCH NEXT 1 ROWS ONLY;");
+            while (resultSet.next()) {
+                playerName = resultSet.getString(1); // gets the result of name
+            }
+            closeDbConnection();
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+        }
+        if (!computerModes.contains(playerName)) {
+            return true;
+        }
+        return false;
+    }
+
+    public String getUserName() {
+        String userName = null;
+        try {
+            Statement statement = getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT username from gamesessions WHERE gamesession_id=" + gameSessionID +
+                    ";");
+            while (resultSet.next()) {
+                userName = resultSet.getString(1); // gets the result of name
+            }
+            closeDbConnection();
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+        }
+        return userName;
+    }
+
+    public String getComputerName() {
+        String computerName = null;
+        try {
+            Statement statement = getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT computer_name from gamesessions WHERE gamesession_id=" + gameSessionID +
+                    ";");
+            while (resultSet.next()) {
+                computerName = resultSet.getString(1); // gets the result of name
+            }
+            closeDbConnection();
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+        }
+        return computerName;
     }
 }

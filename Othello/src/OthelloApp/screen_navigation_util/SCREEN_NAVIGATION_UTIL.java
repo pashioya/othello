@@ -66,8 +66,8 @@ public final class SCREEN_NAVIGATION_UTIL {
         stage.centerOnScreen();
     }
 
-    public static void showGameScreen(Pane view, boolean userGoesFirst, String userName, String difficultyMode) {
-        GameSessionScreenView gameSessionScreenView = new GameSessionScreenView();
+    public static void showGameScreen(Pane view, boolean userGoesFirst, String userName, String difficultyMode, boolean replay) {
+        GameSessionScreenView gameSessionScreenView = new GameSessionScreenView(replay);
         GameSession model = new GameSession(userGoesFirst, userName, difficultyMode);
         GameSessionScreenPresenter gameSessionScreenPresenter = new GameSessionScreenPresenter(model, gameSessionScreenView);
         view.getScene().setRoot(gameSessionScreenView);

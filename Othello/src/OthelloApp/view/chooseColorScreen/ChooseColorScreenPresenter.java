@@ -26,7 +26,7 @@ public class ChooseColorScreenPresenter {
             boolean userGoesFirst = view.getSelectedRadioButtonText(view.getColorToggleGroup()).toLowerCase().equals("black") ? true : false;
             String userName = view.getNameField().getText();
             String difficultyMode = view.getSelectedRadioButtonText(view.getDifficultyToggleGroup()).toLowerCase();
-            showGameScreen(view, userGoesFirst, userName, difficultyMode);
+            showGameScreen(view, userGoesFirst, userName, difficultyMode, false);
         });
 
         view.getBackButton().setOnAction(event -> {

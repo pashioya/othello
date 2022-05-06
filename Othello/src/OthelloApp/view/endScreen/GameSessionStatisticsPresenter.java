@@ -2,14 +2,9 @@ package OthelloApp.view.endScreen;
 
 
 import OthelloApp.model.GameSessionStatistics;
-import OthelloApp.model.GameStatistics;
-import OthelloApp.view.allGameStatisticsScreen.GameStatisticsScreenPresenter;
-import OthelloApp.view.allGameStatisticsScreen.GameStatisticsScreenView;
-import OthelloApp.view.chooseColorScreen.ChooseColorScreenPresenter;
-import OthelloApp.view.chooseColorScreen.ChooseColorScreenView;
 import static OthelloApp.screen_navigation_util.SCREEN_NAVIGATION_UTIL.*;
 import javafx.scene.chart.XYChart;
-import javafx.stage.Stage;
+
 
 import java.util.*;
 
@@ -34,12 +29,16 @@ public class GameSessionStatisticsPresenter {
         this.view.getMoveProfitabilityHistogramRadioButton().setOnAction(event -> {
             displayMoveProfitabilitiesHistogram();
         });
-        this.view.getPlayAgainButton().setOnAction(event -> {
+        this.view.getNewGameButton().setOnAction(event -> {
             showChooseColorScreen(view);
         });
 
         this.view.getAllGameStatisticsButton().setOnAction(event -> {
             showAllGameStatisticsScreen(view, false);
+        });
+
+        this.view.getReplayLastGameSessionButton().setOnAction(event -> {
+            showGameScreen(view, model.userWentFirst(), model.getUserName(), model.getComputerName(), true);
         });
 
     }
@@ -80,7 +79,7 @@ public class GameSessionStatisticsPresenter {
     private void displayMoveDurationsChart() {
         view.getDurationsPerMoveChart().getData().clear();
         XYChart.Series<Number, Number> playerMoveDurations = new XYChart.Series<>();
-        playerMoveDurations.setName("Move Durations in Seconds by Move Number");
+        playerMoveDurations.setName("User Move");
         for (Map.Entry<Integer, Double> userMoveDurationsEntry : model.getUserMoveDurationsMap().entrySet()) {
             playerMoveDurations.getData().add(new XYChart.Data<Number, Number>(userMoveDurationsEntry.getKey(), userMoveDurationsEntry.getValue()));
         }
@@ -115,8 +114,7 @@ public class GameSessionStatisticsPresenter {
     private void fillHistogram(HashMap<Integer, Integer> profitabilitiesFrequencies) {
         view.getProfitabilitiesHistogram().getData().clear();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Move Profitability (Number of Flipped Stones)");
-        this.view.getProfitabilitiesHistogram().getYAxis().setLabel("Frequency");
+        series.setName("User");
         for (Map.Entry<Integer, Integer> profitabilityFrequency : profitabilitiesFrequencies.entrySet()) {
             series.getData().add(new XYChart.Data<String, Number>(
                     String.valueOf(profitabilityFrequency.getKey()),

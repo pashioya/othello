@@ -1,36 +1,30 @@
-//import org.jeasy.rules.annotation.Action;
-//import org.jeasy.rules.annotation.Condition;
-//import org.jeasy.rules.annotation.Fact;
-//import org.jeasy.rules.annotation.Rule;
-//
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.List;
-//
-//public class Test {
-//
-//
-//    public static void main(String[] args) {
-//        int[] coordinate1= {7,7};
-//        System.out.println(coordinateIsCorner(coordinate1));
-//        int[] coordinate2 = {1,0};
-//        System.out.println(coordinateIsSide(coordinate2));
-//        int[] coordinate3 = {7,3};
-//        System.out.println(coordinateIsSide(coordinate3));
-//        int[] coordinate4 = {5,3};
-//        System.out.println(coordinateIsSide(coordinate4));
-//        int[] coordinate5 = {0,0};
-//        System.out.println(coordinateIsSide(coordinate5));
-//        ArrayList<int[]> possibleMoves = new ArrayList<>();
-//        possibleMoves.add(coordinate1);
-//        possibleMoves.add(coordinate2);
-//        possibleMoves.add(coordinate3);
-//        possibleMoves.add(coordinate4);
-//        possibleMoves.add(coordinate5);
-//        ArrayList<int[]> filteredMoves = filterPossibleMoves(possibleMoves);
-//        System.out.println("Printing contents");
-//        for (int[] filteredMove : filteredMoves) {
-//            System.out.println(filteredMove[0] + " " + filteredMove[1]);
-//        }
-//    }
-//}
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class Test {
+    private static boolean coordinateIsNotDangerZone(int[] coordinates){
+        List<int[]> dangerZoneTopLeft = List.of(new int[]{1,0}, new int[]{1,1}, new int[]{0,1});
+        List<int[]> dangerZoneTopRight = List.of(new int[]{1,6}, new int[]{0,6}, new int[]{1,7});
+        List<int[]> dangerZoneBottomLeft = List.of(new int[]{6,1}, new int[]{6,1}, new int[]{7,1});
+        List<int[]> dangerZoneBottomRight = List.of(new int[]{7,6}, new int[]{6,7}, new int[]{6,6});
+        List<List<int[]>> dangerZones = new ArrayList<List<int[]>>();
+        dangerZones.add(dangerZoneTopLeft);
+        dangerZones.add(dangerZoneTopRight);
+        dangerZones.add(dangerZoneBottomLeft);
+        dangerZones.add(dangerZoneBottomRight);
+        for (List<int[]> dangerZone : dangerZones){
+            for (int[] dangerousCoordinate : dangerZone){
+                if (Arrays.equals(dangerousCoordinate, coordinates)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(coordinateIsNotDangerZone(new int[] {4,4}));
+
+    }
+}

@@ -26,17 +26,23 @@ public class GameSessionScreenView extends BorderPane {
     private Text turnInstruction;
     private Button rulesButton;
     private Button quitButton;
-    private Button computerTurnButton;
+    private Button turnButton;
+    private Button explainComputerMoveButton;
+    private Button backButton;
     private Text timer;
     private GridPane grid;
     private Button[][] gridButtons;
     private final static Font BODY_FONT = new Font("Consolas", 15);
     private final long startMilliseconds = System.currentTimeMillis();
+    private final boolean replay;
 
-    public GameSessionScreenView() {
+    public GameSessionScreenView(boolean replay) {
+        this.replay = replay;
         initialiseNodes();
         layoutNodes();
-        updateTimer();
+        if (!replay) {
+            updateTimer();
+        }
     }
 
     private void initialiseNodes() {
@@ -49,7 +55,13 @@ public class GameSessionScreenView extends BorderPane {
         this.computerScore = new Text("Computer: ");
         this.turnInstruction = new Text();
         this.rulesButton = new Button("Rules");
-        this.computerTurnButton = new Button("Play Computer Turn");
+        this.explainComputerMoveButton = new Button("Explain Last Computer Turn");
+        this.backButton = new Button ("Back");
+        if (!replay) {
+            this.turnButton = new Button("Play Computer Turn");
+        } else {
+            this.turnButton = new Button("View Next Turn");
+        }
         this.quitButton = new Button("Quit");
     }
 
@@ -75,10 +87,10 @@ public class GameSessionScreenView extends BorderPane {
     public void layoutHboxBottom() {
         this.setBottom(hBoxBottomButtons);
         this.hBoxBottomButtons.setAlignment(Pos.CENTER);
-        this.hBoxBottomButtons.getChildren().addAll(rulesButton, computerTurnButton, quitButton);
+        this.hBoxBottomButtons.getChildren().addAll(rulesButton, turnButton, explainComputerMoveButton, backButton, quitButton);
         this.hBoxBottomButtons.setPadding(new Insets(10, 10, 10, 10));
         this.setMargin(hBoxBottomButtons, new Insets(10, 10, 10, 10));
-        this.hBoxBottomButtons.setSpacing(100);
+        this.hBoxBottomButtons.setSpacing(20);
     }
 
     public void styleNodes() {
@@ -88,14 +100,10 @@ public class GameSessionScreenView extends BorderPane {
         computerScore.setFont(BODY_FONT);
         turnInstruction.setFont(BODY_FONT);
         rulesButton.setFont(BODY_FONT);
-        computerTurnButton.setFont(BODY_FONT);
+        turnButton.setFont(BODY_FONT);
         quitButton.setFont(BODY_FONT);
-//        for (int row = 0; row < this.gridButtons.length; row++) {
-//            for (int column = 0; column < this.gridButtons[row].length; column++) {
-//                Button button = this.gridButtons[row][column];
-//                button.setStyle(";");
-//            }
-//        }
+        backButton.setFont(BODY_FONT);
+        explainComputerMoveButton.setFont(BODY_FONT);
     }
 
     public void setButtonOpacity(int row, int column, boolean hasStone, boolean isValidMove) {
@@ -113,7 +121,6 @@ public class GameSessionScreenView extends BorderPane {
         int buttonWidth = 80;
         int buttonHeight = 80;
         Image image = new Image(imageUrl, buttonWidth, buttonHeight, false, true, true);
-
         BackgroundImage backgroundImage = new BackgroundImage(image,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
@@ -133,10 +140,8 @@ public class GameSessionScreenView extends BorderPane {
     private void initializeGrid() {
         this.grid = new GridPane();
         this.setCenter(grid);
-//        this.grid.setGridLinesVisible(true);
         this.grid.setVgap(10);
         this.grid.setHgap(10);
-        // change so view doesn't see Board
         this.gridButtons = new Button[8][8];
         for (int row = 0; row < this.gridButtons.length; row++) {
             for (int column = 0; column < this.gridButtons[row].length; column++) {
@@ -150,10 +155,13 @@ public class GameSessionScreenView extends BorderPane {
 
     }
 
-    void setClickableComputerTurnButton(boolean activePlayerIsComputer) {
-        this.computerTurnButton.setDisable(!activePlayerIsComputer);
+    void setClickableTurnButton(boolean activePlayerIsComputer) {
+        this.turnButton.setDisable(!activePlayerIsComputer);
     }
 
+    void setClickableExplainComputerMoveButton(boolean computerIsActivePlayer){
+        explainComputerMoveButton.setDisable(!computerIsActivePlayer);
+    }
 
     void disableButton(int row, int column) {
         Button button = getGridButtons()[row][column];
@@ -180,12 +188,16 @@ public class GameSessionScreenView extends BorderPane {
         return gridButtons;
     }
 
-    public Button getComputerTurnButton() {
-        return computerTurnButton;
+    public Button getTurnButton() {
+        return turnButton;
     }
 
     public Text getTurnInstruction() {
         return turnInstruction;
+    }
+
+    public Button getBackButton() {
+        return backButton;
     }
 
     private void setTimerText() {
@@ -240,6 +252,15 @@ public class GameSessionScreenView extends BorderPane {
         fadeTransitionIn.setToValue(1.0);
         fadeTransitionIn.play();
     }
+
+    public boolean isReplay() {
+        return replay;
+    }
+
+    public Button getExplainComputerMoveButton() {
+        return explainComputerMoveButton;
+    }
+
 }
 
 

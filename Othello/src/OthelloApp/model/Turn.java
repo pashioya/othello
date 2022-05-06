@@ -20,8 +20,9 @@ public class Turn {
     private int[] placedCoordinate;
     private ArrayList<int[]> flippedStoneCoordinates;
 
-    public Turn(String name) {
-        if (turnCount == 0) {
+    public Turn(String name, boolean isFirstTurn) {
+        if (isFirstTurn){
+            turnCount = 0;
             createTurnsTable();
             createFlippedPiecesTable();
         }
@@ -31,7 +32,7 @@ public class Turn {
         this.startTimeMilisec = currentTimeMillis();
 
         this.flippedStoneCoordinates = new ArrayList<>();
-        turnCount += 1;
+        turnCount ++;
     }
 
     public void setPlacedCoordinate(int[] placedCoordinate) {

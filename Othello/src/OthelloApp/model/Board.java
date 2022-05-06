@@ -213,17 +213,15 @@ public class Board {
         int highestProfitability = 0;
         for (int[] possibleMove : possibleMoves) {
             int profitability = getMoveProfitability(possibleMove, stoneColor);
-//            System.out.println("Move at row " + possibleMove[0] + ", column " + possibleMove[1] + " yields " + profitability);
             if (profitability > highestProfitability) {
                 mostProfitableMove = possibleMove;
                 highestProfitability = profitability;
             }
         }
-//        System.out.println("Placed stone at: row " + mostProfitableMove[0] + ", column " + mostProfitableMove[1]);
         return mostProfitableMove;
     }
 
-    private int getMoveProfitability(int[] possibleMove, StoneColor stoneColor){
+    public int getMoveProfitability(int[] possibleMove, StoneColor stoneColor){
         ArrayList<int[]> flippableStoneList = findFlippableStones(possibleMove, stoneColor);
         return flippableStoneList.size();
     }

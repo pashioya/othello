@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static OthelloApp.screen_navigation_util.SCREEN_NAVIGATION_UTIL.showChooseColorScreen;
 import static OthelloApp.screen_navigation_util.SCREEN_NAVIGATION_UTIL.showGameSessionStatisticsScreen;
 
 public class GameSessionScreenPresenter {
@@ -25,17 +26,24 @@ public class GameSessionScreenPresenter {
         this.view = view;
         System.out.println(this.model.getActivePlayer());
         System.out.println(this.model.getBoard());
+        this.view.setClickableExplainComputerMoveButton(false);
         updatePlayerScores();
         addEventHandlers();
-        if (this.model.activePlayerIsComputer()) {
-            this.view.setClickableComputerTurnButton(true);
+        if (view.isReplay()) {
+            this.view.setClickableTurnButton(true);
             disableAllGridButtons();
-            view.getTurnInstruction().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
+            view.getTurnInstruction().setText("Click \"View Next Turn\" to replay the next move in the last game session.");
         } else {
-            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
-            this.view.setClickableComputerTurnButton(false);
-            setClickableGridButtons(activePlayerColor);
-            view.getTurnInstruction().setText("Click a highlighted square to place a stone.");
+            if (this.model.activePlayerIsComputer()) {
+                this.view.setClickableTurnButton(true);
+                disableAllGridButtons();
+                view.getTurnInstruction().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
+            } else {
+                StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+                this.view.setClickableTurnButton(false);
+                setClickableGridButtons(activePlayerColor);
+                view.getTurnInstruction().setText("Click a highlighted square to place a stone.");
+            }
         }
         drawBoard();
     }
@@ -43,8 +51,16 @@ public class GameSessionScreenPresenter {
     class ComputerTurnHandler implements EventHandler<ActionEvent> {
         public void handle(ActionEvent event) {
             int[] mostProfitableMove = model.chooseMove();
+
             if (mostProfitableMove != null) {
+                StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+                ArrayList<int[]> possibleMoves = model.getBoard().findAllPossibleMoves(activePlayerColor);
+                String explanation = model.explainComputerMoveDecision(possibleMoves);
+                view.getExplainComputerMoveButton().setOnAction(innerEvent -> {
+                    createComputerMoveExplanationAlert(explanation);
+                });
                 ArrayList<int[]> flippableStoneCoordinates = model.updateStones(mostProfitableMove);
+                view.setClickableTurnButton(!model.activePlayerIsComputer());
                 setButtonImage(mostProfitableMove);
                 updateView(flippableStoneCoordinates);
                 updatePlayerScores();
@@ -62,7 +78,8 @@ public class GameSessionScreenPresenter {
                     view.getTurnInstruction().setText("You cannot place a stone - Click \"Play Computer Move\" to make the Computer place a stone.");
                     model.switchActivePlayer();
                 }
-                view.setClickableComputerTurnButton(model.activePlayerIsComputer());
+                view.setClickableTurnButton(model.activePlayerIsComputer());
+                view.setClickableExplainComputerMoveButton(true);
             }
         }
     }
@@ -70,12 +87,10 @@ public class GameSessionScreenPresenter {
 
     class StoneHandler implements EventHandler<ActionEvent> {
         private final int[] coordinates = new int[2];
-
         private StoneHandler(int row, int column) {
             this.coordinates[0] = row;
             this.coordinates[1] = column;
         }
-
         public void handle(ActionEvent event) {
             ArrayList<int[]> flippableStoneCoordinates = model.updateStones(coordinates);
             setButtonImage(coordinates);
@@ -97,12 +112,38 @@ public class GameSessionScreenPresenter {
                     StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
                     setClickableGridButtons(activePlayerColor);
                 }
-                view.setClickableComputerTurnButton(model.activePlayerIsComputer());
+                view.setClickableTurnButton(model.activePlayerIsComputer());
+                view.setClickableExplainComputerMoveButton(false);
             }
         }
 
     }
 
+    class ReplayHandler implements EventHandler<ActionEvent> {
+        private static int turnCount=0;
+
+        public void handle(ActionEvent event) {
+            if (turnCount == model.getLastSessionNumberOfTurns()){
+                turnCount = 0;
+            }
+            int[] coordinates = model.getTurnCoordinates(turnCount);
+            StoneColor stoneColor = (turnCount % 2 == 0) ? StoneColor.BLACK : StoneColor.WHITE;
+            System.out.println(turnCount);
+            if (coordinates != null) {
+                ArrayList<int[]> flippableStoneCoordinates = model.getBoard().findFlippableStones(coordinates, stoneColor);
+                model.getBoard().update(coordinates, stoneColor);
+                setButtonImage(coordinates);
+                updateView(flippableStoneCoordinates);
+                updatePlayerScores();
+                System.out.println(model.getBoard());
+                view.setButtonOpacity(coordinates[0], coordinates[1], model.getBoard().getGRID()[coordinates[0]][coordinates[1]].hasStone(), false);
+            }
+            turnCount++;
+            if (turnCount == model.getLastSessionNumberOfTurns()){
+                view.getTurnButton().setDisable(true);
+            }
+        }
+    }
 
     void disableAllGridButtons() {
         for (int row = 0; row < model.getBoard().getGRID().length; row++) {
@@ -133,12 +174,23 @@ public class GameSessionScreenPresenter {
 
 
     private void addEventHandlers() {
-        for (int row = 0; row < view.getGridButtons().length; row++) {
-            for (int col = 0; col < view.getGridButtons()[row].length; col++) {
-                view.getGridButtons()[row][col].setOnAction(new StoneHandler(row, col));
+        if (!view.isReplay()) {
+            for (int row = 0; row < view.getGridButtons().length; row++) {
+                for (int col = 0; col < view.getGridButtons()[row].length; col++) {
+                    view.getGridButtons()[row][col].setOnAction(new StoneHandler(row, col));
+                }
             }
+            view.getTurnButton().setOnAction(new ComputerTurnHandler());
+            view.getBackButton().setOnAction(event -> {
+                showChooseColorScreen(view);
+            });
+        } else {
+            view.getTurnButton().setOnAction(new ReplayHandler());
+            view.getBackButton().setOnAction(event -> {
+                showGameSessionStatisticsScreen(view);
+            });
         }
-        view.getComputerTurnButton().setOnAction(new ComputerTurnHandler());
+
         view.getRulesButton().setOnAction(event -> {
             Alert rulesInfoAlert = createRulesInfoAlert();
             rulesInfoAlert.showAndWait();
@@ -181,6 +233,15 @@ public class GameSessionScreenPresenter {
                 "The game is over when neither player can make a move. The player with the most stones of his/her color on the board wins the game."
         );
         return rulesInfoAlert;
+    }
+
+    private Alert createComputerMoveExplanationAlert(String explanation) {
+        Alert computerMoveExplanationAlert = new Alert(Alert.AlertType.INFORMATION);
+        computerMoveExplanationAlert.setTitle("Latest Computer Move Explanation");
+        computerMoveExplanationAlert.setHeaderText("Explanation");
+        computerMoveExplanationAlert.setContentText(explanation);
+        computerMoveExplanationAlert.showAndWait();
+        return computerMoveExplanationAlert;
     }
 
 
@@ -257,7 +318,6 @@ public class GameSessionScreenPresenter {
         }
 
     }
-
 }
 
 
