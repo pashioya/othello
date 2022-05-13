@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="46e6b1a3-9c16-4881-b49e-419aac47a3ad" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/postgresql_42_3_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/t9_othello.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello ASCII/src/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello ASCII/src/domain/Board.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello ASCII/src/domain/Computer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello ASCII/src/domain/GameSession.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello ASCII/src/domain/Player.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello ASCII/src/domain/Square.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello ASCII/src/domain/Stone.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello ASCII/src/domain/StoneColor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello ASCII/src/domain/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/lib/easy-rules-core-4.1.1-20201206.215123-1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/lib/postgresql-42.3.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/lib/slf4j-api-1.7.9.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/lib/slf4j-simple-1.7.9.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/othello.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/resources/black.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/resources/empty.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/resources/gameEnd.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/resources/gameStart.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/resources/othelloImage.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/resources/othelloMove.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/resources/white.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/DBUtil/DBUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/alert_creation/AlertCreation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/dataManager/DataManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/model/Board.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/model/Game.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/model/GameSession.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/model/GameSessionStatistics.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/model/GameStatistics.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/model/Player.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/model/Square.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/model/Stone.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/model/StoneColor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/model/Turn.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/screen_navigation_util/SCREEN_NAVIGATION_UTIL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/view/allGameStatisticsScreen/GameStatisticsScreenPresenter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/view/allGameStatisticsScreen/GameStatisticsScreenView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/view/chooseColorScreen/ChooseColorScreenPresenter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/view/chooseColorScreen/ChooseColorScreenView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/view/endScreen/GameSessionStatisticsPresenter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/view/endScreen/GameSessionStatisticsView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/view/gameSessionScreen/GameSessionScreenPresenter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/view/gameSessionScreen/GameSessionScreenView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/view/rulesScreen/RulesScreenPresenter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/view/rulesScreen/RulesScreenView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/view/welcomeScreen/WelcomeScreenPresenter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/OthelloApp/view/welcomeScreen/WelcomeScreenView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Othello/src/Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/OthelloApp/model/Board.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/OthelloApp/model/GameSession.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/OthelloApp/model/Player.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/OthelloApp/model/Square.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/OthelloApp/model/Stone.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/OthelloApp/model/StoneColor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/OthelloApp/model/Turn.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/OthelloApp/view/chooseColorScreen/chooseColorScreenPresenter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/OthelloApp/view/chooseColorScreen/chooseColorScreenView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/black.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/empty.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Othello/white.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/t9_othello/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/t9_othello/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/t9_othello/domain/Board.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/t9_othello/domain/Computer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/t9_othello/domain/GameSession.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/t9_othello/domain/Player.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/t9_othello/domain/Square.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/t9_othello/domain/Stone.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/t9_othello/domain/StoneColor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/t9_othello/domain/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/t9_othello.iml" beforeDir="false" afterPath="$PROJECT_DIR$/t9_othello.iml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="296pizMSHA2I6vgE8AyYCZ7XNHE" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="t9_othello" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\dev\openjfx-17.0.2_windows-x64_bin-sdk\javafx-sdk-17.0.2\lib&quot; --add-modules=javafx.controls,javafx.media  " />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="46e6b1a3-9c16-4881-b49e-419aac47a3ad" name="Changes" comment="" />
+      <created>1652443526283</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1652443526283</updated>
+      <workItem from="1652443531949" duration="557000" />
+      <workItem from="1652444126077" duration="107000" />
+      <workItem from="1652444254069" duration="357000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
