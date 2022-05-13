@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import static OthelloApp.DBUtil.DBUtil.*;
+import static OthelloApp.dataManager.DataManager.*;
 import static java.lang.System.currentTimeMillis;
 
 public class Turn {
@@ -30,7 +31,6 @@ public class Turn {
         this.name = name;
         this.startDateTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SS").format(new Date());
         this.startTimeMilisec = currentTimeMillis();
-
         this.flippedStoneCoordinates = new ArrayList<>();
         turnCount ++;
     }
@@ -52,104 +52,9 @@ public class Turn {
     }
 
     public void save(int gameSessionID) {
-        saveTurn(gameSessionID);
-        saveFlippedPieces(gameSessionID);
+        saveTurn(gameSessionID, getTurnId(), getName(), getStartDateTime(), getTimeElapsed(), getPlacedCoordinate());
+        saveFlippedPieces(gameSessionID, getTurnId(), getFlippedStoneCoordinates());
     }
-
-    private void saveTurn(int gameSessionID) {
-        // use turnID, placedCoordinate, userType, and startTimeMilisec to update the SQL database
-        if (getPlacedCoordinate() != null) {
-            try {
-                Statement statement = getStatement();
-                statement.executeUpdate("INSERT INTO turns (gamesession_id, turn_id, player_name, start_date_time, time_elapsed, placed_stone_row, placed_stone_column) " +
-                        "VALUES ("
-                        + gameSessionID + ", "
-                        + getTurnId() + ", '"
-                        + getName() + "', '"
-                        + getStartDateTime() + "', "
-                        + getTimeElapsed() + ", "
-                        + getPlacedCoordinate()[0] + ", "
-                        + getPlacedCoordinate()[1] + ")");
-                closeDbConnection();
-            } catch (SQLException e) {
-                e.printStackTrace(); // error handling
-            }
-        } else {
-            try {
-                Statement statement = getStatement();
-                statement.executeUpdate("INSERT INTO turns (gamesession_id, turn_id, player_name, start_date_time, time_elapsed, placed_stone_row, placed_stone_column) " +
-                        "VALUES ("
-                        + gameSessionID + ", "
-                        + getTurnId() + ", '"
-                        + getName() + "', '"
-                        + getStartDateTime() + "', "
-                        + getTimeElapsed() + ", "
-                        + null + ", "
-                        + null + ")");
-                closeDbConnection();
-            } catch (SQLException e) {
-                e.printStackTrace(); // error handling
-            }
-        }
-    }
-
-
-    private void createTurnsTable() {
-        try {
-            Statement statement = getStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS turns (" +
-                    "gamesession_id  NUMERIC(8) CONSTRAINT fk_gamesession_id REFERENCES gamesessions(gamesession_id)," +
-                    "turn_id NUMERIC(2) CONSTRAINT nn_turn_id NOT NULL, " +
-                    "player_name VARCHAR(50) CONSTRAINT nn_player_name NOT NULL, " +
-                    "start_date_time VARCHAR(50) CONSTRAINT nn_turn_start_date_time NOT NULL, " +
-                    "time_elapsed NUMERIC(10,2) DEFAULT 0, " +
-                    "placed_stone_row NUMERIC(1) CONSTRAINT ch_placed_stone_row CHECK(placed_stone_row BETWEEN 0 AND 7), " +
-                    "placed_stone_column NUMERIC(1) CONSTRAINT ch_placed_stone_column CHECK(placed_stone_column BETWEEN 0 AND 7), " +
-                    "CONSTRAINT pk_gs_id_turn_id PRIMARY KEY (gamesession_id, turn_id));");
-            closeDbConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void createFlippedPiecesTable() {
-        try {
-            Statement statement = getStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS flipped_pieces (" +
-                    "gamesession_id  NUMERIC(8), " +
-                    "turn_id NUMERIC(2), " +
-                    "flipped_stone_row NUMERIC(1) CONSTRAINT ch_flipped_stone_row CHECK(flipped_stone_row BETWEEN 0 AND 7), " +
-                    "flipped_stone_column NUMERIC(1) CONSTRAINT ch_flipped_stone_column CHECK(flipped_stone_column BETWEEN 0 AND 7), " +
-                    "CONSTRAINT fk_gs_id_turn_id FOREIGN KEY (gamesession_id, turn_id) REFERENCES turns(gamesession_id, turn_id), " +
-                    "CONSTRAINT pk_gs_id_turn_id_row_column PRIMARY KEY (gamesession_id, turn_id, flipped_stone_row, flipped_stone_column));");
-            closeDbConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void saveFlippedPieces(int gameSessionID) {
-        // use turnID and flippedStoneCoordinates to update the SQL database
-        if (flippedStoneCoordinates.size() > 0) {
-            try {
-                Statement statement = getStatementAutoCommitFalse();
-                statement.executeUpdate("BEGIN TRANSACTION;");
-                for (int[] flippedStoneCoordinate : getFlippedStoneCoordinates()) {
-                    statement.executeUpdate("INSERT INTO flipped_pieces (gamesession_id, turn_id, flipped_stone_row, flipped_stone_column) " +
-                            "VALUES ("
-                            + gameSessionID + ", "
-                            + getTurnId() + ", "
-                            + flippedStoneCoordinate[0] + ", "
-                            + flippedStoneCoordinate[1] + ");");
-                }
-                statement.executeUpdate("COMMIT;");
-                closeDbConnection();
-            } catch (SQLException e) {
-                e.printStackTrace(); // error handling
-            }
-        }
-    }
-
 
     @Override
     public String toString() {

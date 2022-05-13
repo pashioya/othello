@@ -84,9 +84,8 @@ public class GameSessionStatistics {
     }
 
     public boolean isTied() {
-        return score == 32;
+        return isTied;
     }
-
 
     public HashMap<Integer, Integer> getUserMoveProfitabilitiesMap() {
         return userMoveProfitabilitiesMap;

@@ -1,6 +1,12 @@
 package OthelloApp.view.welcomeScreen;
 
-import static OthelloApp.alertCreation.AlertCreation.showResetDatabaseAlert;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
+import java.util.Optional;
+
+import static OthelloApp.alertCreation.AlertCreationUtil.createWarningAlert;
+import static OthelloApp.dataManager.DataManager.clearAllData;
 import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.*;
 
 public class WelcomeScreenPresenter {
@@ -13,7 +19,7 @@ public class WelcomeScreenPresenter {
 
     private void addEventHandlers(){
         view.getNewGameButton().setOnAction(event ->{
-            showChooseColorScreen(view);
+            showChooseColorScreen(view, "welcomeScreen");
         });
         view.getRulesButton().setOnAction(event -> {
             showRulesScreen(view);
@@ -26,9 +32,15 @@ public class WelcomeScreenPresenter {
         });
     }
 
-
-
-
-
+    private void showResetDatabaseAlert() {
+        Alert resetDatabaseAlert = createWarningAlert("Confirm clear database", "Are you sure you want to clear the contents of the database?", "Click \"Continue\" to delete all data from previous game sessions.");
+        ButtonType continueButton = new ButtonType("Continue");
+        ButtonType cancelButton = new ButtonType("Cancel");
+        resetDatabaseAlert.getButtonTypes().addAll(continueButton, cancelButton);
+        Optional<ButtonType> result = resetDatabaseAlert.showAndWait();
+        if (result.get() == continueButton) {
+            clearAllData();
+        }
+    }
 
 }

@@ -8,6 +8,7 @@ import java.util.*;
 
 import static OthelloApp.DBUtil.DBUtil.closeDbConnection;
 import static OthelloApp.DBUtil.DBUtil.getStatement;
+import static OthelloApp.dataManager.DataManager.createGameSessionsTable;
 
 public class GameSession {
     private int idNo;
@@ -51,7 +52,7 @@ public class GameSession {
     }
 
     public boolean isOver() {
-        return (board.isFull() || board.containsOnlyOneColorStone());
+        return neitherPlayerHasValidMoves() ;
     }
 
     public double getTimeElapsed() {
@@ -106,6 +107,10 @@ public class GameSession {
         return false;
     }
 
+    public boolean neitherPlayerHasValidMoves(){
+        return (!board.hasValidMoves(players[0].getPlayerColor())) && (!board.hasValidMoves(players[1].getPlayerColor()));
+    }
+
 
     private void initializePlayers(boolean userGoesFirst, String userName, String difficultyMode) {
         if (userGoesFirst) {
@@ -123,24 +128,7 @@ public class GameSession {
         board.update(coordinates, playerColor);
     }
 
-    private void createGameSessionsTable() {
-        try {
-            Statement statement = getStatement();
-            statement.executeUpdate("CREATE SEQUENCE IF NOT EXISTS seq_gamesession_id INCREMENT BY 1 MINVALUE 0 START WITH 0;");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS gamesessions (" +
-                    "gamesession_id NUMERIC(20) CONSTRAINT pk_gamesession_id PRIMARY KEY, " +
-                    "start_date_time VARCHAR(50) CONSTRAINT nn_gs_start_date_time NOT NULL, " +
-                    "time_elapsed NUMERIC(10,3) DEFAULT 0, " +
-                    "is_over BOOLEAN DEFAULT FALSE, " +
-                    "user_won BOOLEAN DEFAULT FALSE, " +
-                    "username VARCHAR(25) CONSTRAINT nn_username NOT NULL, " +
-                    "computer_name VARCHAR(25) CONSTRAINT nn_computer_name NOT NULL, " +
-                    "number_stones_user NUMERIC(2) DEFAULT 0);");
-            closeDbConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public HashMap<Player, Integer> getPlayerScores() {
         HashMap<Player, Integer> playersScores = new HashMap<>();

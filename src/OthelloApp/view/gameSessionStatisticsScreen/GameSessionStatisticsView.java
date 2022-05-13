@@ -1,4 +1,4 @@
-package OthelloApp.view.endScreen;
+package OthelloApp.view.gameSessionStatisticsScreen;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

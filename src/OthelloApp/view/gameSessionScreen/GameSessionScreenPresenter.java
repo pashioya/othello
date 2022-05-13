@@ -5,14 +5,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
-
-import static OthelloApp.alertCreation.AlertCreation.*;
+import static OthelloApp.alertCreation.AlertCreationUtil.*;
 import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.showChooseColorScreen;
 import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.showGameSessionStatisticsScreen;
 
@@ -123,9 +125,10 @@ public class GameSessionScreenPresenter {
         ArrayList<int[]> possibleMoves = model.getBoard().findAllPossibleMoves(activePlayerColor);
         String explanation = model.explainComputerMoveDecision(possibleMoves);
         view.getExplainComputerMoveButton().setOnAction(innerEvent -> {
-            createComputerMoveExplanationAlert(explanation);
+            createInformationAlert("Latest Computer Move Explanation", "Explanation", explanation);
         });
     }
+
 
     class ReplayHandler implements EventHandler<ActionEvent> {
         private static int turnCount = 0;
@@ -153,7 +156,7 @@ public class GameSessionScreenPresenter {
         }
     }
 
-    void disableAllGridButtons() {
+    private void disableAllGridButtons() {
         for (int row = 0; row < model.getGrid().length; row++) {
             for (int column = 0; column < model.getGrid()[row].length; column++) {
                 view.disableButton(row, column);
@@ -171,7 +174,7 @@ public class GameSessionScreenPresenter {
             }
             view.getTurnButton().setOnAction(new ComputerTurnHandler());
             view.getBackButton().setOnAction(event -> {
-                showChooseColorScreen(view);
+                showChooseColorScreen(view, "gameSessionScreen");
             });
             view.getQuitButton().setOnAction(event -> {
                 showQuitGameAlert(event, view);
@@ -191,9 +194,6 @@ public class GameSessionScreenPresenter {
         });
 
     }
-
-
-
 
     private void drawBoard() {
         for (int row = 0; row < model.getGrid().length; row++) {
@@ -266,6 +266,48 @@ public class GameSessionScreenPresenter {
                 this.view.getPlayerScoreLabel().setText(String.format("Player: %d", playerScore.getValue()));
             }
         }
+    }
+
+    //-------------------------------------ALERTS----------------------------------------------------
+
+    private void showGameOverAlert(GameSessionScreenView view) {
+        Alert gameOverAlert = createWarningAlert("Game over!", "Neither player can play any more turns.", "Click \"Continue\" to view the results of your game.");
+        ButtonType continueButton = new ButtonType("Continue");
+        ButtonType cancelButton = new ButtonType("Cancel");
+        gameOverAlert.getButtonTypes().addAll(continueButton, cancelButton);
+        Optional<ButtonType> result = gameOverAlert.showAndWait();
+        if (result.get() == continueButton) {
+            showGameSessionStatisticsScreen(view);
+        } else {
+            gameOverAlert.close();
+        }
+    }
+
+    private void showQuitGameAlert(ActionEvent event, GameSessionScreenView view) {
+        Alert quitGameAlert =  createWarningAlert("Confirm quit game", "All progress in this game will be lost.", "Quit anyway?");
+        quitGameAlert.getButtonTypes().clear();
+        ButtonType continueButton = new ButtonType("Continue");
+        ButtonType cancelButton = new ButtonType("Cancel");
+        quitGameAlert.getButtonTypes().addAll(continueButton, cancelButton);
+        Optional<ButtonType> result = quitGameAlert.showAndWait();
+        if (result.get() == continueButton) {
+            Stage stage = (Stage) view.getScene().getWindow();
+            stage.close();
+        } else {
+            event.consume();
+        }
+    }
+
+    private Alert createRulesInfoAlert() {
+        return createInformationAlert("Othello Rules", "Rules", "Othello is a two-player game. One player plays black stones and the other player plays white stones. " +
+                "The game begins with four stones (two white and two black) in the center of the board. The player that plays black stones makes the first move.\n\n" +
+                "Players make moves by placing stone of their respective colors on the board. " +
+                "A move is valid only if the placed stone outflanks an opposite-colored stone (or row of opposite-colored stones). " +
+                "A stone or row of stones is outflanked when it is bordered by opposite-colored stones at each end. " +
+                "Each player must outflank opposite-colored stones and flip them so they have the player's color. \n\n" +
+                "If a player is not able to flip any stones, the player forfeits his/her turn and the other player plays again. " +
+                "Players may not voluntarily forfeit a turn if a move is available.\n\n" +
+                "The game is over when neither player can make a move. The player with the most stones of his/her color on the board wins the game.");
     }
 }
 

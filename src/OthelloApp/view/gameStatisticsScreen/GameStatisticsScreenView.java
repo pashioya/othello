@@ -1,4 +1,4 @@
-package OthelloApp.view.allGameStatisticsScreen;
+package OthelloApp.view.gameStatisticsScreen;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -37,6 +37,7 @@ public class GameStatisticsScreenView extends BorderPane {
         NumberAxis xAxisGameSessionNo = new NumberAxis();
         xAxisGameSessionNo.setLabel("Game Number");
         NumberAxis yAxisSessionDurations = new  NumberAxis();
+        yAxisSessionDurations.setAutoRanging(true);
         yAxisSessionDurations.setLabel("Session Durations (Seconds)");
         this.sessionDurationsChart = new ScatterChart<Number,Number>(xAxisGameSessionNo, yAxisSessionDurations);
 
@@ -96,5 +97,9 @@ public class GameStatisticsScreenView extends BorderPane {
 
     public Button getBackButton() {
         return backButton;
+    }
+
+    public Text getTitle() {
+        return title;
     }
 }

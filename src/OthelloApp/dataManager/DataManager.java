@@ -3,13 +3,128 @@ package OthelloApp.dataManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static OthelloApp.DBUtil.DBUtil.closeDbConnection;
-import static OthelloApp.DBUtil.DBUtil.getStatement;
+import static OthelloApp.DBUtil.DBUtil.*;
 
 public final class DataManager {
+
+    public static void createGameSessionsTable() {
+        try {
+            Statement statement = getStatement();
+            statement.executeUpdate("CREATE SEQUENCE IF NOT EXISTS seq_gamesession_id INCREMENT BY 1 MINVALUE 0 START WITH 0;");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS gamesessions (" +
+                    "gamesession_id NUMERIC(20) CONSTRAINT pk_gamesession_id PRIMARY KEY, " +
+                    "start_date_time VARCHAR(50) CONSTRAINT nn_gs_start_date_time NOT NULL, " +
+                    "time_elapsed NUMERIC(10,3) DEFAULT 0, " +
+                    "is_over BOOLEAN DEFAULT FALSE, " +
+                    "user_won BOOLEAN DEFAULT FALSE, " +
+                    "username VARCHAR(25) CONSTRAINT nn_username NOT NULL, " +
+                    "computer_name VARCHAR(25) CONSTRAINT nn_computer_name NOT NULL, " +
+                    "number_stones_user NUMERIC(2) DEFAULT 0);");
+            closeDbConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void createTurnsTable() {
+        try {
+            Statement statement = getStatement();
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS turns (" +
+                    "gamesession_id  NUMERIC(8) CONSTRAINT fk_gamesession_id REFERENCES gamesessions(gamesession_id)," +
+                    "turn_id NUMERIC(2) CONSTRAINT nn_turn_id NOT NULL, " +
+                    "player_name VARCHAR(50) CONSTRAINT nn_player_name NOT NULL, " +
+                    "start_date_time VARCHAR(50) CONSTRAINT nn_turn_start_date_time NOT NULL, " +
+                    "time_elapsed NUMERIC(10,2) DEFAULT 0, " +
+                    "placed_stone_row NUMERIC(1) CONSTRAINT ch_placed_stone_row CHECK(placed_stone_row BETWEEN 0 AND 7), " +
+                    "placed_stone_column NUMERIC(1) CONSTRAINT ch_placed_stone_column CHECK(placed_stone_column BETWEEN 0 AND 7), " +
+                    "CONSTRAINT pk_gs_id_turn_id PRIMARY KEY (gamesession_id, turn_id));");
+            closeDbConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void createFlippedPiecesTable() {
+        try {
+            Statement statement = getStatement();
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS flipped_pieces (" +
+                    "gamesession_id  NUMERIC(8), " +
+                    "turn_id NUMERIC(2), " +
+                    "flipped_stone_row NUMERIC(1) CONSTRAINT ch_flipped_stone_row CHECK(flipped_stone_row BETWEEN 0 AND 7), " +
+                    "flipped_stone_column NUMERIC(1) CONSTRAINT ch_flipped_stone_column CHECK(flipped_stone_column BETWEEN 0 AND 7), " +
+                    "CONSTRAINT fk_gs_id_turn_id FOREIGN KEY (gamesession_id, turn_id) REFERENCES turns(gamesession_id, turn_id), " +
+                    "CONSTRAINT pk_gs_id_turn_id_row_column PRIMARY KEY (gamesession_id, turn_id, flipped_stone_row, flipped_stone_column));");
+            closeDbConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveTurn(int gameSessionID, int turnId, String playerName, String startDateTime, double timeElapsed, int[] placedCoordinate) {
+        // use turnID, placedCoordinate, userType, and startTimeMilisec to update the SQL database
+        if (placedCoordinate != null) {
+            try {
+                Statement statement = getStatement();
+                statement.executeUpdate("INSERT INTO turns (gamesession_id, turn_id, player_name, start_date_time, time_elapsed, placed_stone_row, placed_stone_column) " +
+                        "VALUES ("
+                        + gameSessionID + ", "
+                        + turnId + ", '"
+                        + playerName + "', '"
+                        + startDateTime + "', "
+                        + timeElapsed + ", "
+                        + placedCoordinate[0] + ", "
+                        + placedCoordinate[1] + ")");
+                closeDbConnection();
+            } catch (SQLException e) {
+                e.printStackTrace(); // error handling
+            }
+        } else {
+            try {
+                Statement statement = getStatement();
+                statement.executeUpdate("INSERT INTO turns (gamesession_id, turn_id, player_name, start_date_time, time_elapsed, placed_stone_row, placed_stone_column) " +
+                        "VALUES ("
+                        + gameSessionID + ", "
+                        + turnId + ", '"
+                        + playerName + "', '"
+                        + startDateTime + "', "
+                        + timeElapsed + ", "
+                        + null + ", "
+                        + null + ")");
+                closeDbConnection();
+            } catch (SQLException e) {
+                e.printStackTrace(); // error handling
+            }
+        }
+    }
+
+
+
+
+    public static void saveFlippedPieces(int gameSessionID, int turnID, ArrayList<int[]> flippedStoneCoordinates) {
+        // use turnID and flippedStoneCoordinates to update the SQL database
+        if (flippedStoneCoordinates.size() > 0) {
+            try {
+                Statement statement = getStatementAutoCommitFalse();
+                statement.executeUpdate("BEGIN TRANSACTION;");
+                for (int[] flippedStoneCoordinate : flippedStoneCoordinates) {
+                    statement.executeUpdate("INSERT INTO flipped_pieces (gamesession_id, turn_id, flipped_stone_row, flipped_stone_column) " +
+                            "VALUES ("
+                            + gameSessionID + ", "
+                            + turnID + ", "
+                            + flippedStoneCoordinate[0] + ", "
+                            + flippedStoneCoordinate[1] + ");");
+                }
+                statement.executeUpdate("COMMIT;");
+                closeDbConnection();
+            } catch (SQLException e) {
+                e.printStackTrace(); // error handling
+            }
+        }
+    }
 
     public static void clearAllData(){
         try {
@@ -31,7 +146,7 @@ public final class DataManager {
             ResultSet resultSet = statement.executeQuery("SELECT number_stones_user FROM gamesessions " +
                     "WHERE gamesession_id =  " + gameSessionID + "; ");
             while (resultSet.next()) {
-                lastSessionScore = resultSet.getInt(1); // gets the result of name
+                lastSessionScore = resultSet.getInt(1);
             }
             closeDbConnection();
         } catch (
@@ -49,7 +164,7 @@ public final class DataManager {
             ResultSet resultSet = statement.executeQuery("SELECT time_elapsed FROM gamesessions " +
                     "WHERE gamesession_id =  " + gameSessionID + "; ");
             while (resultSet.next()) {
-                lastSessionDuration = resultSet.getDouble(1); // gets the result of name
+                lastSessionDuration = resultSet.getDouble(1);
             }
             closeDbConnection();
         } catch (
@@ -66,7 +181,7 @@ public final class DataManager {
             ResultSet resultSet = statement.executeQuery("SELECT user_won FROM gamesessions " +
                     "WHERE gamesession_id =  " + gameSessionID + "; ");
             while (resultSet.next()) {
-                userWon = resultSet.getBoolean(1); // gets the result of name
+                userWon = resultSet.getBoolean(1);
             }
             closeDbConnection();
         } catch (
@@ -83,7 +198,7 @@ public final class DataManager {
             ResultSet resultSet = statement.executeQuery("SELECT number_stones_user FROM gamesessions " +
                     "WHERE gamesession_id =  " + gameSessionID + "; ");
             while (resultSet.next()) {
-                isTied = (resultSet.getInt(1) == 32); // gets the result of name
+                isTied = (resultSet.getInt(1) == 32);
             }
             closeDbConnection();
         } catch (
@@ -164,7 +279,7 @@ public final class DataManager {
             ResultSet resultSet = statement.executeQuery("SELECT username from gamesessions WHERE gamesession_id=" + gameSessionID +
                     ";");
             while (resultSet.next()) {
-                userName = resultSet.getString(1); // gets the result of name
+                userName = resultSet.getString(1);
             }
             closeDbConnection();
         } catch (
@@ -181,7 +296,7 @@ public final class DataManager {
             ResultSet resultSet = statement.executeQuery("SELECT computer_name from gamesessions WHERE gamesession_id=" + gameSessionID +
                     ";");
             while (resultSet.next()) {
-                computerName = resultSet.getString(1); // gets the result of name
+                computerName = resultSet.getString(1);
             }
             closeDbConnection();
         } catch (
@@ -200,7 +315,7 @@ public final class DataManager {
             ResultSet resultSet = statement.executeQuery("SELECT player_name from turns WHERE gamesession_id=" + gameSessionID +
                     " FETCH NEXT 1 ROWS ONLY;");
             while (resultSet.next()) {
-                playerName = resultSet.getString(1); // gets the result of name
+                playerName = resultSet.getString(1);
             }
             closeDbConnection();
         } catch (
@@ -211,5 +326,43 @@ public final class DataManager {
             return true;
         }
         return false;
+    }
+
+    public static boolean databaseHasTables(){
+        boolean databaseHasData = false;
+        try {
+            Statement statement = getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT EXISTS (" +
+                    "    SELECT FROM " +
+                    "        information_schema.tables " +
+                    "    WHERE " +
+                    "        table_name = 'gamesessions' " +
+                    "    );");
+            while (resultSet.next()) {
+                databaseHasData = resultSet.getBoolean(1);
+            }
+            closeDbConnection();
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+        }
+        return databaseHasData;
+    }
+
+    public static ArrayList<Integer> getFinishedGameSessionIDList() {
+        ArrayList<Integer> finishedGameSessionsIDList = new ArrayList<>();
+        try {
+            Statement statement = getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT gamesession_id FROM gamesessions WHERE is_over = true ORDER BY gamesession_id;");
+            while (resultSet.next()) {
+                int gamesessionID = resultSet.getInt(1);
+                finishedGameSessionsIDList.add(gamesessionID);
+            }
+            closeDbConnection();
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+        }
+        return finishedGameSessionsIDList;
     }
 }

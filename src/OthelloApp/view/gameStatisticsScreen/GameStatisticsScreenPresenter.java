@@ -1,9 +1,11 @@
-package OthelloApp.view.allGameStatisticsScreen;
+package OthelloApp.view.gameStatisticsScreen;
 
 import OthelloApp.model.GameStatistics;
 import javafx.scene.chart.XYChart;
 
-import static OthelloApp.alertCreation.AlertCreation.showExitAlert;
+import java.util.Map;
+
+import static OthelloApp.alertCreation.AlertCreationUtil.showExitAlert;
 import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.*;
 
 public class GameStatisticsScreenPresenter {
@@ -16,13 +18,16 @@ public class GameStatisticsScreenPresenter {
         this.model = model;
         this.isCreatedFromWelcomeScreen = isCreatedFromWelcomeScreen;
         addEventHandlers();
-        updateView();
+        if (model.getSessionDurationsMap().isEmpty()) {
+            view.getTitle().setText("You have no previous game sessions.");
+        } else{
+            updateView();
+        };
     }
-
 
     private void addEventHandlers() {
         view.getNewGameButton().setOnAction(event -> {
-            showChooseColorScreen(view);
+            showChooseColorScreen(view, "gameStatisticsScreen");
         });
 
         view.getQuitButton().setOnAction(event -> {
@@ -38,7 +43,6 @@ public class GameStatisticsScreenPresenter {
                 showGameSessionStatisticsScreen(view);
             });
         }
-
     }
 
     private void updateView() {
@@ -69,9 +73,9 @@ public class GameStatisticsScreenPresenter {
         this.view.getSessionDurationsChart().getData().clear();
         XYChart.Series<Number, Number> sessionDurations = new XYChart.Series<>();
         sessionDurations.setName("Game Durations in Seconds");
-        for (int i = 0; i < model.getSessionDurationsList().size(); i++) {
-            sessionDurations.getData().add(new XYChart.Data<Number, Number>(i, model.getSessionDurationsList().get(i)));
-        }
+        for (Map.Entry<Integer, Double> sessionDuration : model.getSessionDurationsMap().entrySet()) {
+            sessionDurations.getData().add(new XYChart.Data<Number, Number>(sessionDuration.getKey(), sessionDuration.getValue()));
+        };
         this.view.getSessionDurationsChart().getData().addAll(sessionDurations);
     }
 

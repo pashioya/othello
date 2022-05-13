@@ -1,4 +1,4 @@
-package OthelloApp.view.endScreen;
+package OthelloApp.view.gameSessionStatisticsScreen;
 
 
 import OthelloApp.model.GameSessionStatistics;
@@ -30,7 +30,7 @@ public class GameSessionStatisticsPresenter {
             displayMoveProfitabilitiesHistogram();
         });
         this.view.getNewGameButton().setOnAction(event -> {
-            showChooseColorScreen(view);
+            showChooseColorScreen(view, "gameSessionStatisticsScreen");
         });
 
         this.view.getAllGameStatisticsButton().setOnAction(event -> {
@@ -66,7 +66,7 @@ public class GameSessionStatisticsPresenter {
         userMoves.setName("User Move");
         for (Map.Entry<Integer, Integer> userMoveProfitability : model.getUserMoveProfitabilitiesMap().entrySet()) {
             userMoves.getData().add(new XYChart.Data<Number, Number>(userMoveProfitability.getKey(), userMoveProfitability.getValue()));
-        };
+        }
         XYChart.Series<Number, Number> computerMoves = new XYChart.Series<>();
         computerMoves.setName("Computer Move");
         for (Map.Entry<Integer, Integer> computerMoveProfitability : model.getComputerMoveProfitabilitiesMap().entrySet()) {

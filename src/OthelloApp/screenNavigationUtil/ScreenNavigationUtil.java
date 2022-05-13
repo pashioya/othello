@@ -4,12 +4,12 @@ import OthelloApp.model.Game;
 import OthelloApp.model.GameSession;
 import OthelloApp.model.GameSessionStatistics;
 import OthelloApp.model.GameStatistics;
-import OthelloApp.view.allGameStatisticsScreen.GameStatisticsScreenPresenter;
-import OthelloApp.view.allGameStatisticsScreen.GameStatisticsScreenView;
+import OthelloApp.view.gameStatisticsScreen.GameStatisticsScreenPresenter;
+import OthelloApp.view.gameStatisticsScreen.GameStatisticsScreenView;
 import OthelloApp.view.chooseColorScreen.ChooseColorScreenPresenter;
 import OthelloApp.view.chooseColorScreen.ChooseColorScreenView;
-import OthelloApp.view.endScreen.GameSessionStatisticsPresenter;
-import OthelloApp.view.endScreen.GameSessionStatisticsView;
+import OthelloApp.view.gameSessionStatisticsScreen.GameSessionStatisticsPresenter;
+import OthelloApp.view.gameSessionStatisticsScreen.GameSessionStatisticsView;
 import OthelloApp.view.gameSessionScreen.GameSessionScreenPresenter;
 import OthelloApp.view.gameSessionScreen.GameSessionScreenView;
 import OthelloApp.view.rulesScreen.RulesScreenPresenter;
@@ -39,9 +39,9 @@ public final class ScreenNavigationUtil {
         stage.centerOnScreen();
     }
 
-    public static void showChooseColorScreen(Pane view){
+    public static void showChooseColorScreen(Pane view, String creationScreen){
         ChooseColorScreenView chooseColorScreenView = new ChooseColorScreenView();
-        ChooseColorScreenPresenter ChooseColorScreenPresenter = new ChooseColorScreenPresenter(chooseColorScreenView);
+        ChooseColorScreenPresenter ChooseColorScreenPresenter = new ChooseColorScreenPresenter(chooseColorScreenView, creationScreen);
         view.getScene().setRoot(chooseColorScreenView);
         chooseColorScreenView.getScene().getWindow().sizeToScene();
         Stage stage = (Stage) chooseColorScreenView.getScene().getWindow();

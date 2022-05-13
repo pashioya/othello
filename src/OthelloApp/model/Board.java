@@ -302,34 +302,34 @@ public class Board {
         return playerStoneCount;
     }
 
-    public boolean isFull() {
-        int stoneCounter = 0;
-        int numberOfSquares = SIDE_LENGTH * SIDE_LENGTH;
-        for (Square[] row : getGRID()) {
-            for (Square square : row) {
-                if (square.hasStone()) {
-                    stoneCounter++;
-                }
-            }
-        }
-        return stoneCounter == numberOfSquares;
-    }
-
-    public boolean containsOnlyOneColorStone(){
-        int whiteStoneCounter = 0;
-        int blackStoneCounter = 0;
-        for (Square[] row: getGRID()){
-            for (Square square: row){
-                if (square.hasStone()){
-                    switch(square.getStoneColor()){
-                        case WHITE -> whiteStoneCounter++;
-                        case BLACK -> blackStoneCounter++;
-                    }
-                }
-            }
-        }
-        return (whiteStoneCounter == 0 || blackStoneCounter == 0);
-    }
+//    public boolean isFull() {
+//        int stoneCounter = 0;
+//        int numberOfSquares = SIDE_LENGTH * SIDE_LENGTH;
+//        for (Square[] row : getGRID()) {
+//            for (Square square : row) {
+//                if (square.hasStone()) {
+//                    stoneCounter++;
+//                }
+//            }
+//        }
+//        return stoneCounter == numberOfSquares;
+//    }
+//
+//    public boolean containsOnlyOneColorStone(){
+//        int whiteStoneCounter = 0;
+//        int blackStoneCounter = 0;
+//        for (Square[] row: getGRID()){
+//            for (Square square: row){
+//                if (square.hasStone()){
+//                    switch(square.getStoneColor()){
+//                        case WHITE -> whiteStoneCounter++;
+//                        case BLACK -> blackStoneCounter++;
+//                    }
+//                }
+//            }
+//        }
+//        return (whiteStoneCounter == 0 || blackStoneCounter == 0);
+//    }
 
     public void update(int[] coordinates, StoneColor stoneColor) {
         ArrayList<int[]> flippableStoneCoordinates = findFlippableStones(coordinates, stoneColor);

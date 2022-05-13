@@ -1,13 +1,11 @@
 package OthelloApp.model;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
-import static OthelloApp.DBUtil.DBUtil.closeDbConnection;
-import static OthelloApp.DBUtil.DBUtil.getStatement;
+import static OthelloApp.dataManager.DataManager.databaseHasTables;
+import static OthelloApp.dataManager.DataManager.getFinishedGameSessionIDList;
 
 public class GameStatistics {
     private ArrayList<GameSessionStatistics> gameSessionStatisticsList;
@@ -15,7 +13,9 @@ public class GameStatistics {
 
     public GameStatistics() {
         gameSessionStatisticsList = new ArrayList<>();
-        fillGameSessionStatisticsList();
+        if (databaseHasTables()) {
+            fillGameSessionStatisticsList();
+        };
     }
 
     public ArrayList<GameSessionStatistics> getGameSessionStatisticsList() {
@@ -28,37 +28,20 @@ public class GameStatistics {
         }
     }
 
-    private ArrayList<Integer> getFinishedGameSessionIDList() {
-        ArrayList<Integer> finishedGameSessionsIDList = new ArrayList<>();
-        try {
-            Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT gamesession_id FROM gamesessions WHERE is_over = True ORDER BY gamesession_id;");
-            while (resultSet.next()) {
-                int gamesessionID = resultSet.getInt(1);
-                finishedGameSessionsIDList.add(gamesessionID);
-            }
-            closeDbConnection();
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-        }
-        return finishedGameSessionsIDList;
-    }
 
-
-    public ArrayList<Double> getSessionDurationsList() {
-        ArrayList<Double> sessionDurationsList = new ArrayList<>();
+    public HashMap<Integer, Double> getSessionDurationsMap() {
+        HashMap<Integer, Double> sessionDurationsMap = new HashMap<Integer, Double>();
         if (!gameSessionStatisticsList.isEmpty()) {
             for (GameSessionStatistics gameSessionStatistics : gameSessionStatisticsList) {
-                sessionDurationsList.add(gameSessionStatistics.getDuration());
+                sessionDurationsMap.put(gameSessionStatistics.getGameSessionID(), gameSessionStatistics.getDuration());
             }
         }
-        return sessionDurationsList;
+        return sessionDurationsMap;
     }
 
     public double getLastSessionDurationPercentile() {
-        double lastSessionDuration = getGameSessionStatisticsList().get(getGameSessionStatisticsList().size()-1).getDuration();
-        ArrayList<Double> sessionDurationsList = getSessionDurationsList();
+        double lastSessionDuration = getGameSessionStatisticsList().get(getGameSessionStatisticsList().size() - 1).getDuration();
+        ArrayList<Double> sessionDurationsList = new ArrayList<Double>(getSessionDurationsMap().values());
         Collections.sort(sessionDurationsList);
         double nBelow = 0.0;
         for (Double sessionDuration : sessionDurationsList) {
@@ -85,7 +68,7 @@ public class GameStatistics {
         for (GameSessionStatistics gameSessionStatistics : gameSessionStatisticsList) {
             sum += gameSessionStatistics.getScore();
         }
-        averageScore = Double.valueOf(sum/gameSessionStatisticsList.size());
+        averageScore = Double.valueOf(sum / gameSessionStatisticsList.size());
         return averageScore;
     }
 
@@ -93,7 +76,7 @@ public class GameStatistics {
         return gameSessionStatisticsList.get(gameSessionStatisticsList.size() - 1).getScore() > getAverageScore();
     }
 
-    public int getLastSessionID(){
+    public int getLastSessionID() {
         return gameSessionStatisticsList.get(gameSessionStatisticsList.size() - 1).getGameSessionID();
     }
 
