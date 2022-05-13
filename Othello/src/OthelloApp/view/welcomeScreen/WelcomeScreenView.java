@@ -14,6 +14,7 @@ public class WelcomeScreenView extends VBox{
     private Button newGameButton;
     private Button rulesButton;
     private Button gameStatisticsButton;
+    private Button resetDataBaseButton;
     private final static Font BODY_FONT = new Font("Consolas", 20);
     private final static double IMAGE_WIDTH = 500;
     private final static double BUTTON_WIDTH = 250;
@@ -27,6 +28,7 @@ public class WelcomeScreenView extends VBox{
         this.newGameButton = new Button("New Game");
         this.rulesButton = new Button("Rules");
         this.gameStatisticsButton = new Button("View Game Statistics");
+        this.resetDataBaseButton = new Button("Reset Database");
     }
 
     private void layoutNodes(){
@@ -36,10 +38,11 @@ public class WelcomeScreenView extends VBox{
         newGameButton.setPrefWidth(BUTTON_WIDTH);
         rulesButton.setPrefWidth(BUTTON_WIDTH);
         gameStatisticsButton.setPrefWidth(BUTTON_WIDTH);
-        this.getChildren().addAll(othelloImageView, newGameButton, rulesButton, gameStatisticsButton);
+        resetDataBaseButton.setPrefWidth(BUTTON_WIDTH);
+        this.getChildren().addAll(othelloImageView, newGameButton, rulesButton, gameStatisticsButton, resetDataBaseButton);
         this.setSpacing(20);
         this.setAlignment(Pos.TOP_CENTER);
-        VBox.setMargin(gameStatisticsButton, new Insets(0, 0, 50, 0));
+        VBox.setMargin(resetDataBaseButton, new Insets(0, 0, 50, 0));
         setFonts();
     }
 
@@ -47,6 +50,7 @@ public class WelcomeScreenView extends VBox{
         newGameButton.setFont(BODY_FONT);
         rulesButton.setFont(BODY_FONT);
         gameStatisticsButton.setFont(BODY_FONT);
+        resetDataBaseButton.setFont(BODY_FONT);
     }
 
     public Button getNewGameButton() {
@@ -59,5 +63,9 @@ public class WelcomeScreenView extends VBox{
 
     public Button getGameStatisticsButton() {
         return gameStatisticsButton;
+    }
+
+    public Button getResetDataBaseButton() {
+        return resetDataBaseButton;
     }
 }

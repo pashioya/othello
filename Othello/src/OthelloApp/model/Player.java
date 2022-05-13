@@ -1,15 +1,16 @@
 package OthelloApp.model;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
-public abstract class Player {
+public class Player {
     private StoneColor stoneColor;
     private String name;
+    private String type;
 
-    public Player(StoneColor stoneColor, String name) {
+    public Player(StoneColor stoneColor, String name, String type) {
         this.stoneColor = stoneColor;
         this.name = name;
+        this.type = type;
     }
 
     public StoneColor getPlayerColor() {
@@ -36,5 +37,13 @@ public abstract class Player {
     @Override
     public String toString() {
         return name;
+    }
+
+
+    public boolean isComputer(){
+        if (type.equals("computer")){
+            return true;
+        }
+        return false;
     }
 }

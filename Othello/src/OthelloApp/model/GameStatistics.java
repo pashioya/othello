@@ -6,8 +6,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static OthelloApp.db_util.DB_UTIL.closeDbConnection;
-import static OthelloApp.db_util.DB_UTIL.getStatement;
+import static OthelloApp.DBUtil.DBUtil.closeDbConnection;
+import static OthelloApp.DBUtil.DBUtil.getStatement;
 
 public class GameStatistics {
     private ArrayList<GameSessionStatistics> gameSessionStatisticsList;

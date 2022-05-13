@@ -1,12 +1,8 @@
 package OthelloApp.model;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 
-import static OthelloApp.db_util.DB_UTIL.closeDbConnection;
-import static OthelloApp.db_util.DB_UTIL.getStatement;
+import static OthelloApp.dataManager.DataManager.*;
 
 public class GameSessionStatistics {
     private int gameSessionID;
@@ -33,67 +29,19 @@ public class GameSessionStatistics {
     }
 
     public void setScore() {
-        int lastSessionScore = 0;
-        try {
-            Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT number_stones_user FROM gamesessions " +
-                    "WHERE gamesession_id =  " + gameSessionID + "; ");
-            while (resultSet.next()) {
-                lastSessionScore = resultSet.getInt(1); // gets the result of name
-            }
-            closeDbConnection();
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-        }
-        this.score = lastSessionScore;
+        this.score = getSessionScore(gameSessionID);
     }
 
     public void setDuration() {
-        double lastSessionDuration = 0;
-        try {
-            Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT time_elapsed FROM gamesessions " +
-                    "WHERE gamesession_id =  " + gameSessionID + "; ");
-            while (resultSet.next()) {
-                lastSessionDuration = resultSet.getDouble(1); // gets the result of name
-            }
-            closeDbConnection();
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-        }
-        duration = lastSessionDuration;
+        this.duration = getSessionDuration(gameSessionID);
     }
 
     public void setUserWon() {
-        try {
-            Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT user_won FROM gamesessions " +
-                    "WHERE gamesession_id =  " + gameSessionID + "; ");
-            while (resultSet.next()) {
-                userWon = resultSet.getBoolean(1); // gets the result of name
-            }
-            closeDbConnection();
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-        }
+        this.userWon = getSessionWon( gameSessionID);
     }
 
     public void setIsTied() {
-        try {
-            Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT number_stones_user FROM gamesessions " +
-                    "WHERE gamesession_id =  " + gameSessionID + "; ");
-            while (resultSet.next()) {
-                isTied = (resultSet.getInt(1) == 32); // gets the result of name
-            }
-            closeDbConnection();
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-        }
+        this.isTied = getSessionTied(gameSessionID);
     }
 
     public double getAverageUserMoveProfitability() {
@@ -108,64 +56,15 @@ public class GameSessionStatistics {
     }
 
     private void fillComputerMoveProfitabilitiesMap() {
-        try {
-            Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT t.turn_id, COUNT(*) " +
-                    "        FROM turns t JOIN gamesessions g ON g.gamesession_id = t.gamesession_id " +
-                    "        JOIN flipped_pieces f ON (t.gamesession_id = f.gamesession_id AND t.turn_id=f.turn_id) " +
-                    "        WHERE f.gamesession_id=" + gameSessionID + " AND player_name IN ('easy', 'medium', 'hard') " +
-                    "        GROUP BY (t.gamesession_id, t.turn_id) " +
-                    "        ORDER BY t.gamesession_id, t.turn_id;");
-            while (resultSet.next()) {
-                int computerMoveTurnID = resultSet.getInt(1);
-                int computerMoveProfitability = resultSet.getInt(2);
-                computerMoveProfitabilitiesMap.put(computerMoveTurnID, computerMoveProfitability);
-            }
-            closeDbConnection();
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-        }
-
+        userMoveProfitabilitiesMap = getSessionComputerMoveProfitabilities(gameSessionID, userMoveProfitabilitiesMap);
     }
 
     private void fillUserMoveProfitabilitiesMap() {
-        try {
-            Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT t.turn_id, COUNT(*) " +
-                    "        FROM turns t JOIN gamesessions g ON g.gamesession_id = t.gamesession_id " +
-                    "        JOIN flipped_pieces f ON (t.gamesession_id = f.gamesession_id AND t.turn_id=f.turn_id) " +
-                    "        WHERE f.gamesession_id=" + gameSessionID + " AND player_name NOT IN ('easy', 'medium', 'hard') " +
-                    "        GROUP BY (t.gamesession_id, t.turn_id) " +
-                    "        ORDER BY t.gamesession_id, t.turn_id;");
-            while (resultSet.next()) {
-                int userMoveTurnID = resultSet.getInt(1);
-                int userMoveProfitability = resultSet.getInt(2);
-                userMoveProfitabilitiesMap.put(userMoveTurnID, userMoveProfitability);
-            }
-            closeDbConnection();
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-        }
+        computerMoveProfitabilitiesMap = getSessionUserMoveProfitabilities(gameSessionID, computerMoveProfitabilitiesMap);
     }
 
     private void fillUserMoveDurationsMap() {
-        try {
-            Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT turn_id, time_elapsed FROM turns " +
-                    " WHERE gamesession_id = " + gameSessionID +
-                    " AND player_name NOT IN ('easy', 'medium', 'hard') " +
-                    " ORDER BY turn_id;");
-            while (resultSet.next()) {
-                int userMoveTurnID = resultSet.getInt(1);
-                double userMoveDuration = resultSet.getDouble(2);
-                userMoveDurationsMap.put(userMoveTurnID, userMoveDuration);
-            }
-            closeDbConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        userMoveDurationsMap = getSessionUserMoveDurations(gameSessionID, userMoveDurationsMap);
     }
 
     public int getGameSessionID() {
@@ -302,57 +201,14 @@ public class GameSessionStatistics {
     }
 
     public boolean userWentFirst() {
-        List<String> computerModes = List.of("easy", "medium", "hard");
-        String playerName = null;
-        try {
-            Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT player_name from turns WHERE gamesession_id=" + gameSessionID +
-                    " FETCH NEXT 1 ROWS ONLY;");
-            while (resultSet.next()) {
-                playerName = resultSet.getString(1); // gets the result of name
-            }
-            closeDbConnection();
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-        }
-        if (!computerModes.contains(playerName)) {
-            return true;
-        }
-        return false;
+        return getSessionUserWentFirst(gameSessionID);
     }
 
     public String getUserName() {
-        String userName = null;
-        try {
-            Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT username from gamesessions WHERE gamesession_id=" + gameSessionID +
-                    ";");
-            while (resultSet.next()) {
-                userName = resultSet.getString(1); // gets the result of name
-            }
-            closeDbConnection();
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-        }
-        return userName;
+        return getSessionUserName(gameSessionID);
     }
 
     public String getComputerName() {
-        String computerName = null;
-        try {
-            Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT computer_name from gamesessions WHERE gamesession_id=" + gameSessionID +
-                    ";");
-            while (resultSet.next()) {
-                computerName = resultSet.getString(1); // gets the result of name
-            }
-            closeDbConnection();
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-        }
-        return computerName;
+        return getSessionComputerName(gameSessionID);
     }
 }

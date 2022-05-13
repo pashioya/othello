@@ -1,4 +1,4 @@
-package OthelloApp.db_util;
+package OthelloApp.DBUtil;
 
 
 import java.sql.Connection;
@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public final class DB_UTIL {
+public final class DBUtil {
 
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/othello";
     private static final String DB_USER = "postgres";

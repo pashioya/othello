@@ -5,26 +5,23 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
+
+import static OthelloApp.alert_creation.AlertCreation.*;
 import static OthelloApp.screen_navigation_util.SCREEN_NAVIGATION_UTIL.showChooseColorScreen;
 import static OthelloApp.screen_navigation_util.SCREEN_NAVIGATION_UTIL.showGameSessionStatisticsScreen;
 
 public class GameSessionScreenPresenter {
-
     private final GameSession model;
     private final GameSessionScreenView view;
 
     public GameSessionScreenPresenter(GameSession model, GameSessionScreenView view) {
         this.model = model;
         this.view = view;
-        System.out.println(this.model.getActivePlayer());
         System.out.println(this.model.getBoard());
         this.view.setClickableExplainComputerMoveButton(false);
         updatePlayerScores();
@@ -34,6 +31,7 @@ public class GameSessionScreenPresenter {
             disableAllGridButtons();
             view.getTurnInstruction().setText("Click \"View Next Turn\" to replay the next move in the last game session.");
         } else {
+            System.out.println(this.model.activePlayerIsComputer());
             if (this.model.activePlayerIsComputer()) {
                 this.view.setClickableTurnButton(true);
                 disableAllGridButtons();
@@ -51,31 +49,26 @@ public class GameSessionScreenPresenter {
     class ComputerTurnHandler implements EventHandler<ActionEvent> {
         public void handle(ActionEvent event) {
             int[] mostProfitableMove = model.chooseMove();
-
             if (mostProfitableMove != null) {
-                StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
-                ArrayList<int[]> possibleMoves = model.getBoard().findAllPossibleMoves(activePlayerColor);
-                String explanation = model.explainComputerMoveDecision(possibleMoves);
-                view.getExplainComputerMoveButton().setOnAction(innerEvent -> {
-                    createComputerMoveExplanationAlert(explanation);
-                });
+                setComputerTurnExplanationAlert();
                 ArrayList<int[]> flippableStoneCoordinates = model.updateStones(mostProfitableMove);
                 view.setClickableTurnButton(!model.activePlayerIsComputer());
                 setButtonImage(mostProfitableMove);
                 updateView(flippableStoneCoordinates);
                 updatePlayerScores();
-            }
+            };
             model.switchActivePlayer();
             StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
             if (model.isOver()) {
                 disableAllGridButtons();
-                showGameOverAlert();
+                showGameOverAlert(view);
             } else {
                 if (model.getBoard().hasValidMoves(activePlayerColor)) {
                     view.getTurnInstruction().setText("Click a highlighted square to place a stone.");
                     setClickableGridButtons(activePlayerColor);
                 } else {
                     view.getTurnInstruction().setText("You cannot place a stone - Click \"Play Computer Move\" to make the Computer place a stone.");
+                    disableAllGridButtons();
                     model.switchActivePlayer();
                 }
                 view.setClickableTurnButton(model.activePlayerIsComputer());
@@ -87,10 +80,12 @@ public class GameSessionScreenPresenter {
 
     class StoneHandler implements EventHandler<ActionEvent> {
         private final int[] coordinates = new int[2];
+
         private StoneHandler(int row, int column) {
             this.coordinates[0] = row;
             this.coordinates[1] = column;
         }
+
         public void handle(ActionEvent event) {
             ArrayList<int[]> flippableStoneCoordinates = model.updateStones(coordinates);
             setButtonImage(coordinates);
@@ -99,31 +94,43 @@ public class GameSessionScreenPresenter {
             model.switchActivePlayer();
             if (model.isOver()) {
                 disableAllGridButtons();
-                showGameOverAlert();
+                showGameOverAlert(view);
             } else {
-                // If the Computer can play a turn, then disable the buttons so the user can't click on them, and enable the button that allows the computer to take a turn
-                if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
-                    view.getTurnInstruction().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
-                    disableAllGridButtons();
-                    // If Computer can't, then switch back to user and let user pick another move
-                } else {
-                    view.getTurnInstruction().setText("Computer unable to place a stone - Click another square to place a stone.");
-                    model.switchActivePlayer();
-                    StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
-                    setClickableGridButtons(activePlayerColor);
-                }
+                beginComputerTurn();
                 view.setClickableTurnButton(model.activePlayerIsComputer());
-                view.setClickableExplainComputerMoveButton(false);
+                view.setClickableExplainComputerMoveButton(!model.activePlayerIsComputer());
             }
         }
+    }
 
+    private void beginComputerTurn(){
+        // If the Computer can play a turn, then disable the buttons so the user can't click on them, and enable the button that allows the computer to take a turn
+        if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
+            view.getTurnInstruction().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
+            disableAllGridButtons();
+            // If Computer can't, then switch back to user and let user pick another move
+        } else {
+            view.getTurnInstruction().setText("Computer unable to place a stone - Click another square to place a stone.");
+            model.switchActivePlayer();
+            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+            setClickableGridButtons(activePlayerColor);
+        }
+    }
+
+    private void setComputerTurnExplanationAlert(){
+        StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+        ArrayList<int[]> possibleMoves = model.getBoard().findAllPossibleMoves(activePlayerColor);
+        String explanation = model.explainComputerMoveDecision(possibleMoves);
+        view.getExplainComputerMoveButton().setOnAction(innerEvent -> {
+            createComputerMoveExplanationAlert(explanation);
+        });
     }
 
     class ReplayHandler implements EventHandler<ActionEvent> {
-        private static int turnCount=0;
+        private static int turnCount = 0;
 
         public void handle(ActionEvent event) {
-            if (turnCount == model.getLastSessionNumberOfTurns()){
+            if (turnCount == model.getLastSessionNumberOfTurns()) {
                 turnCount = 0;
             }
             int[] coordinates = model.getTurnCoordinates(turnCount);
@@ -136,42 +143,23 @@ public class GameSessionScreenPresenter {
                 updateView(flippableStoneCoordinates);
                 updatePlayerScores();
                 System.out.println(model.getBoard());
-                view.setButtonOpacity(coordinates[0], coordinates[1], model.getBoard().getGRID()[coordinates[0]][coordinates[1]].hasStone(), false);
+                view.setButtonOpacity(coordinates[0], coordinates[1], model.getGrid()[coordinates[0]][coordinates[1]].hasStone(), false);
             }
             turnCount++;
-            if (turnCount == model.getLastSessionNumberOfTurns()){
+            if (turnCount == model.getLastSessionNumberOfTurns()) {
                 view.getTurnButton().setDisable(true);
             }
         }
     }
 
     void disableAllGridButtons() {
-        for (int row = 0; row < model.getBoard().getGRID().length; row++) {
-            for (int column = 0; column < model.getBoard().getGRID()[row].length; column++) {
+        for (int row = 0; row < model.getGrid().length; row++) {
+            for (int column = 0; column < model.getGrid()[row].length; column++) {
                 view.disableButton(row, column);
-                view.setButtonOpacity(row, column, model.getBoard().getGRID()[row][column].hasStone(), false);
+                view.setButtonOpacity(row, column, model.getGrid()[row][column].hasStone(), false);
             }
         }
     }
-
-
-    private void showGameOverAlert() {
-        Alert gameOverAlert = new Alert(Alert.AlertType.INFORMATION);
-        gameOverAlert.setTitle("Game over!");
-        gameOverAlert.setHeaderText("Neither player can play any more turns.");
-        gameOverAlert.setContentText("Click \"Continue\" to view the results of your game.");
-        gameOverAlert.getButtonTypes().clear();
-        ButtonType continueButton = new ButtonType("Continue");
-        ButtonType cancelButton = new ButtonType("Cancel");
-        gameOverAlert.getButtonTypes().addAll(continueButton, cancelButton);
-        Optional<ButtonType> result = gameOverAlert.showAndWait();
-        if (result.get() == continueButton) {
-            showGameSessionStatisticsScreen(view);
-        } else {
-            gameOverAlert.close();
-        }
-    }
-
 
     private void addEventHandlers() {
         if (!view.isReplay()) {
@@ -184,77 +172,38 @@ public class GameSessionScreenPresenter {
             view.getBackButton().setOnAction(event -> {
                 showChooseColorScreen(view);
             });
+            view.getQuitButton().setOnAction(event -> {
+                showQuitGameAlert(event, view);
+            });
         } else {
             view.getTurnButton().setOnAction(new ReplayHandler());
             view.getBackButton().setOnAction(event -> {
                 showGameSessionStatisticsScreen(view);
             });
+            view.getQuitButton().setOnAction(event -> {
+                showExitAlert(event, view);
+            });
         }
-
         view.getRulesButton().setOnAction(event -> {
             Alert rulesInfoAlert = createRulesInfoAlert();
             rulesInfoAlert.showAndWait();
         });
-        view.getQuitButton().setOnAction(event -> {
-            showQuitGameAlert(event);
-        });
+
     }
 
-    private void showQuitGameAlert(ActionEvent event) {
-        Alert quitGameAlert = new Alert(Alert.AlertType.WARNING);
-        quitGameAlert.setTitle("Confirm quit game");
-        quitGameAlert.setHeaderText("All progress in this game will be lost.");
-        quitGameAlert.setContentText("Quit anyway?");
-        quitGameAlert.getButtonTypes().clear();
-        ButtonType continueButton = new ButtonType("Continue");
-        ButtonType cancelButton = new ButtonType("Cancel");
-        quitGameAlert.getButtonTypes().addAll(continueButton, cancelButton);
-        Optional<ButtonType> result = quitGameAlert.showAndWait();
-        if (result.get() == continueButton) {
-            Stage stage = (Stage) view.getScene().getWindow();
-            stage.close();
-        } else {
-            event.consume();
-        }
-    }
 
-    private Alert createRulesInfoAlert() {
-        Alert rulesInfoAlert = new Alert(Alert.AlertType.INFORMATION);
-        rulesInfoAlert.setTitle("Othello Rules");
-        rulesInfoAlert.setHeaderText("Rules");
-        rulesInfoAlert.setContentText("Othello is a two-player game. One player plays black stones and the other player plays white stones. " +
-                "The game begins with four stones (two white and two black) in the center of the board. The player that plays black stones makes the first move.\n\n" +
-                "Players make moves by placing stone of their respective colors on the board. " +
-                "A move is valid only if the placed stone outflanks an opposite-colored stone (or row of opposite-colored stones). " +
-                "A stone or row of stones is outflanked when it is bordered by opposite-colored stones at each end. " +
-                "Each player must outflank opposite-colored stones and flip them so they have the player's color. \n\n" +
-                "If a player is not able to flip any stones, the player forfeits his/her turn and the other player plays again. " +
-                "Players may not voluntarily forfeit a turn if a move is available.\n\n" +
-                "The game is over when neither player can make a move. The player with the most stones of his/her color on the board wins the game."
-        );
-        return rulesInfoAlert;
-    }
-
-    private Alert createComputerMoveExplanationAlert(String explanation) {
-        Alert computerMoveExplanationAlert = new Alert(Alert.AlertType.INFORMATION);
-        computerMoveExplanationAlert.setTitle("Latest Computer Move Explanation");
-        computerMoveExplanationAlert.setHeaderText("Explanation");
-        computerMoveExplanationAlert.setContentText(explanation);
-        computerMoveExplanationAlert.showAndWait();
-        return computerMoveExplanationAlert;
-    }
 
 
     private void drawBoard() {
-        for (int row = 0; row < model.getBoard().getGRID().length; row++) {
-            for (int column = 0; column < model.getBoard().getGRID()[row].length; column++) {
+        for (int row = 0; row < model.getGrid().length; row++) {
+            for (int column = 0; column < model.getGrid()[row].length; column++) {
                 setButtonImage(new int[]{row, column});
             }
         }
     }
 
     private void setButtonImage(int[] coordinates) {
-        Square square = this.model.getBoard().getGRID()[coordinates[0]][coordinates[1]];
+        Square square = this.model.getGrid()[coordinates[0]][coordinates[1]];
         Button button = this.view.getGridButtons()[coordinates[0]][coordinates[1]];
         String imageURL = getButtonImageURL(square);
         this.view.setButtonBackgroundImage(button, imageURL);
@@ -276,7 +225,7 @@ public class GameSessionScreenPresenter {
             for (int column = 0; column < view.getGridButtons()[row].length; column++) {
                 Button button = this.view.getGridButtons()[row][column];
                 button.setDisable(!(buttonIsValidMove(row, column, possibleMoves)));
-                view.setButtonOpacity(row, column, model.getBoard().getGRID()[row][column].hasStone(), buttonIsValidMove(row, column, possibleMoves));
+                view.setButtonOpacity(row, column, model.getGrid()[row][column].hasStone(), buttonIsValidMove(row, column, possibleMoves));
             }
         }
     }
@@ -301,7 +250,7 @@ public class GameSessionScreenPresenter {
     }
 
     private void fadeTransition(int[] flippableStoneCoordinates, double imageTransitionDuration) {
-        Square square = model.getBoard().getGRID()[flippableStoneCoordinates[0]][flippableStoneCoordinates[1]];
+        Square square = model.getGrid()[flippableStoneCoordinates[0]][flippableStoneCoordinates[1]];
         String URL = getButtonImageURL(square);
         Button button = view.getGridButtons()[flippableStoneCoordinates[0]][flippableStoneCoordinates[1]];
         view.fadeBetweenImages(button, URL, imageTransitionDuration);
@@ -310,13 +259,12 @@ public class GameSessionScreenPresenter {
     private void updatePlayerScores() {
         HashMap<Player, Integer> playerScores = this.model.getPlayerScores();
         for (Map.Entry<Player, Integer> playerScore : playerScores.entrySet()) {
-            if (playerScore.getKey() instanceof User) {
-                this.view.getPlayerScoreLabel().setText(String.format("Player: %d", playerScore.getValue()));
-            } else {
+            if (playerScore.getKey().isComputer()) {
                 this.view.getComputerScore().setText(String.format("Computer: %d", playerScore.getValue()));
+            } else {
+                this.view.getPlayerScoreLabel().setText(String.format("Player: %d", playerScore.getValue()));
             }
         }
-
     }
 }
 

@@ -1,5 +1,6 @@
 package OthelloApp.screen_navigation_util;
 
+import OthelloApp.model.Game;
 import OthelloApp.model.GameSession;
 import OthelloApp.model.GameSessionStatistics;
 import OthelloApp.model.GameStatistics;
@@ -49,10 +50,13 @@ public final class SCREEN_NAVIGATION_UTIL {
 
     public static void showRulesScreen(Pane view){
         RulesScreenView rulesScreenView = new RulesScreenView();
-        RulesScreenPresenter rulesScreenPresenter = new RulesScreenPresenter(rulesScreenView);
+        Game model = new Game();
+        RulesScreenPresenter rulesScreenPresenter = new RulesScreenPresenter(model, rulesScreenView);
         view.getScene().setRoot(rulesScreenView);
         rulesScreenView.getScene().getWindow().sizeToScene();
         Stage stage = (Stage) rulesScreenView.getScene().getWindow();
+        stage.setMinWidth(1000);
+        stage.setMinHeight(1000);
         stage.centerOnScreen();
     }
 
@@ -68,7 +72,8 @@ public final class SCREEN_NAVIGATION_UTIL {
 
     public static void showGameScreen(Pane view, boolean userGoesFirst, String userName, String difficultyMode, boolean replay) {
         GameSessionScreenView gameSessionScreenView = new GameSessionScreenView(replay);
-        GameSession model = new GameSession(userGoesFirst, userName, difficultyMode);
+        Game game = new Game();
+        GameSession model = game.createNewGameSession(userGoesFirst, userName, difficultyMode);
         GameSessionScreenPresenter gameSessionScreenPresenter = new GameSessionScreenPresenter(model, gameSessionScreenView);
         view.getScene().setRoot(gameSessionScreenView);
         gameSessionScreenView.getScene().getWindow().sizeToScene();

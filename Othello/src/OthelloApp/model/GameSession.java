@@ -6,8 +6,8 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static OthelloApp.db_util.DB_UTIL.closeDbConnection;
-import static OthelloApp.db_util.DB_UTIL.getStatement;
+import static OthelloApp.DBUtil.DBUtil.closeDbConnection;
+import static OthelloApp.DBUtil.DBUtil.getStatement;
 
 public class GameSession {
     private int idNo;
@@ -43,7 +43,7 @@ public class GameSession {
     }
 
     public boolean activePlayerIsComputer() {
-        return (activePlayer instanceof Computer);
+        return (activePlayer.isComputer());
     }
 
     public Player[] getPlayers() {
@@ -61,6 +61,8 @@ public class GameSession {
     public Board getBoard() {
         return board;
     }
+
+    public Square[][] getGrid(){return board.getGRID();}
 
     public void setActivePlayer(Player activePlayer) {
         this.activePlayer = activePlayer;
@@ -97,7 +99,7 @@ public class GameSession {
 
     public boolean userWon() {
         for (Player player : players) {
-            if (player instanceof User) {
+            if (!player.isComputer()) {
                 return board.userWon(player.getPlayerColor());
             }
         }
@@ -107,11 +109,11 @@ public class GameSession {
 
     private void initializePlayers(boolean userGoesFirst, String userName, String difficultyMode) {
         if (userGoesFirst) {
-            this.players[0] = new User(StoneColor.BLACK, userName);
-            this.players[1] = new Computer(StoneColor.WHITE, difficultyMode);
+            this.players[0] = new Player(StoneColor.BLACK, userName, "user");
+            this.players[1] = new Player(StoneColor.WHITE, difficultyMode, "computer");
         } else {
-            this.players[0] = new Computer(StoneColor.BLACK, difficultyMode);
-            this.players[1] = new User(StoneColor.WHITE, userName);
+            this.players[0] = new Player(StoneColor.BLACK, difficultyMode, "computer");
+            this.players[1] = new Player(StoneColor.WHITE, userName, "user");
         }
     }
 
@@ -153,7 +155,7 @@ public class GameSession {
     public int getUserScore() {
         HashMap<Player, Integer> playerScores = getPlayerScores();
         for (Map.Entry<Player, Integer> playerScore : playerScores.entrySet()) {
-            if (playerScore.getKey() instanceof User) {
+            if (!playerScore.getKey().isComputer()) {
                 return playerScore.getValue();
             }
         }
@@ -162,7 +164,7 @@ public class GameSession {
 
     public String getUserName() {
         for (Player player : players) {
-            if (player instanceof User) {
+            if (!player.isComputer()) {
                 return player.getName();
             }
         }
@@ -171,7 +173,7 @@ public class GameSession {
 
     private String getComputerName() {
         for (Player player : players) {
-            if (player instanceof Computer) {
+            if (player.isComputer()) {
                 return player.getName();
             }
         }
@@ -206,6 +208,7 @@ public class GameSession {
             case "hard":
                 ArrayList<int[]> filteredMoves = filterPossibleMoves(possibleMoves);
                 chosenMove = getBoard().findMostProfitableMove(filteredMoves, activePlayerColor);
+                System.out.println("Chosen move: " + chosenMove[0] + " " + chosenMove[1]);
                 break;
             default:
                 Random random = new Random();
@@ -265,6 +268,10 @@ public class GameSession {
             }
         }
         if (!filteredMoves.isEmpty()) {
+            System.out.println("Corners: ");
+            for (int[] filteredMove : filteredMoves) {
+                System.out.println(filteredMove[0] + " " + filteredMove[1]);
+            }
             return filteredMoves;
         }
         for (int[] possibleMove : possibleMoves) {
@@ -273,6 +280,10 @@ public class GameSession {
             }
         }
         if (!filteredMoves.isEmpty()) {
+            System.out.println("Sides: ");
+            for (int[] filteredMove : filteredMoves) {
+                System.out.println(filteredMove[0] + " " + filteredMove[1]);
+            }
             return filteredMoves;
         }
         for (int[] possibleMove : possibleMoves) {
@@ -281,6 +292,10 @@ public class GameSession {
             }
         }
         if (!filteredMoves.isEmpty()) {
+            System.out.println("Center: ");
+            for (int[] filteredMove : filteredMoves) {
+                System.out.println(filteredMove[0] + " " + filteredMove[1]);
+            }
             return filteredMoves;
         }
         for (int[] possibleMove : possibleMoves) {
@@ -289,6 +304,10 @@ public class GameSession {
             }
         }
         if (!filteredMoves.isEmpty()) {
+            System.out.println("Not safe zone: ");
+            for (int[] filteredMove : filteredMoves) {
+                System.out.println(filteredMove[0] + " " + filteredMove[1]);
+            }
             return filteredMoves;
         }
         return possibleMoves;
@@ -325,9 +344,9 @@ public class GameSession {
             }
         }
         if (!filteredMoves.isEmpty()) {
-            return createComputerMoveExplanation("Computer could not place a stone in a corner, side, or center, but found available non-danger zone move(s): ", filteredMoves);
+            return createComputerMoveExplanation("Computer could not place a stone in a corner, side, or center, but found available non-corner-adjacent move(s): ", filteredMoves);
         }
-        return createComputerMoveExplanation("Computer only found danger zone move(s): ", possibleMoves);
+        return createComputerMoveExplanation("Computer only found corner-adjacent move(s): ", possibleMoves);
     }
 
     private String createComputerMoveExplanation(String header, ArrayList<int[]> filteredMoves){

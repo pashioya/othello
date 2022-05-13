@@ -1,13 +1,6 @@
 package OthelloApp.view.chooseColorScreen;
 
 
-import OthelloApp.model.GameSession;
-import OthelloApp.view.gameSessionScreen.GameSessionScreenPresenter;
-import OthelloApp.view.gameSessionScreen.GameSessionScreenView;
-import OthelloApp.view.welcomeScreen.WelcomeScreenPresenter;
-import OthelloApp.view.welcomeScreen.WelcomeScreenView;
-import javafx.stage.Stage;
-
 import static OthelloApp.screen_navigation_util.SCREEN_NAVIGATION_UTIL.showGameScreen;
 import static OthelloApp.screen_navigation_util.SCREEN_NAVIGATION_UTIL.showWelcomeScreen;
 

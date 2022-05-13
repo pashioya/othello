@@ -1,11 +1,6 @@
 package OthelloApp.view.welcomeScreen;
 
-import OthelloApp.view.chooseColorScreen.ChooseColorScreenPresenter;
-import OthelloApp.view.chooseColorScreen.ChooseColorScreenView;
-import OthelloApp.view.rulesScreen.RulesScreenPresenter;
-import OthelloApp.view.rulesScreen.RulesScreenView;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
+import static OthelloApp.alert_creation.AlertCreation.showResetDatabaseAlert;
 import static OthelloApp.screen_navigation_util.SCREEN_NAVIGATION_UTIL.*;
 
 public class WelcomeScreenPresenter {
@@ -25,6 +20,9 @@ public class WelcomeScreenPresenter {
         });
         view.getGameStatisticsButton().setOnAction(event ->{
             showAllGameStatisticsScreen(view, true);
+        });
+        view.getResetDataBaseButton().setOnAction(event -> {
+            showResetDatabaseAlert();
         });
     }
 

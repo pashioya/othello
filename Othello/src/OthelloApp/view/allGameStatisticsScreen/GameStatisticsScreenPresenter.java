@@ -1,21 +1,9 @@
 package OthelloApp.view.allGameStatisticsScreen;
 
-import OthelloApp.model.GameSessionStatistics;
 import OthelloApp.model.GameStatistics;
-import OthelloApp.view.chooseColorScreen.ChooseColorScreenPresenter;
-import OthelloApp.view.chooseColorScreen.ChooseColorScreenView;
-import OthelloApp.view.endScreen.GameSessionStatisticsPresenter;
-import OthelloApp.view.endScreen.GameSessionStatisticsView;
-import javafx.event.ActionEvent;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
-import java.util.List;
-import java.util.Optional;
-
+import static OthelloApp.alert_creation.AlertCreation.showExitAlert;
 import static OthelloApp.screen_navigation_util.SCREEN_NAVIGATION_UTIL.*;
 
 public class GameStatisticsScreenPresenter {
@@ -38,7 +26,7 @@ public class GameStatisticsScreenPresenter {
         });
 
         view.getQuitButton().setOnAction(event -> {
-            showQuitAlert(event);
+            showExitAlert(event, view);
         });
 
         if (isCreatedFromWelcomeScreen) {
@@ -94,21 +82,4 @@ public class GameStatisticsScreenPresenter {
                         model.getLastSessionDurationPercentile()));
     }
 
-    private void showQuitAlert(ActionEvent event) {
-        Alert quitGameAlert = new Alert(Alert.AlertType.WARNING);
-        quitGameAlert.setTitle("Confirm quit");
-        quitGameAlert.setHeaderText("Quit game and exit?");
-        quitGameAlert.setContentText("Click \"Continue\" to exit");
-        quitGameAlert.getButtonTypes().clear();
-        ButtonType continueButton = new ButtonType("Continue");
-        ButtonType cancelButton = new ButtonType("Cancel");
-        quitGameAlert.getButtonTypes().addAll(continueButton, cancelButton);
-        Optional<ButtonType> result = quitGameAlert.showAndWait();
-        if (result.get() == continueButton) {
-            Stage stage = (Stage) view.getScene().getWindow();
-            stage.close();
-        } else {
-            event.consume();
-        }
-    }
 }

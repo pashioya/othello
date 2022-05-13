@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-import static OthelloApp.db_util.DB_UTIL.*;
+import static OthelloApp.DBUtil.DBUtil.*;
 import static java.lang.System.currentTimeMillis;
 
 public class Turn {

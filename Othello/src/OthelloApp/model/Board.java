@@ -8,6 +8,7 @@ import static OthelloApp.model.StoneColor.WHITE;
 public class Board {
     private final Square[][] GRID;
     private final static int SIDE_LENGTH = 8;
+    private final static int SPACING = 11;
 
     public Board() {
         this.GRID = new Square[SIDE_LENGTH][SIDE_LENGTH];
@@ -61,11 +62,11 @@ public class Board {
         choose which column coordinate of the Square he/she wants to check.
          */
 
-        for (int i = 0; i < 11 + 3 * SIDE_LENGTH; i++) {
+        for (int i = 0; i < SPACING + 3 * SIDE_LENGTH; i++) {
             builder.append("_");
         }
         builder.append("\n");
-        String header = "|%" + (11 + 3 * SIDE_LENGTH) + "s";
+        String header = "|%" + (SPACING + 3 * SIDE_LENGTH) + "s";
         builder.append(String.format(header, "|\n"));
         builder.append(String.format("%-7s", "|"));
         for (int i = 0; i < SIDE_LENGTH; i++) {
@@ -129,9 +130,9 @@ public class Board {
 
         Formats the bottom of the grid that is displayed to the user.
          */
-        String footer = "|%" + (11 + 3 * SIDE_LENGTH) + "s";
+        String footer = "|%" + (SPACING + 3 * SIDE_LENGTH) + "s";
         builder.append(String.format(footer, "|\n"));
-        for (int i = 0; i < 11 + 3 * SIDE_LENGTH; i++) {
+        for (int i = 0; i < SPACING + 3 * SIDE_LENGTH; i++) {
             builder.append("-");
         }
     }
@@ -202,10 +203,7 @@ public class Board {
 
     public boolean hasValidMoves(StoneColor stoneColor) {
         ArrayList<int[]> validMoves = findAllPossibleMoves(stoneColor);
-        if (validMoves.size() == 0) {
-            return false;
-        }
-        return true;
+        return validMoves.size() != 0;
     }
 
     public int[] findMostProfitableMove(ArrayList<int[]> possibleMoves, StoneColor stoneColor) {
