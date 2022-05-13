@@ -1,10 +1,12 @@
 <component name="libraryTable">
   <library name="lib">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/Othello/lib" />
+      <root url="jar://$PROJECT_DIR$/lib/easy-rules-core-4.1.1-20201206.215123-1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/postgresql-42.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-simple-1.7.9.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
-    <jarDirectory url="file://$PROJECT_DIR$/Othello/lib" recursive="false" />
   </library>
 </component>
