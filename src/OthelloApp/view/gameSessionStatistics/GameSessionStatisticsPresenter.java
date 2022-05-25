@@ -1,8 +1,8 @@
-package OthelloApp.view.gameSessionStatisticsScreen;
+package OthelloApp.view.gameSessionStatistics;
 
 
 import OthelloApp.model.GameSessionStatistics;
-import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.*;
+import static OthelloApp.utilities.ScreenNavigationUtil.*;
 import javafx.scene.chart.XYChart;
 
 
@@ -63,12 +63,12 @@ public class GameSessionStatisticsPresenter {
     private void displayMoveProfitabilitiesChart() {
         view.getProfitabilitiesPerMoveChart().getData().clear();
         XYChart.Series<Number, Number> userMoves = new XYChart.Series<>();
-        userMoves.setName("User Move");
+        userMoves.setName("User");
         for (Map.Entry<Integer, Integer> userMoveProfitability : model.getUserMoveProfitabilitiesMap().entrySet()) {
             userMoves.getData().add(new XYChart.Data<Number, Number>(userMoveProfitability.getKey(), userMoveProfitability.getValue()));
         }
         XYChart.Series<Number, Number> computerMoves = new XYChart.Series<>();
-        computerMoves.setName("Computer Move");
+        computerMoves.setName("Computer");
         for (Map.Entry<Integer, Integer> computerMoveProfitability : model.getComputerMoveProfitabilitiesMap().entrySet()) {
             computerMoves.getData().add(new XYChart.Data<Number, Number>(computerMoveProfitability.getKey(), computerMoveProfitability.getValue()));
         };
@@ -79,7 +79,7 @@ public class GameSessionStatisticsPresenter {
     private void displayMoveDurationsChart() {
         view.getDurationsPerMoveChart().getData().clear();
         XYChart.Series<Number, Number> playerMoveDurations = new XYChart.Series<>();
-        playerMoveDurations.setName("User Move");
+        playerMoveDurations.setName("User");
         for (Map.Entry<Integer, Double> userMoveDurationsEntry : model.getUserMoveDurationsMap().entrySet()) {
             playerMoveDurations.getData().add(new XYChart.Data<Number, Number>(userMoveDurationsEntry.getKey(), userMoveDurationsEntry.getValue()));
         }

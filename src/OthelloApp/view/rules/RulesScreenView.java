@@ -1,4 +1,4 @@
-package OthelloApp.view.rulesScreen;
+package OthelloApp.view.rules;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;

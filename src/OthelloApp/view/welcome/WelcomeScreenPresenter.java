@@ -1,13 +1,13 @@
-package OthelloApp.view.welcomeScreen;
+package OthelloApp.view.welcome;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 import java.util.Optional;
 
-import static OthelloApp.alertCreation.AlertCreationUtil.createWarningAlert;
+import static OthelloApp.utilities.AlertCreationUtil.createWarningAlert;
 import static OthelloApp.dataManager.DataManager.clearAllData;
-import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.*;
+import static OthelloApp.utilities.ScreenNavigationUtil.*;
 
 public class WelcomeScreenPresenter {
     private final WelcomeScreenView view;

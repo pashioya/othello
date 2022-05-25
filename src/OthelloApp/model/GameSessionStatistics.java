@@ -28,19 +28,19 @@ public class GameSessionStatistics {
         fillUserMoveDurationsMap();
     }
 
-    public void setScore() {
+    private void setScore() {
         this.score = getSessionScore(gameSessionID);
     }
 
-    public void setDuration() {
+    private void setDuration() {
         this.duration = getSessionDuration(gameSessionID);
     }
 
-    public void setUserWon() {
+    private void setUserWon() {
         this.userWon = getSessionWon( gameSessionID);
     }
 
-    public void setIsTied() {
+    private void setIsTied() {
         this.isTied = getSessionTied(gameSessionID);
     }
 

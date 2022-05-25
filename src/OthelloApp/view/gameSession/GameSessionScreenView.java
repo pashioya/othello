@@ -1,4 +1,4 @@
-package OthelloApp.view.gameSessionScreen;
+package OthelloApp.view.gameSession;
 
 
 import javafx.animation.FadeTransition;

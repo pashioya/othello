@@ -1,4 +1,4 @@
-package OthelloApp.view.gameStatisticsScreen;
+package OthelloApp.view.gameStatistics;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -30,7 +30,7 @@ public class GameStatisticsScreenView extends BorderPane {
     }
 
     private void initializeNodes(){
-        this.title = new Text("Statistics For All Games Already Played");
+        this.title = new Text("Statistics For All Finished Games");
         this.activeSessionScoreVSAverage  = new Text();
         this.activeSessionDurationPercentile = new Text();
 

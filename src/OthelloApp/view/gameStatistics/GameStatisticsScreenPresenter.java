@@ -1,12 +1,12 @@
-package OthelloApp.view.gameStatisticsScreen;
+package OthelloApp.view.gameStatistics;
 
 import OthelloApp.model.GameStatistics;
 import javafx.scene.chart.XYChart;
 
 import java.util.Map;
 
-import static OthelloApp.alertCreation.AlertCreationUtil.showExitAlert;
-import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.*;
+import static OthelloApp.utilities.AlertCreationUtil.showExitAlert;
+import static OthelloApp.utilities.ScreenNavigationUtil.*;
 
 public class GameStatisticsScreenPresenter {
     private final GameStatisticsScreenView view;
