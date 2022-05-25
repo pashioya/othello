@@ -4,31 +4,70 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="46e6b1a3-9c16-4881-b49e-419aac47a3ad" name="Changes" comment="-- added Alert Util class">
+    <list default="true" id="46e6b1a3-9c16-4881-b49e-419aac47a3ad" name="Changes" comment="-- changed access modifier">
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanProtectSideAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanProtectSideCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanReinforceCornerAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanReinforceCornerCondtion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CenterMovesAvailableAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CenterMovesAvailableCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CornerMovesAvailableAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CornerMovesAvailableCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/MaximizeProfitabilityAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/MinimizeProfitabilityAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/MovesAvailableCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/NotCornerAdjacentMovesAvailableAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/NotCornerAdjacentMovesAvailableCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/SafeSideMovesAvailableAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/SafeSideMovesAvailableCondition.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/alertCreation/AlertCreation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/alertCreation/AlertCreationUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/t9_othello/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/t9_othello/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/DBUtil/DBUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/utilities/DBUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/alertCreation/AlertCreationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/utilities/AlertCreationUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OthelloApp/dataManager/DataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/dataManager/DataManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/GameSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/GameSession.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/GameSessionStatistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/GameSessionStatistics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/GameStatistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/GameStatistics.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/Turn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/Turn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/screenNavigationUtil/ScreenNavigationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/screenNavigationUtil/ScreenNavigationUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/allGameStatisticsScreen/GameStatisticsScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameStatisticsScreen/GameStatisticsScreenPresenter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/allGameStatisticsScreen/GameStatisticsScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameStatisticsScreen/GameStatisticsScreenView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/chooseColorScreen/ChooseColorScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/chooseColorScreen/ChooseColorScreenPresenter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/endScreen/GameSessionStatisticsPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionStatisticsScreen/GameSessionStatisticsPresenter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/endScreen/GameSessionStatisticsView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionStatisticsScreen/GameSessionStatisticsView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionScreen/GameSessionScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionScreen/GameSessionScreenPresenter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/welcomeScreen/WelcomeScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/welcomeScreen/WelcomeScreenPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/screenNavigationUtil/ScreenNavigationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/utilities/ScreenNavigationUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/chooseColorScreen/ChooseColorScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/chooseColor/ChooseColorScreenPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/chooseColorScreen/ChooseColorScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/chooseColor/ChooseColorScreenView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionScreen/GameSessionScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSession/GameSessionScreenPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionScreen/GameSessionScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSession/GameSessionScreenView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionStatisticsScreen/GameSessionStatisticsPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionStatistics/GameSessionStatisticsPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionStatisticsScreen/GameSessionStatisticsView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionStatistics/GameSessionStatisticsView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameStatisticsScreen/GameStatisticsScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameStatistics/GameStatisticsScreenPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameStatisticsScreen/GameStatisticsScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameStatistics/GameStatisticsScreenView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/rulesScreen/RulesScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/rules/RulesScreenPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/rulesScreen/RulesScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/rules/RulesScreenView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/welcomeScreen/WelcomeScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/welcome/WelcomeScreenPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/welcomeScreen/WelcomeScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/welcome/WelcomeScreenView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Test.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="296pizMSHA2I6vgE8AyYCZ7XNHE" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -50,7 +89,12 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
   </component>
-  <component name="RunManager">
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="OthelloApp.model" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="t9_othello" />
@@ -59,9 +103,23 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="OthelloApp.model.RuleBase.Test" />
+      <module name="t9_othello" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="OthelloApp.model.rules.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Test" />
       </list>
     </recent_temporary>
   </component>
@@ -75,7 +133,12 @@
       <updated>1652443526283</updated>
       <workItem from="1652443531949" duration="557000" />
       <workItem from="1652444126077" duration="107000" />
-      <workItem from="1652444254069" duration="11705000" />
+      <workItem from="1652444254069" duration="11877000" />
+      <workItem from="1652606625612" duration="243000" />
+      <workItem from="1652778343700" duration="19049000" />
+      <workItem from="1652807045417" duration="87503000" />
+      <workItem from="1653287229830" duration="1190000" />
+      <workItem from="1653460376053" duration="11315000" />
     </task>
     <task id="LOCAL-00001" summary="-- changed directory structure :)">
       <created>1652444653962</created>
@@ -84,7 +147,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652444653962</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="-- changed access modifier">
+      <created>1652456060400</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1652456060400</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -100,10 +170,12 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="-- changed directory structure :)" />
     <MESSAGE value="-- added Alert Util class" />
-    <option name="LAST_COMMIT_MESSAGE" value="-- added Alert Util class" />
+    <MESSAGE value="-- changed access modifier" />
+    <option name="LAST_COMMIT_MESSAGE" value="-- changed access modifier" />
   </component>
 </project>

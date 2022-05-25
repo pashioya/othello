@@ -1,21 +1,21 @@
-package OthelloApp.screenNavigationUtil;
+package OthelloApp.utilities;
 
 import OthelloApp.model.Game;
 import OthelloApp.model.GameSession;
 import OthelloApp.model.GameSessionStatistics;
 import OthelloApp.model.GameStatistics;
-import OthelloApp.view.gameStatisticsScreen.GameStatisticsScreenPresenter;
-import OthelloApp.view.gameStatisticsScreen.GameStatisticsScreenView;
-import OthelloApp.view.chooseColorScreen.ChooseColorScreenPresenter;
-import OthelloApp.view.chooseColorScreen.ChooseColorScreenView;
-import OthelloApp.view.gameSessionStatisticsScreen.GameSessionStatisticsPresenter;
-import OthelloApp.view.gameSessionStatisticsScreen.GameSessionStatisticsView;
-import OthelloApp.view.gameSessionScreen.GameSessionScreenPresenter;
-import OthelloApp.view.gameSessionScreen.GameSessionScreenView;
-import OthelloApp.view.rulesScreen.RulesScreenPresenter;
-import OthelloApp.view.rulesScreen.RulesScreenView;
-import OthelloApp.view.welcomeScreen.WelcomeScreenPresenter;
-import OthelloApp.view.welcomeScreen.WelcomeScreenView;
+import OthelloApp.view.gameStatistics.GameStatisticsScreenPresenter;
+import OthelloApp.view.gameStatistics.GameStatisticsScreenView;
+import OthelloApp.view.chooseColor.ChooseColorScreenPresenter;
+import OthelloApp.view.chooseColor.ChooseColorScreenView;
+import OthelloApp.view.gameSessionStatistics.GameSessionStatisticsPresenter;
+import OthelloApp.view.gameSessionStatistics.GameSessionStatisticsView;
+import OthelloApp.view.gameSession.GameSessionScreenPresenter;
+import OthelloApp.view.gameSession.GameSessionScreenView;
+import OthelloApp.view.rules.RulesScreenPresenter;
+import OthelloApp.view.rules.RulesScreenView;
+import OthelloApp.view.welcome.WelcomeScreenPresenter;
+import OthelloApp.view.welcome.WelcomeScreenView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -50,8 +50,7 @@ public final class ScreenNavigationUtil {
 
     public static void showRulesScreen(Pane view){
         RulesScreenView rulesScreenView = new RulesScreenView();
-        Game model = new Game();
-        RulesScreenPresenter rulesScreenPresenter = new RulesScreenPresenter(model, rulesScreenView);
+        RulesScreenPresenter rulesScreenPresenter = new RulesScreenPresenter(Game.getInstance(), rulesScreenView);
         view.getScene().setRoot(rulesScreenView);
         rulesScreenView.getScene().getWindow().sizeToScene();
         Stage stage = (Stage) rulesScreenView.getScene().getWindow();
@@ -72,8 +71,7 @@ public final class ScreenNavigationUtil {
 
     public static void showGameScreen(Pane view, boolean userGoesFirst, String userName, String difficultyMode, boolean replay) {
         GameSessionScreenView gameSessionScreenView = new GameSessionScreenView(replay);
-        Game game = new Game();
-        GameSession model = game.createNewGameSession(userGoesFirst, userName, difficultyMode);
+        GameSession model = Game.createNewGameSession(userGoesFirst, userName, difficultyMode);
         GameSessionScreenPresenter gameSessionScreenPresenter = new GameSessionScreenPresenter(model, gameSessionScreenView);
         view.getScene().setRoot(gameSessionScreenView);
         gameSessionScreenView.getScene().getWindow().sizeToScene();

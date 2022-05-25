@@ -1,13 +1,10 @@
 package OthelloApp.model;
 
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-import static OthelloApp.DBUtil.DBUtil.*;
 import static OthelloApp.dataManager.DataManager.*;
 import static java.lang.System.currentTimeMillis;
 
@@ -20,6 +17,7 @@ public class Turn {
     private long endTimeMilisec;
     private int[] placedCoordinate;
     private ArrayList<int[]> flippedStoneCoordinates;
+    private String explanation;
 
     public Turn(String name, boolean isFirstTurn) {
         if (isFirstTurn){
@@ -54,6 +52,14 @@ public class Turn {
     public void save(int gameSessionID) {
         saveTurn(gameSessionID, getTurnId(), getName(), getStartDateTime(), getTimeElapsed(), getPlacedCoordinate());
         saveFlippedPieces(gameSessionID, getTurnId(), getFlippedStoneCoordinates());
+    }
+
+    public void setExplanation(String explanation) {
+        this.explanation = explanation;
+    }
+
+    public String getExplanation() {
+        return explanation;
     }
 
     @Override

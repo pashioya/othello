@@ -1,4 +1,4 @@
-package OthelloApp.view.chooseColorScreen;
+package OthelloApp.view.chooseColor;
 
 import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;

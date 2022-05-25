@@ -1,4 +1,4 @@
-package OthelloApp.view.gameSessionScreen;
+package OthelloApp.view.gameSession;
 
 import OthelloApp.model.*;
 import javafx.event.ActionEvent;
@@ -14,9 +14,9 @@ import java.util.Map;
 import java.util.Optional;
 
 
-import static OthelloApp.alertCreation.AlertCreationUtil.*;
-import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.showChooseColorScreen;
-import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.showGameSessionStatisticsScreen;
+import static OthelloApp.utilities.AlertCreationUtil.*;
+import static OthelloApp.utilities.ScreenNavigationUtil.showChooseColorScreen;
+import static OthelloApp.utilities.ScreenNavigationUtil.showGameSessionStatisticsScreen;
 
 public class GameSessionScreenPresenter {
     private final GameSession model;
@@ -91,6 +91,8 @@ public class GameSessionScreenPresenter {
 
         public void handle(ActionEvent event) {
             ArrayList<int[]> flippableStoneCoordinates = model.updateStones(coordinates);
+            model.getActiveTurn().setPlacedCoordinate(coordinates);
+            model.getActiveTurn().setFlippedStoneCoordinates(flippableStoneCoordinates);
             setButtonImage(coordinates);
             updateView(flippableStoneCoordinates);
             updatePlayerScores();
@@ -123,7 +125,7 @@ public class GameSessionScreenPresenter {
     private void setComputerTurnExplanationAlert(){
         StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
         ArrayList<int[]> possibleMoves = model.getBoard().findAllPossibleMoves(activePlayerColor);
-        String explanation = model.explainComputerMoveDecision(possibleMoves);
+        String explanation = model.getActiveTurn().getExplanation();
         view.getExplainComputerMoveButton().setOnAction(innerEvent -> {
             createInformationAlert("Latest Computer Move Explanation", "Explanation", explanation);
         });
@@ -137,9 +139,10 @@ public class GameSessionScreenPresenter {
             if (turnCount == model.getLastSessionNumberOfTurns()) {
                 turnCount = 0;
             }
+            System.out.println(turnCount);
             int[] coordinates = model.getTurnCoordinates(turnCount);
             StoneColor stoneColor = (turnCount % 2 == 0) ? StoneColor.BLACK : StoneColor.WHITE;
-            System.out.println(turnCount);
+            System.out.println(stoneColor);
             if (coordinates != null) {
                 ArrayList<int[]> flippableStoneCoordinates = model.getBoard().findFlippableStones(coordinates, stoneColor);
                 model.getBoard().update(coordinates, stoneColor);

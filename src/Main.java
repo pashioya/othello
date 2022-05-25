@@ -1,5 +1,5 @@
-import OthelloApp.view.welcomeScreen.WelcomeScreenPresenter;
-import OthelloApp.view.welcomeScreen.WelcomeScreenView;
+import OthelloApp.view.welcome.WelcomeScreenPresenter;
+import OthelloApp.view.welcome.WelcomeScreenView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
