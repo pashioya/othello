@@ -24,7 +24,7 @@ public class MinimizeProfitabilityAction implements Action {
         builder.append("Computer placed stone at row " + coordinates[0] + ", column " + coordinates[1] + " because this move flipped the least user stone(s).");
         activeTurn.setPlacedCoordinate(coordinates);
         activeTurn.setFlippedStoneCoordinates(board.findFlippableStones(coordinates, playerColor));
-        activeTurn.setExplanation(builder.toString());
+        activeTurn.setAIMoveExplanation(builder.toString());
     }
 
     public static MinimizeProfitabilityAction chooseLeastProfitableMove(){

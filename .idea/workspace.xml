@@ -4,47 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="46e6b1a3-9c16-4881-b49e-419aac47a3ad" name="Changes" comment="-- changed access modifier">
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanProtectSideAction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanProtectSideCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanReinforceCornerAction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanReinforceCornerCondtion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CenterMovesAvailableAction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CenterMovesAvailableCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CornerMovesAvailableAction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CornerMovesAvailableCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/MaximizeProfitabilityAction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/MinimizeProfitabilityAction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/MovesAvailableCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/NotCornerAdjacentMovesAvailableAction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/NotCornerAdjacentMovesAvailableCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/SafeSideMovesAvailableAction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/SafeSideMovesAvailableCondition.java" afterDir="false" />
+    <list default="true" id="46e6b1a3-9c16-4881-b49e-419aac47a3ad" name="Changes" comment="-- added rules">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/t9_othello/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/t9_othello/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/DBUtil/DBUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/utilities/DBUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/alertCreation/AlertCreationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/utilities/AlertCreationUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OthelloApp/dataManager/DataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/dataManager/DataManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/Board.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/GameSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/GameSession.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/GameSessionStatistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/GameSessionStatistics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/GameStatistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/GameStatistics.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/Turn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/Turn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/screenNavigationUtil/ScreenNavigationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/utilities/ScreenNavigationUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/chooseColorScreen/ChooseColorScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/chooseColor/ChooseColorScreenPresenter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/chooseColorScreen/ChooseColorScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/chooseColor/ChooseColorScreenView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionScreen/GameSessionScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSession/GameSessionScreenPresenter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionScreen/GameSessionScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSession/GameSessionScreenView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionStatisticsScreen/GameSessionStatisticsPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionStatistics/GameSessionStatisticsPresenter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionStatisticsScreen/GameSessionStatisticsView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionStatistics/GameSessionStatisticsView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameStatisticsScreen/GameStatisticsScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameStatistics/GameStatisticsScreenPresenter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameStatisticsScreen/GameStatisticsScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameStatistics/GameStatisticsScreenView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/rulesScreen/RulesScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/rules/RulesScreenPresenter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/rulesScreen/RulesScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/rules/RulesScreenView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/welcomeScreen/WelcomeScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/welcome/WelcomeScreenPresenter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/welcomeScreen/WelcomeScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/welcome/WelcomeScreenView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanProtectSideAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanProtectSideAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanProtectSideCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanProtectSideCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanReinforceCornerCondtion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/CanReinforceCornerCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/rules/MaximizeProfitabilityAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/MaximizeProfitabilityAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/rules/MinimizeProfitabilityAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/rules/MinimizeProfitabilityAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameSession/GameSessionScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSession/GameSessionScreenPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameStatistics/GameStatisticsScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameStatistics/GameStatisticsScreenPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameStatistics/GameStatisticsScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameStatistics/GameStatisticsScreenView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,7 +115,9 @@
       <workItem from="1652778343700" duration="19049000" />
       <workItem from="1652807045417" duration="87503000" />
       <workItem from="1653287229830" duration="1190000" />
-      <workItem from="1653460376053" duration="11315000" />
+      <workItem from="1653460376053" duration="12328000" />
+      <workItem from="1653506749867" duration="762000" />
+      <workItem from="1653569193557" duration="32540000" />
     </task>
     <task id="LOCAL-00001" summary="-- changed directory structure :)">
       <created>1652444653962</created>
@@ -154,7 +133,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652456060400</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="-- added rules">
+      <created>1653501544317</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1653501544317</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -176,6 +162,18 @@
     <MESSAGE value="-- changed directory structure :)" />
     <MESSAGE value="-- added Alert Util class" />
     <MESSAGE value="-- changed access modifier" />
-    <option name="LAST_COMMIT_MESSAGE" value="-- changed access modifier" />
+    <MESSAGE value="-- added rules" />
+    <option name="LAST_COMMIT_MESSAGE" value="-- added rules" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/OthelloApp/view/gameStatistics/GameStatisticsScreenView.java</url>
+          <line>43</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

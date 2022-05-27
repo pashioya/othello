@@ -451,4 +451,21 @@ public final class DataManager {
         }
         return finishedGameSessionsIDList;
     }
+
+    public static String getSessionDate(int gameSessionID){
+        String date = null;
+        try {
+            Statement statement = getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT start_date_time from gamesessions WHERE gamesession_id=" + gameSessionID +
+                    " FETCH NEXT 1 ROWS ONLY;");
+            while (resultSet.next()) {
+                date = resultSet.getString(1);
+            }
+            closeDbConnection();
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
 }

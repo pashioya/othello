@@ -10,10 +10,9 @@ import java.util.ArrayList;
 public class CanProtectSideCondition implements Condition {
 
     public boolean evaluate(Facts facts) {
-        ArrayList<int[]> possibleMoves = facts.get("possibleMoveList");
         Board board = facts.get("board");
         StoneColor computerColor = facts.get("playerColor");
-        if (userCanTakeSide(board, computerColor)) {
+        if (board.userCanTakeSide(computerColor)) {
             ArrayList<int[]> dangerousTopBottomCoordinates = new ArrayList<>();
             dangerousTopBottomCoordinates.addAll(board.findDangerousTopBottomCoordinates(computerColor));
             for (int[] dangerousCoordinate : dangerousTopBottomCoordinates) {
@@ -33,15 +32,7 @@ public class CanProtectSideCondition implements Condition {
         return false;
     }
 
-    private boolean userCanTakeSide(Board board, StoneColor computerColor) {
-        boolean userCanTakeTopOrBottomSide = board.findDangerousTopBottomCoordinates(computerColor) != null;
-        boolean userCanTakeLeftOrRightSide = board.findDangerousLeftRightCoordinates(computerColor) != null;
-        System.out.println("danger sides " + userCanTakeLeftOrRightSide);
-        if (userCanTakeTopOrBottomSide || userCanTakeLeftOrRightSide) {
-            return true;
-        }
-        return false;
-    }
+
 
 
     public static CanProtectSideCondition computerCanProtectSide() {

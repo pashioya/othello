@@ -40,7 +40,7 @@ public class GameSessionScreenPresenter {
                 disableAllGridButtons();
                 view.getTurnInstruction().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
             } else {
-                StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+                StoneColor activePlayerColor = model.getActivePlayerColor();
                 this.view.setClickableTurnButton(false);
                 setClickableGridButtons(activePlayerColor);
                 view.getTurnInstruction().setText("Click a highlighted square to place a stone.");
@@ -61,7 +61,7 @@ public class GameSessionScreenPresenter {
                 updatePlayerScores();
             };
             model.switchActivePlayer();
-            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+            StoneColor activePlayerColor = model.getActivePlayerColor();
             if (model.isOver()) {
                 disableAllGridButtons();
                 showGameOverAlert(view);
@@ -110,25 +110,16 @@ public class GameSessionScreenPresenter {
 
     private void beginComputerTurn(){
         // If the Computer can play a turn, then disable the buttons so the user can't click on them, and enable the button that allows the computer to take a turn
-        if (model.getBoard().hasValidMoves(model.getActivePlayer().getPlayerColor())) {
+        if (model.getBoard().hasValidMoves(model.getActivePlayerColor())) {
             view.getTurnInstruction().setText("Click \"Play Computer Turn\" to make the computer place a stone.");
             disableAllGridButtons();
             // If Computer can't, then switch back to user and let user pick another move
         } else {
             view.getTurnInstruction().setText("Computer unable to place a stone - Click another square to place a stone.");
             model.switchActivePlayer();
-            StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
+            StoneColor activePlayerColor = model.getActivePlayerColor();
             setClickableGridButtons(activePlayerColor);
         }
-    }
-
-    private void setComputerTurnExplanationAlert(){
-        StoneColor activePlayerColor = model.getActivePlayer().getPlayerColor();
-        ArrayList<int[]> possibleMoves = model.getBoard().findAllPossibleMoves(activePlayerColor);
-        String explanation = model.getActiveTurn().getExplanation();
-        view.getExplainComputerMoveButton().setOnAction(innerEvent -> {
-            createInformationAlert("Latest Computer Move Explanation", "Explanation", explanation);
-        });
     }
 
 
@@ -311,6 +302,13 @@ public class GameSessionScreenPresenter {
                 "If a player is not able to flip any stones, the player forfeits his/her turn and the other player plays again. " +
                 "Players may not voluntarily forfeit a turn if a move is available.\n\n" +
                 "The game is over when neither player can make a move. The player with the most stones of his/her color on the board wins the game.");
+    }
+
+    private void setComputerTurnExplanationAlert(){
+        String explanation = model.getActiveTurn().getAIMoveExplanation();
+        view.getExplainComputerMoveButton().setOnAction(innerEvent -> {
+            createInformationAlert("Latest Computer Move Explanation", "Explanation", explanation);
+        });
     }
 }
 

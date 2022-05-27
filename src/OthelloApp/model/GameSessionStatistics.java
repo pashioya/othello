@@ -5,11 +5,12 @@ import java.util.*;
 import static OthelloApp.dataManager.DataManager.*;
 
 public class GameSessionStatistics {
-    private int gameSessionID;
+    private final int gameSessionID;
     private int score;
     private double duration;
     private boolean userWon;
     private boolean isTied;
+    private String date;
     private HashMap<Integer, Integer> userMoveProfitabilitiesMap;
     private HashMap<Integer, Integer> computerMoveProfitabilitiesMap;
     private HashMap<Integer, Double> userMoveDurationsMap;
@@ -23,11 +24,15 @@ public class GameSessionStatistics {
         setDuration();
         setUserWon();
         setIsTied();
+        setDate();
         fillUserMoveProfitabilitiesMap();
         fillComputerMoveProfitabilitiesMap();
         fillUserMoveDurationsMap();
     }
 
+    private void setDate(){
+        this.date = getSessionDate(gameSessionID);
+    }
     private void setScore() {
         this.score = getSessionScore(gameSessionID);
     }
@@ -44,16 +49,6 @@ public class GameSessionStatistics {
         this.isTied = getSessionTied(gameSessionID);
     }
 
-    public double getAverageUserMoveProfitability() {
-        Double sum = 0.0;
-        if (!userMoveProfitabilitiesMap.isEmpty()) {
-            for (Integer userMoveProfitability : userMoveProfitabilitiesMap.values()) {
-                sum += Double.valueOf(userMoveProfitability);
-            }
-            return sum / userMoveProfitabilitiesMap.values().size();
-        }
-        return sum;
-    }
 
     private void fillComputerMoveProfitabilitiesMap() {
         userMoveProfitabilitiesMap = getSessionComputerMoveProfitabilities(gameSessionID, userMoveProfitabilitiesMap);
@@ -209,5 +204,9 @@ public class GameSessionStatistics {
 
     public String getComputerName() {
         return getSessionComputerName(gameSessionID);
+    }
+
+    public String getDate() {
+        return date;
     }
 }
