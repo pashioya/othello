@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="46e6b1a3-9c16-4881-b49e-419aac47a3ad" name="Changes" comment="-- added Alert Util class">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/alertCreation/AlertCreation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/alertCreation/AlertCreationUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/dataManager/DataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/dataManager/DataManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/GameSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/GameSession.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/GameSessionStatistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/GameSessionStatistics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/GameStatistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/GameStatistics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/model/Turn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/model/Turn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/screenNavigationUtil/ScreenNavigationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/screenNavigationUtil/ScreenNavigationUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/allGameStatisticsScreen/GameStatisticsScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameStatisticsScreen/GameStatisticsScreenPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/allGameStatisticsScreen/GameStatisticsScreenView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameStatisticsScreen/GameStatisticsScreenView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/chooseColorScreen/ChooseColorScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/chooseColorScreen/ChooseColorScreenPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/endScreen/GameSessionStatisticsPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionStatisticsScreen/GameSessionStatisticsPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/endScreen/GameSessionStatisticsView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionStatisticsScreen/GameSessionStatisticsView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionScreen/GameSessionScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/gameSessionScreen/GameSessionScreenPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OthelloApp/view/welcomeScreen/WelcomeScreenPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OthelloApp/view/welcomeScreen/WelcomeScreenPresenter.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="296pizMSHA2I6vgE8AyYCZ7XNHE" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="t9_othello" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\dev\openjfx-17.0.2_windows-x64_bin-sdk\javafx-sdk-17.0.2\lib&quot; --add-modules=javafx.controls,javafx.media  " />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="46e6b1a3-9c16-4881-b49e-419aac47a3ad" name="Changes" comment="" />
+      <created>1652443526283</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1652443526283</updated>
+      <workItem from="1652443531949" duration="557000" />
+      <workItem from="1652444126077" duration="107000" />
+      <workItem from="1652444254069" duration="11705000" />
+    </task>
+    <task id="LOCAL-00001" summary="-- changed directory structure :)">
+      <created>1652444653962</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1652444653962</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="-- changed directory structure :)" />
+    <MESSAGE value="-- added Alert Util class" />
+    <option name="LAST_COMMIT_MESSAGE" value="-- added Alert Util class" />
+  </component>
+</project>
