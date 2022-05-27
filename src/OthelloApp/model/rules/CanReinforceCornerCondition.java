@@ -7,7 +7,7 @@ import org.jeasy.rules.api.Facts;
 
 import java.util.ArrayList;
 
-public class CanReinforceCornerCondtion implements Condition {
+public class CanReinforceCornerCondition implements Condition {
 
     public boolean evaluate(Facts facts) {
         ArrayList<int[]> possibleMoves = facts.get("possibleMoveList");
@@ -34,8 +34,8 @@ public class CanReinforceCornerCondtion implements Condition {
         return false;
     }
 
-    public static CanReinforceCornerCondtion computerCanReinforceCorner() {
-        return new CanReinforceCornerCondtion();
+    public static CanReinforceCornerCondition computerCanReinforceCorner() {
+        return new CanReinforceCornerCondition();
     }
 }
 

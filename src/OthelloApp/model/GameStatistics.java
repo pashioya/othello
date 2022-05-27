@@ -15,7 +15,8 @@ public class GameStatistics {
         gameSessionStatisticsList = new ArrayList<>();
         if (databaseHasTables()) {
             fillGameSessionStatisticsList();
-        };
+        }
+        ;
     }
 
     public ArrayList<GameSessionStatistics> getGameSessionStatisticsList() {
@@ -80,5 +81,24 @@ public class GameStatistics {
         return gameSessionStatisticsList.get(gameSessionStatisticsList.size() - 1).getGameSessionID();
     }
 
+
+    public GameSessionStatistics getFastestGameSession(boolean sessionLost) {
+        GameSessionStatistics fastestGameSession = gameSessionStatisticsList.get(0);
+        double fastestTime = gameSessionStatisticsList.get(0).getDuration();
+        for (GameSessionStatistics gameSessionStatistics : gameSessionStatisticsList) {
+            if (sessionLost) {
+                if (!gameSessionStatistics.userWon() && (gameSessionStatistics.getDuration() < fastestTime)) {
+                    fastestTime = gameSessionStatistics.getDuration();
+                    fastestGameSession = gameSessionStatistics;
+                }
+            } else {
+                if (gameSessionStatistics.userWon() && (gameSessionStatistics.getDuration() < fastestTime)) {
+                    fastestTime = gameSessionStatistics.getDuration();
+                    fastestGameSession = gameSessionStatistics;
+                }
+            }
+        }
+        return fastestGameSession;
+    }
 }
 

@@ -17,6 +17,7 @@ public class CanProtectSideAction implements Action {
         StoneColor computerColor = facts.get("playerColor");
         Turn activeTurn = facts.get("turn");
         StringBuilder builder = facts.get("moveExplanationBuilder");
+        builder.append("Computer could not take a corner.\n");
         builder.append("Computer found the following user stone(s) that could flip the computer's side stone(s): \n");
         ArrayList<int[]> dangerousTopBottomCoordinates = new ArrayList<>();
         dangerousTopBottomCoordinates.addAll(board.findDangerousTopBottomCoordinates(computerColor));

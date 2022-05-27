@@ -10,7 +10,7 @@ import java.util.*;
 import static OthelloApp.model.rules.CanProtectSideAction.takeSideProtectingSquare;
 import static OthelloApp.model.rules.CanProtectSideCondition.computerCanProtectSide;
 import static OthelloApp.model.rules.CanReinforceCornerAction.takeCornerReinforcingSquare;
-import static OthelloApp.model.rules.CanReinforceCornerCondtion.computerCanReinforceCorner;
+import static OthelloApp.model.rules.CanReinforceCornerCondition.computerCanReinforceCorner;
 import static OthelloApp.model.rules.CenterMovesAvailableAction.takeCenterSquare;
 import static OthelloApp.model.rules.CenterMovesAvailableCondition.computerCanTakeCenter;
 import static OthelloApp.model.rules.CornerMovesAvailableAction.takeCornerSquare;
@@ -70,7 +70,7 @@ public class GameSession {
         newFacts.put("moveExplanationBuilder", builder);
         Rules rules = new Rules();
         Rule mostProfitableMoveRule = new RuleBuilder()
-                .name("available moves rule")
+                .name("profitable available moves rule")
                 .when(computerHasAvailableMoves())
                 .then(chooseMoveProfitableMove())
                 .build();
@@ -89,7 +89,7 @@ public class GameSession {
         newFacts.put("moveExplanationBuilder", builder);
         Rules rules = new Rules();
         Rule mostProfitableMoveRule = new RuleBuilder()
-                .name("available moves rule")
+                .name("unprofitable available moves rule")
                 .when(computerHasAvailableMoves())
                 .then(chooseLeastProfitableMove())
                 .build();
@@ -110,13 +110,11 @@ public class GameSession {
         return activePlayer;
     }
 
-    public StoneColor getInactivePlayerColor() {
-        if (activePlayer.equals(players[0])) {
-            return players[1].getPlayerColor();
-        }
-        return players[0].getPlayerColor();
+    public StoneColor getActivePlayerColor(){
+        return getActivePlayer().getPlayerColor();
     }
 
+    //Add!
     public boolean activePlayerIsComputer() {
         return (activePlayer.isComputer());
     }
@@ -124,7 +122,7 @@ public class GameSession {
     public Player[] getPlayers() {
         return players;
     }
-
+// add!
     public boolean isOver() {
         return neitherPlayerHasValidMoves();
     }
@@ -305,15 +303,12 @@ public class GameSession {
     public int[] chooseMove() {
         int[] chosenMove = null;
         StoneColor activePlayerColor = getActivePlayer().getPlayerColor();
-//        doIHaveCorner(activePlayer.getPlayerColor());
-        System.out.println("New Computer Turn--------------");
         ArrayList<int[]> possibleMoves = getBoard().findAllPossibleMoves(activePlayerColor);
         switch (getActivePlayer().getName()) {
             case "medium":
                 setMostProfitableMove(possibleMoves, board, activePlayerColor, activeTurn, new StringBuilder());
                 break;
             case "hard":
-                System.out.println("Number of moves total: " + possibleMoves.size());
                 Facts facts = new Facts();
                 facts.put("possibleMoveList", possibleMoves);
                 facts.put("board", board);
@@ -327,35 +322,8 @@ public class GameSession {
                 chosenMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
         }
         chosenMove = activeTurn.getPlacedCoordinate();
-        System.out.println("chosenMove is " + chosenMove[0] + " " + chosenMove[1]);
         return chosenMove;
     }
-
-
-    private void doIHaveCorner(StoneColor activePlayerColor) {
-        int[] cornerTopLeft = {0, 0};
-        int[] cornerTopRight = {0, 7};
-        int[] cornerBottomLeft = {7, 0};
-        int[] cornerBottomRight = {7, 7};
-        ArrayList<int[]> corners = new ArrayList<>();
-        corners.add(cornerTopLeft);
-        corners.add(cornerTopRight);
-        corners.add(cornerBottomLeft);
-        corners.add(cornerBottomRight);
-        for (int[] corner : corners) {
-            if (board.getGRID()[corner[0]][corner[1]].hasStone()) {
-                if (board.getGRID()[corner[0]][corner[1]]
-                        .getStone()
-                        .isPlayerColor(activePlayerColor)) {
-                    System.out.println("player has corner:" + corner[0] + ", " + corner[1]);
-                }
-            }
-        }
-    }
-
-
-
-
 
     public ArrayList<int[]> updateStones(int[] moveCoordinates) {
         StoneColor activePlayerColor = getActivePlayer().getPlayerColor();

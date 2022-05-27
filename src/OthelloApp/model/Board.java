@@ -164,11 +164,11 @@ public class Board {
     }
 
     private boolean isValidMove(int row, int column, StoneColor stoneColor) {
-        boolean isValid = false;
+        boolean isValid;
 
-        // If the quare at the selected coordinate already contains a square, the move isn't valid -> return false
+        // If the square at the selected coordinate already contains a square, the move isn't valid -> return false
         if (GRID[row][column].hasStone()) {
-            return isValid;
+            return false;
         }
 
         // Check every square surrounding the selected square
@@ -187,14 +187,14 @@ public class Board {
                         // Check to see if this stone can be surrounded
                         isValid = checkDirection(verticalShift, horizontalShift, vertical, horizontal, stoneColor);
                         if (isValid) {
-                            return isValid;
+                            return true;
                         }
                     }
                 }
             }
 
         }
-        return isValid;
+        return false;
     }
 
     private void placeStone(int row, int column, StoneColor stoneColor) {
@@ -209,7 +209,7 @@ public class Board {
     }
 
     public ArrayList<int[]> findAllPossibleMoves(StoneColor stonecolor) {
-        ArrayList<int[]> possibleMovesCoordinates = new ArrayList<int[]>();
+        ArrayList<int[]> possibleMovesCoordinates = new ArrayList<>();
         for (int row = 0; row < getGRID().length; row++) {
             for (int column = 0; column < getGRID()[row].length; column++) {
                 if (isValidMove(row, column, stonecolor)) {
@@ -242,7 +242,6 @@ public class Board {
     public int[] findLeastProfitableMove(ArrayList<int[]> possibleMoves, StoneColor stoneColor) {
         int[] leastProfitableMove = null;
         double lowestProfitability = Double.POSITIVE_INFINITY;
-        ;
         for (int[] possibleMove : possibleMoves) {
             int profitability = getMoveProfitability(possibleMove, stoneColor);
             System.out.println("Row: " + possibleMove[0] + " Column: " + possibleMove[1] + " - profitability " + profitability);
@@ -318,29 +317,36 @@ public class Board {
                 return counterMove;
             }
         }
-        return counterMove;
+        return null;
+    }
+
+    private int[] shiftCoordinate(int row, int column, boolean horizontal, boolean left, boolean down){
+        int newColumn;
+        int newRow;
+        if (horizontal) {
+            if (left) {
+                newColumn = column - 1;
+            } else {
+                newColumn = column + 1;
+            }
+            newRow = row;
+        } else {
+            if (down) {
+                newRow = row + 1;
+            } else {
+                newRow = row - 1;
+            }
+            newColumn = column;
+        }
+        return new int[] {newRow, newColumn};
     }
 
 
     public int[] findAvailableSquare(int dangerousCoordinateRow, int dangerousCoordinateColumn, StoneColor activePlayerColor, boolean horizontal, boolean left, boolean down) {
         System.out.println("What's going into this function: Row: " + dangerousCoordinateRow + " Column: " + dangerousCoordinateColumn);
-        int newColumn;
-        int newRow;
-        if (horizontal) {
-            if (left) {
-                newColumn = dangerousCoordinateColumn - 1;
-            } else {
-                newColumn = dangerousCoordinateColumn + 1;
-            }
-            newRow = dangerousCoordinateRow;
-        } else {
-            if (down) {
-                newRow = dangerousCoordinateRow + 1;
-            } else {
-                newRow = dangerousCoordinateRow - 1;
-            }
-            newColumn = dangerousCoordinateColumn;
-        }
+        int[] newCoordinates = shiftCoordinate(dangerousCoordinateRow, dangerousCoordinateColumn, horizontal, left, down);
+        int newRow = newCoordinates[0];
+        int newColumn = newCoordinates[1];
         boolean coordinateIsSide = (newColumn == 7 || newColumn == 0 || newRow == 7 || newRow == 0);
         if (newColumn < 0 || newColumn > SIDE_LENGTH - 1 || newRow < 0 || newRow > SIDE_LENGTH - 1) {
             return null;
@@ -363,23 +369,9 @@ public class Board {
     }
 
     public boolean checkSideCanBeFlipped(int row, int column, StoneColor activePlayerColor, boolean horizontal, boolean left, boolean down) {
-        int newColumn;
-        int newRow;
-        if (horizontal) {
-            if (left) {
-                newColumn = column - 1;
-            } else {
-                newColumn = column + 1;
-            }
-            newRow = row;
-        } else {
-            if (down) {
-                newRow = row + 1;
-            } else {
-                newRow = row - 1;
-            }
-            newColumn = column;
-        }
+        int[] newCoordinates = shiftCoordinate(row, column, horizontal, left, down);
+        int newRow = newCoordinates[0];
+        int newColumn = newCoordinates[1];
         System.out.println("Looking at " + newRow + " : " + newColumn);
         if (newColumn < 0 || newColumn > SIDE_LENGTH - 1 || newRow < 0 || newRow > SIDE_LENGTH - 1) {
             System.out.println("Out of bounds");
@@ -401,23 +393,9 @@ public class Board {
     }
 
     public boolean coordinateCanReinforceCorner(int row, int column, StoneColor activePlayerColor, boolean horizontal, boolean left, boolean down){
-        int newRow;
-        int newColumn;
-        if (horizontal) {
-            if (left) {
-                newColumn = column - 1;
-            } else {
-                newColumn = column + 1;
-            }
-            newRow = row;
-        } else {
-            if (down) {
-                newRow = row + 1;
-            } else {
-                newRow = row - 1;
-            }
-            newColumn = column;
-        }
+        int[] newCoordinates = shiftCoordinate(row, column, horizontal, left, down);
+        int newRow = newCoordinates[0];
+        int newColumn = newCoordinates[1];
         System.out.println("Looking at for reinforcing corner " + newRow + " : " + newColumn);
         // if program passes corner without running into any blank spaces or opposite-colored stones, means that computer has the corner, and coordinate reinforces it
         if (newColumn < 0 || newColumn > SIDE_LENGTH - 1 || newRow < 0 || newRow > SIDE_LENGTH - 1) {
@@ -428,7 +406,7 @@ public class Board {
         if (newSquare.hasStone()) { // if the new square has a stone
             if (newSquare.hasOppositeColorStone(activePlayerColor)) { // if that stone has the opposite color
                 // if black
-                System.out.println(newRow + ", " + newColumn + " has oppostie color stone as computer, stop checking");
+                System.out.println(newRow + ", " + newColumn + " has opposite color stone as computer, stop checking");
                 return false;
             } else { // if square has stone of same color
                 System.out.println(newRow + ", " + newColumn + " has same color stone as computer, keep checking");
@@ -443,7 +421,7 @@ public class Board {
     public ArrayList<int[]> findFlippableStones(int[] coordinates, StoneColor stoneColor) {
         int row = coordinates[0];
         int column = coordinates[1];
-        ArrayList<int[]> flippableStoneCoordinates = new ArrayList<int[]>();
+        ArrayList<int[]> flippableStoneCoordinates = new ArrayList<>();
         for (int vertical = row - 1; vertical <= row + 1; vertical++) {
             for (int horizontal = column - 1; horizontal <= column + 1; horizontal++) {
                 if (horizontal < 0 || horizontal > SIDE_LENGTH - 1 || vertical < 0 || vertical > SIDE_LENGTH - 1) {
@@ -527,6 +505,15 @@ public class Board {
         return false;
     }
 
+    public boolean userCanTakeSide(StoneColor computerColor) {
+        boolean userCanTakeTopOrBottomSide = findDangerousTopBottomCoordinates(computerColor) != null;
+        boolean userCanTakeLeftOrRightSide = findDangerousLeftRightCoordinates(computerColor) != null;
+        System.out.println("danger sides " + userCanTakeLeftOrRightSide);
+        if (userCanTakeTopOrBottomSide || userCanTakeLeftOrRightSide) {
+            return true;
+        }
+        return false;
+    }
     public boolean coordinateIsNotCornerAdjacent(int[] coordinates) {
         for (int[] corner : CORNERS) {
             for (int row = corner[0]-1; row <= corner[0]+1; row ++){ // go through every row in the radius of a corner
@@ -554,7 +541,7 @@ public class Board {
                             ((coordinates[1] == 0) && (coordinates[0] > 1) && (coordinates[0] < SIDE_LENGTH - 2)) || // left
                             ((coordinates[1] == SIDE_LENGTH - 1) && (coordinates[0] > 1) && (coordinates[0] < SIDE_LENGTH - 2)) // right
             );
-        };
+        }
         return (
                 ((coordinates[0] == 0) && (coordinates[1] > 0) && (coordinates[1] < SIDE_LENGTH - 1)) || // top
                         ((coordinates[0] == SIDE_LENGTH - 1) && (coordinates[1] > 0) && (coordinates[1] < SIDE_LENGTH - 1)) || // bottom
@@ -599,8 +586,7 @@ public class Board {
     }
 
     public ArrayList<int[]> findDangerousLeftRightCoordinates(StoneColor computerColor) {
-        System.out.println("testing left and right sides");
-        ArrayList<int[]> dangerousStoneCoordinates = new ArrayList<int[]>();
+        ArrayList<int[]> dangerousStoneCoordinates = new ArrayList<>();
         ArrayList<Integer> sideColumns = new ArrayList<>();
         sideColumns.add(0);
         sideColumns.add(7);

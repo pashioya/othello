@@ -16,6 +16,9 @@ public class MaximizeProfitabilityAction implements Action {
         Turn activeTurn = facts.get("turn");
         Board board = facts.get("board");
         StringBuilder builder = facts.get("moveExplanationBuilder");
+        if (builder.toString().isEmpty()){
+            builder.append("Computer was not able to take any corner, side, center squares and could not avoid corner-adjacent squares.\n");
+        }
         for (int[] possibleMove : possibleMoves) {
             builder.append("Row " + possibleMove[0] + ", column " + possibleMove[1] + " flips " + board.getMoveProfitability(possibleMove, playerColor) + " user stone(s).\n");
         }
@@ -23,7 +26,7 @@ public class MaximizeProfitabilityAction implements Action {
         builder.append("Computer placed stone at row " + coordinates[0] + ", column " + coordinates[1] + " because this move flipped the most user stone(s).");
         activeTurn.setPlacedCoordinate(coordinates);
         activeTurn.setFlippedStoneCoordinates(board.findFlippableStones(coordinates, playerColor));
-        activeTurn.setExplanation(builder.toString());
+        activeTurn.setAIMoveExplanation(builder.toString());
     }
 
     public static MaximizeProfitabilityAction chooseMoveProfitableMove(){

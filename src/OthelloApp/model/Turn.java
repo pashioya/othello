@@ -9,7 +9,7 @@ import static OthelloApp.dataManager.DataManager.*;
 import static java.lang.System.currentTimeMillis;
 
 public class Turn {
-    static int turnCount = 0;
+    private static int turnCount = 0;
     private final int turnId;
     private final String name;
     private final String startDateTime;
@@ -17,7 +17,7 @@ public class Turn {
     private long endTimeMilisec;
     private int[] placedCoordinate;
     private ArrayList<int[]> flippedStoneCoordinates;
-    private String explanation;
+    private String aiMoveExplanation;
 
     public Turn(String name, boolean isFirstTurn) {
         if (isFirstTurn){
@@ -54,12 +54,12 @@ public class Turn {
         saveFlippedPieces(gameSessionID, getTurnId(), getFlippedStoneCoordinates());
     }
 
-    public void setExplanation(String explanation) {
-        this.explanation = explanation;
+    public void setAIMoveExplanation(String aiMoveExplanation) {
+        this.aiMoveExplanation = aiMoveExplanation;
     }
 
-    public String getExplanation() {
-        return explanation;
+    public String getAIMoveExplanation() {
+        return aiMoveExplanation;
     }
 
     @Override
