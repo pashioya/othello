@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static OthelloApp.DBUtil.DBUtil.*;
+import static OthelloApp.utilities.DBUtil.*;
 
 public final class DataManager {
 
@@ -28,6 +28,98 @@ public final class DataManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Integer getNextGameSessionID(){
+        Integer idNo = null;
+        try {
+            Statement statement = getStatement();
+            ResultSet resultset = statement.executeQuery("SELECT nextval('seq_gamesession_id')");
+            while (resultset.next()) {
+                idNo = resultset.getInt(1);
+            }
+            closeDbConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idNo;
+    }
+
+    public static void updateGameSessions(int gameSessionID, String startDateTime, double timeElapsed, boolean isOver, boolean userWon, String userName, String computerName, int userScore) {
+        try {
+            Statement statement = getStatement();
+            statement.executeUpdate("INSERT INTO gamesessions (gamesession_id, start_date_time, time_elapsed, is_over, user_won, username, computer_name, number_stones_user) " +
+                    "VALUES ("
+                    + gameSessionID + ", '"
+                    + startDateTime + "', "
+                    + timeElapsed + ", "
+                    + isOver + ", "
+                    + userWon + ", '"
+                    + userName + "', '"
+                    + computerName + "', "
+                    + userScore + " " +
+                    ") " +
+                    "ON CONFLICT (gamesession_id) DO UPDATE " +
+                    "SET  time_elapsed= EXCLUDED.time_elapsed, " +
+                    "       is_over = EXCLUDED.is_over, " +
+                    "       user_won = EXCLUDED.user_won, " +
+                    "       number_stones_user = EXCLUDED.number_stones_user ");
+            closeDbConnection();
+        } catch (SQLException e) {
+            e.printStackTrace(); // error handling
+        }
+    }
+
+    public static int[] getPlacedCoordinatesByTurnID(int turnID) {
+        int[] coordinates = new int[2];
+        try {
+            Statement statement = getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT placed_stone_row, placed_stone_column " +
+                    "FROM turns " +
+                    "WHERE gamesession_id = (" +
+                    "                       SELECT MAX(gamesession_id) " +
+                    "                       FROM gamesessions " +
+                    "                       WHERE is_over = True) " +
+                    "AND turn_id = " + turnID + ";");
+            while (resultSet.next()) {
+                int placedStoneRow = resultSet.getInt(1);
+                int placedStoneColumn = resultSet.getInt(2);
+                if (!resultSet.wasNull()) {
+                    coordinates[0] = placedStoneRow;
+                    coordinates[1] = placedStoneColumn;
+                } else {
+                    coordinates = null;
+                }
+            }
+            closeDbConnection();
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+        }
+
+        return coordinates;
+    }
+
+    public static int getNumberOfTurnsLastSession() {
+        int maxNumberOfTurns = 0;
+        try {
+            Statement statement = getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) " +
+                    "FROM turns " +
+                    "WHERE gamesession_id = (" +
+                    "                       SELECT MAX(gamesession_id) " +
+                    "                       FROM gamesessions " +
+                    "                       WHERE is_over = True) " +
+                    ";");
+            while (resultSet.next()) {
+                maxNumberOfTurns = resultSet.getInt(1);
+            }
+            closeDbConnection();
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+        }
+        return maxNumberOfTurns;
     }
 
     public static void createTurnsTable() {
@@ -101,9 +193,6 @@ public final class DataManager {
         }
     }
 
-
-
-
     public static void saveFlippedPieces(int gameSessionID, int turnID, ArrayList<int[]> flippedStoneCoordinates) {
         // use turnID and flippedStoneCoordinates to update the SQL database
         if (flippedStoneCoordinates.size() > 0) {
@@ -126,7 +215,7 @@ public final class DataManager {
         }
     }
 
-    public static void clearAllData(){
+    public static void clearAllData() {
         try {
             Statement statement = getStatement();
             statement.executeUpdate("DROP SEQUENCE IF EXISTS seq_gamesession_id CASCADE;");
@@ -156,8 +245,7 @@ public final class DataManager {
         return lastSessionScore;
     }
 
-
-    public static double getSessionDuration(int gameSessionID){
+    public static double getSessionDuration(int gameSessionID) {
         double lastSessionDuration = 0;
         try {
             Statement statement = getStatement();
@@ -174,7 +262,7 @@ public final class DataManager {
         return lastSessionDuration;
     }
 
-    public static boolean getSessionWon(int gameSessionID){
+    public static boolean getSessionWon(int gameSessionID) {
         boolean userWon = false;
         try {
             Statement statement = getStatement();
@@ -191,7 +279,7 @@ public final class DataManager {
         return userWon;
     }
 
-    public static boolean getSessionTied(int gameSessionID){
+    public static boolean getSessionTied(int gameSessionID) {
         boolean isTied = false;
         try {
             Statement statement = getStatement();
@@ -230,8 +318,7 @@ public final class DataManager {
         return computerMoveProfitabilitiesMap;
     }
 
-
-    public static HashMap<Integer, Integer> getSessionUserMoveProfitabilities(int gameSessionID, HashMap<Integer, Integer> userMoveProfitabilitiesMap)  {
+    public static HashMap<Integer, Integer> getSessionUserMoveProfitabilities(int gameSessionID, HashMap<Integer, Integer> userMoveProfitabilitiesMap) {
         try {
             Statement statement = getStatement();
             ResultSet resultSet = statement.executeQuery("SELECT t.turn_id, COUNT(*) " +
@@ -253,7 +340,7 @@ public final class DataManager {
         return userMoveProfitabilitiesMap;
     }
 
-    public static HashMap<Integer, Double> getSessionUserMoveDurations(int gameSessionID, HashMap<Integer, Double> userMoveDurationsMap)  {
+    public static HashMap<Integer, Double> getSessionUserMoveDurations(int gameSessionID, HashMap<Integer, Double> userMoveDurationsMap) {
         try {
             Statement statement = getStatement();
             ResultSet resultSet = statement.executeQuery("SELECT turn_id, time_elapsed FROM turns " +
@@ -289,7 +376,7 @@ public final class DataManager {
         return userName;
     }
 
-    public static String getSessionComputerName(int gameSessionID){
+    public static String getSessionComputerName(int gameSessionID) {
         String computerName = null;
         try {
             Statement statement = getStatement();
@@ -305,7 +392,6 @@ public final class DataManager {
         }
         return computerName;
     }
-
 
     public static boolean getSessionUserWentFirst(int gameSessionID) {
         List<String> computerModes = List.of("easy", "medium", "hard");
@@ -328,7 +414,7 @@ public final class DataManager {
         return false;
     }
 
-    public static boolean databaseHasTables(){
+    public static boolean databaseHasTables() {
         boolean databaseHasData = false;
         try {
             Statement statement = getStatement();
@@ -364,5 +450,22 @@ public final class DataManager {
             e.printStackTrace();
         }
         return finishedGameSessionsIDList;
+    }
+
+    public static String getSessionDate(int gameSessionID){
+        String date = null;
+        try {
+            Statement statement = getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT start_date_time from gamesessions WHERE gamesession_id=" + gameSessionID +
+                    " FETCH NEXT 1 ROWS ONLY;");
+            while (resultSet.next()) {
+                date = resultSet.getString(1);
+            }
+            closeDbConnection();
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 }

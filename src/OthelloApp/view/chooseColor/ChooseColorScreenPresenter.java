@@ -1,7 +1,7 @@
-package OthelloApp.view.chooseColorScreen;
+package OthelloApp.view.chooseColor;
 
 
-import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.*;
+import static OthelloApp.utilities.ScreenNavigationUtil.*;
 
 public class ChooseColorScreenPresenter {
     private final ChooseColorScreenView view;

@@ -1,12 +1,12 @@
-package OthelloApp.view.gameStatisticsScreen;
+package OthelloApp.view.gameStatistics;
 
 import OthelloApp.model.GameStatistics;
 import javafx.scene.chart.XYChart;
 
 import java.util.Map;
 
-import static OthelloApp.alertCreation.AlertCreationUtil.showExitAlert;
-import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.*;
+import static OthelloApp.utilities.AlertCreationUtil.showExitAlert;
+import static OthelloApp.utilities.ScreenNavigationUtil.*;
 
 public class GameStatisticsScreenPresenter {
     private final GameStatisticsScreenView view;
@@ -49,6 +49,8 @@ public class GameStatisticsScreenPresenter {
         setActiveSessionScoreVSAverage();
         fillSessionDurationsChart();
         setSessionDurationsPercentile();
+        setFastestWinTime();
+        setFastestLoseTime();
     }
 
     private void setActiveSessionScoreVSAverage() {
@@ -81,9 +83,28 @@ public class GameStatisticsScreenPresenter {
 
     private void setSessionDurationsPercentile() {
         view.getActiveSessionDurationPercentile().setText(
-                String.format("Your game duration (%.2f seconds) is in the %.1f percentile of game durations",
+                String.format("The last game's duration (%.2f seconds) is in the %.1f percentile of game durations",
                         model.getLatestGameSessionStatistics().getDuration(),
                         model.getLastSessionDurationPercentile()));
     }
 
+    private void setFastestWinTime(){
+        view.getFastestWinTime().setText(
+                String.format("Shortest win time : Player %s's game on %s was won in %.2f seconds with %d stones against %s mode",
+                        model.getFastestGameSession(false).getUserName(),
+                        model.getFastestGameSession(false).getDate(),
+                        model.getFastestGameSession(false).getDuration(),
+                        model.getFastestGameSession(false).getScore(),
+                        model.getFastestGameSession(false).getComputerName()));
+    }
+
+    private void setFastestLoseTime(){
+        view.getFastestLoseTime().setText(
+                String.format("Shortest lose time : Player %s's game on %s was lost in %.2f seconds with %d stones against %s mode",
+                        model.getFastestGameSession(true).getUserName(),
+                        model.getFastestGameSession(true).getDate(),
+                        model.getFastestGameSession(true).getDuration(),
+                        model.getFastestGameSession(true).getScore(),
+                        model.getFastestGameSession(true).getComputerName()));
+    }
 }

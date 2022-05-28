@@ -1,8 +1,8 @@
-package OthelloApp.view.rulesScreen;
+package OthelloApp.view.rules;
 
 import OthelloApp.model.Game;
 
-import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.showWelcomeScreen;
+import static OthelloApp.utilities.ScreenNavigationUtil.showWelcomeScreen;
 
 public class RulesScreenPresenter {
     private final Game model;

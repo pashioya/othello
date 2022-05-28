@@ -1,4 +1,4 @@
-package OthelloApp.DBUtil;
+package OthelloApp.utilities;
 
 
 import java.sql.Connection;

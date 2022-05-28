@@ -1,6 +1,5 @@
-package OthelloApp.alertCreation;
+package OthelloApp.utilities;
 
-import OthelloApp.view.gameSessionScreen.GameSessionScreenView;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -8,9 +7,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.Optional;
-
-import static OthelloApp.dataManager.DataManager.clearAllData;
-import static OthelloApp.screenNavigationUtil.ScreenNavigationUtil.showGameSessionStatisticsScreen;
 
 public final class AlertCreationUtil {
 
